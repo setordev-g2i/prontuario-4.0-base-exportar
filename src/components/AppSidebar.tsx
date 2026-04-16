@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   Heart, LogOut, DoorOpen, Calendar, Users,
   ClipboardList, Microscope, BarChart3, Stethoscope, Handshake,
@@ -5,16 +6,20 @@ import {
   RotateCcw, FileText, Receipt, Scale, BedDouble, ShieldCheck, FlaskConical,
   FileBarChart, Pill, Package, Utensils, Wallet, TrendingUp, CreditCard,
   Activity, Home as HomeIcon, Siren, HeartPulse, Beaker, ShieldAlert,
-  ListChecks, Radiation, Settings, ChevronRight,
+  ListChecks, Radiation, Settings, ChevronRight, Star,
 } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -24,11 +29,28 @@ import {
 } from "@/components/ui/hover-card";
 import { Link, useLocation } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
+import { useFavorites } from "@/hooks/use-favorites";
+
+/* ── icon registry for favorites ── */
+const iconMap: Record<string, LucideIcon> = {
+  DoorOpen, Stethoscope, CalendarDays, Scissors, Printer, Settings2,
+  Users, UserPlus, RotateCcw, Tag, FolderArchive, ClipboardList,
+  Receipt, FileText, BedDouble, Scale, ShieldCheck, FileBarChart,
+  Microscope, ListChecks, Wallet, TrendingUp, CreditCard, Activity,
+  Pill, Package, Beaker, Utensils, FlaskConical, HomeIcon, Siren,
+  HeartPulse, ShieldAlert, Radiation, Handshake, Calendar, BarChart3,
+  Settings,
+};
+
+function getIconByName(name: string): LucideIcon {
+  return iconMap[name] || Star;
+}
 
 /* ── types ── */
 interface SubItem {
   label: string;
   icon: LucideIcon;
+  iconName: string;
   path: string;
 }
 interface MenuGroup {
@@ -49,8 +71,8 @@ const menuConfig: MenuItem[] = [
     groups: [
       {
         items: [
-          { label: "Sala de Espera", icon: DoorOpen, path: "/salas/espera" },
-          { label: "Sala de Procedimentos", icon: Stethoscope, path: "/salas/procedimentos" },
+          { label: "Sala de Espera", icon: DoorOpen, iconName: "DoorOpen", path: "/salas/espera" },
+          { label: "Sala de Procedimentos", icon: Stethoscope, iconName: "Stethoscope", path: "/salas/procedimentos" },
         ],
       },
     ],
@@ -62,15 +84,15 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Operacional",
         items: [
-          { label: "Calendário", icon: CalendarDays, path: "/agenda" },
-          { label: "Centro Cirúrgico", icon: Scissors, path: "/agenda/centro-cirurgico" },
-          { label: "Imprimir Agenda", icon: Printer, path: "/agenda/imprimir" },
+          { label: "Calendário", icon: CalendarDays, iconName: "CalendarDays", path: "/agenda" },
+          { label: "Centro Cirúrgico", icon: Scissors, iconName: "Scissors", path: "/agenda/centro-cirurgico" },
+          { label: "Imprimir Agenda", icon: Printer, iconName: "Printer", path: "/agenda/imprimir" },
         ],
       },
       {
         heading: "Administração",
         items: [
-          { label: "Gestão de Agendas", icon: Settings2, path: "/agenda/admin" },
+          { label: "Gestão de Agendas", icon: Settings2, iconName: "Settings2", path: "/agenda/admin" },
         ],
       },
     ],
@@ -82,16 +104,16 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Cadastro",
         items: [
-          { label: "Pacientes", icon: Users, path: "/patients" },
-          { label: "Cadastrar Paciente", icon: UserPlus, path: "/patients?new=1" },
+          { label: "Pacientes", icon: Users, iconName: "Users", path: "/patients" },
+          { label: "Cadastrar Paciente", icon: UserPlus, iconName: "UserPlus", path: "/patients?new=1" },
         ],
       },
       {
         heading: "Gestão",
         items: [
-          { label: "Gerenciar Retornos", icon: RotateCcw, path: "/pacientes/retornos" },
-          { label: "Tags", icon: Tag, path: "/pacientes/tags" },
-          { label: "SAME", icon: FolderArchive, path: "/pacientes/same" },
+          { label: "Gerenciar Retornos", icon: RotateCcw, iconName: "RotateCcw", path: "/pacientes/retornos" },
+          { label: "Tags", icon: Tag, iconName: "Tag", path: "/pacientes/tags" },
+          { label: "SAME", icon: FolderArchive, iconName: "FolderArchive", path: "/pacientes/same" },
         ],
       },
     ],
@@ -103,18 +125,18 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Recepção",
         items: [
-          { label: "Abertura de Atendimento", icon: ClipboardList, path: "/atendimentos/abertura" },
-          { label: "Orçamento", icon: Receipt, path: "/atendimentos/orcamento" },
-          { label: "Nota Fiscal", icon: FileText, path: "/atendimentos/nf" },
+          { label: "Abertura de Atendimento", icon: ClipboardList, iconName: "ClipboardList", path: "/atendimentos/abertura" },
+          { label: "Orçamento", icon: Receipt, iconName: "Receipt", path: "/atendimentos/orcamento" },
+          { label: "Nota Fiscal", icon: FileText, iconName: "FileText", path: "/atendimentos/nf" },
         ],
       },
       {
         heading: "Operacional",
         items: [
-          { label: "Leitos", icon: BedDouble, path: "/atendimentos/leitos" },
-          { label: "Escalas", icon: Scale, path: "/atendimentos/escalas" },
-          { label: "Portaria", icon: ShieldCheck, path: "/atendimentos/portaria" },
-          { label: "Relatórios", icon: FileBarChart, path: "/atendimentos/relatorios" },
+          { label: "Leitos", icon: BedDouble, iconName: "BedDouble", path: "/atendimentos/leitos" },
+          { label: "Escalas", icon: Scale, iconName: "Scale", path: "/atendimentos/escalas" },
+          { label: "Portaria", icon: ShieldCheck, iconName: "ShieldCheck", path: "/atendimentos/portaria" },
+          { label: "Relatórios", icon: FileBarChart, iconName: "FileBarChart", path: "/atendimentos/relatorios" },
         ],
       },
     ],
@@ -125,9 +147,9 @@ const menuConfig: MenuItem[] = [
     groups: [
       {
         items: [
-          { label: "Laudos", icon: FileText, path: "/diagnostico/laudos" },
-          { label: "Fila de Exames", icon: ListChecks, path: "/diagnostico/fila" },
-          { label: "Gerar Etiquetas", icon: Tag, path: "/diagnostico/etiquetas" },
+          { label: "Laudos", icon: FileText, iconName: "FileText", path: "/diagnostico/laudos" },
+          { label: "Fila de Exames", icon: ListChecks, iconName: "ListChecks", path: "/diagnostico/fila" },
+          { label: "Gerar Etiquetas", icon: Tag, iconName: "Tag", path: "/diagnostico/etiquetas" },
         ],
       },
     ],
@@ -139,27 +161,27 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Financeiro",
         items: [
-          { label: "Dashboard Financeiro", icon: Wallet, path: "/gerenciamento/financeiro" },
-          { label: "Contas a Pagar", icon: TrendingUp, path: "/gerenciamento/contas-pagar" },
-          { label: "Contas a Receber", icon: CreditCard, path: "/gerenciamento/contas-receber" },
-          { label: "Faturamento", icon: Receipt, path: "/gerenciamento/faturamento" },
+          { label: "Dashboard Financeiro", icon: Wallet, iconName: "Wallet", path: "/gerenciamento/financeiro" },
+          { label: "Contas a Pagar", icon: TrendingUp, iconName: "TrendingUp", path: "/gerenciamento/contas-pagar" },
+          { label: "Contas a Receber", icon: CreditCard, iconName: "CreditCard", path: "/gerenciamento/contas-receber" },
+          { label: "Faturamento", icon: Receipt, iconName: "Receipt", path: "/gerenciamento/faturamento" },
         ],
       },
       {
         heading: "Indicadores",
         items: [
-          { label: "Dashboards", icon: TrendingUp, path: "/dashboards" },
-          { label: "Produtividade", icon: Activity, path: "/gerenciamento/produtividade" },
+          { label: "Dashboards", icon: TrendingUp, iconName: "TrendingUp", path: "/dashboards" },
+          { label: "Produtividade", icon: Activity, iconName: "Activity", path: "/gerenciamento/produtividade" },
         ],
       },
       {
         heading: "Estoque",
         items: [
-          { label: "Farmácia", icon: Pill, path: "/gerenciamento/estoque/farmacia" },
-          { label: "Almoxarifado", icon: Package, path: "/gerenciamento/estoque/almoxarifado" },
-          { label: "Laboratório", icon: Beaker, path: "/gerenciamento/estoque/laboratorio" },
-          { label: "Nutrição", icon: Utensils, path: "/gerenciamento/estoque/nutricao" },
-          { label: "CME", icon: FlaskConical, path: "/cme" },
+          { label: "Farmácia", icon: Pill, iconName: "Pill", path: "/gerenciamento/estoque/farmacia" },
+          { label: "Almoxarifado", icon: Package, iconName: "Package", path: "/gerenciamento/estoque/almoxarifado" },
+          { label: "Laboratório", icon: Beaker, iconName: "Beaker", path: "/gerenciamento/estoque/laboratorio" },
+          { label: "Nutrição", icon: Utensils, iconName: "Utensils", path: "/gerenciamento/estoque/nutricao" },
+          { label: "CME", icon: FlaskConical, iconName: "FlaskConical", path: "/cme" },
         ],
       },
     ],
@@ -171,29 +193,29 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Pacientes Admitidos",
         items: [
-          { label: "Home Care", icon: HomeIcon, path: "/assistencial/homecare" },
-          { label: "Internados", icon: BedDouble, path: "/assistencial/internados" },
-          { label: "UTI", icon: HeartPulse, path: "/assistencial/uti" },
-          { label: "Pronto Atendimento", icon: Siren, path: "/assistencial/pa" },
+          { label: "Home Care", icon: HomeIcon, iconName: "HomeIcon", path: "/assistencial/homecare" },
+          { label: "Internados", icon: BedDouble, iconName: "BedDouble", path: "/assistencial/internados" },
+          { label: "UTI", icon: HeartPulse, iconName: "HeartPulse", path: "/assistencial/uti" },
+          { label: "Pronto Atendimento", icon: Siren, iconName: "Siren", path: "/assistencial/pa" },
         ],
       },
       {
         heading: "Setores Executores",
         items: [
-          { label: "Enfermagem", icon: Activity, path: "/assistencial/enfermagem" },
-          { label: "Farmácia", icon: Pill, path: "/assistencial/farmacia" },
-          { label: "Procedimentos", icon: Stethoscope, path: "/assistencial/procedimentos" },
-          { label: "Nutrição", icon: Utensils, path: "/assistencial/nutricao" },
-          { label: "CME / Expurgo", icon: FlaskConical, path: "/assistencial/cme" },
+          { label: "Enfermagem", icon: Activity, iconName: "Activity", path: "/assistencial/enfermagem" },
+          { label: "Farmácia", icon: Pill, iconName: "Pill", path: "/assistencial/farmacia" },
+          { label: "Procedimentos", icon: Stethoscope, iconName: "Stethoscope", path: "/assistencial/procedimentos" },
+          { label: "Nutrição", icon: Utensils, iconName: "Utensils", path: "/assistencial/nutricao" },
+          { label: "CME / Expurgo", icon: FlaskConical, iconName: "FlaskConical", path: "/assistencial/cme" },
         ],
       },
       {
         heading: "Especializado",
         items: [
-          { label: "Laboratório", icon: FlaskConical, path: "/laboratorio" },
-          { label: "SCIH", icon: ShieldAlert, path: "/assistencial/scih" },
-          { label: "Triagem", icon: ListChecks, path: "/assistencial/triagem" },
-          { label: "Oncologia", icon: Radiation, path: "/assistencial/oncologia" },
+          { label: "Laboratório", icon: FlaskConical, iconName: "FlaskConical", path: "/laboratorio" },
+          { label: "SCIH", icon: ShieldAlert, iconName: "ShieldAlert", path: "/assistencial/scih" },
+          { label: "Triagem", icon: ListChecks, iconName: "ListChecks", path: "/assistencial/triagem" },
+          { label: "Oncologia", icon: Radiation, iconName: "Radiation", path: "/assistencial/oncologia" },
         ],
       },
     ],
@@ -205,7 +227,7 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Profissionais",
         items: [
-          { label: "Solicitantes", icon: Stethoscope, path: "/cadastros/solicitantes" },
+          { label: "Solicitantes", icon: Stethoscope, iconName: "Stethoscope", path: "/cadastros/solicitantes" },
         ],
       },
     ],
@@ -216,9 +238,9 @@ const menuConfig: MenuItem[] = [
     groups: [
       {
         items: [
-          { label: "Solicitações", icon: FileText, path: "/crm/solicitacoes" },
-          { label: "Negociação", icon: Handshake, path: "/crm/negociacao" },
-          { label: "Relacionamento", icon: Users, path: "/crm/relacionamento" },
+          { label: "Solicitações", icon: FileText, iconName: "FileText", path: "/crm/solicitacoes" },
+          { label: "Negociação", icon: Handshake, iconName: "Handshake", path: "/crm/negociacao" },
+          { label: "Relacionamento", icon: Users, iconName: "Users", path: "/crm/relacionamento" },
         ],
       },
     ],
@@ -231,6 +253,7 @@ export function AppSidebar() {
   const collapsed = state === "collapsed";
   const location = useLocation();
   const currentPath = location.pathname;
+  const { favorites, isFavorite, toggleFavorite } = useFavorites();
 
   return (
     <Sidebar collapsible="icon">
@@ -255,6 +278,41 @@ export function AppSidebar() {
 
       {/* Navigation */}
       <SidebarContent>
+        {/* ★ Favoritos */}
+        {favorites.length > 0 && (
+          <>
+            <SidebarGroup>
+              <SidebarGroupLabel>
+                <Star className="size-3.5 fill-yellow-400 text-yellow-400 mr-1" />
+                <span>Favoritos</span>
+              </SidebarGroupLabel>
+              <SidebarGroupContent>
+                <SidebarMenu>
+                  {favorites.map((fav) => {
+                    const FavIcon = getIconByName(fav.iconName);
+                    return (
+                      <SidebarMenuItem key={fav.path}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={currentPath === fav.path}
+                          size="sm"
+                        >
+                          <Link to={fav.path}>
+                            <FavIcon className="size-4" />
+                            <span>{fav.label}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    );
+                  })}
+                </SidebarMenu>
+              </SidebarGroupContent>
+            </SidebarGroup>
+            <SidebarSeparator />
+          </>
+        )}
+
+        {/* Menu categories */}
         <SidebarMenu>
           {menuConfig.map((menu) => {
             const hasActiveChild = menu.groups.some((g) =>
@@ -278,7 +336,7 @@ export function AppSidebar() {
                     side="right"
                     align="start"
                     sideOffset={4}
-                    className="w-56 p-2"
+                    className="w-64 p-2"
                   >
                     <div className="mb-1 px-2 text-xs font-semibold text-muted-foreground">
                       {menu.label}
@@ -291,18 +349,44 @@ export function AppSidebar() {
                           </div>
                         )}
                         {group.items.map((item) => (
-                          <Link
+                          <div
                             key={item.path + item.label}
-                            to={item.path}
-                            className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
-                              currentPath === item.path
-                                ? "bg-accent font-medium text-accent-foreground"
-                                : "text-foreground"
-                            }`}
+                            className="group/fav-item flex items-center"
                           >
-                            <item.icon className="size-3.5 shrink-0" />
-                            <span>{item.label}</span>
-                          </Link>
+                            <Link
+                              to={item.path}
+                              className={`flex flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
+                                currentPath === item.path
+                                  ? "bg-accent font-medium text-accent-foreground"
+                                  : "text-foreground"
+                              }`}
+                            >
+                              <item.icon className="size-3.5 shrink-0" />
+                              <span className="flex-1">{item.label}</span>
+                            </Link>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite({
+                                  label: item.label,
+                                  iconName: item.iconName,
+                                  path: item.path,
+                                });
+                              }}
+                              className="ml-0.5 flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 transition-opacity hover:bg-accent group-hover/fav-item:opacity-100 data-[fav=true]:opacity-100"
+                              data-fav={isFavorite(item.path) ? "true" : undefined}
+                              title={isFavorite(item.path) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                            >
+                              <Star
+                                className={`size-3 ${
+                                  isFavorite(item.path)
+                                    ? "fill-yellow-400 text-yellow-400"
+                                    : "text-muted-foreground"
+                                }`}
+                              />
+                            </button>
+                          </div>
                         ))}
                       </div>
                     ))}
