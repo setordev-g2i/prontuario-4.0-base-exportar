@@ -1,6 +1,6 @@
 import * as React from "react";
 import {
-  Heart, LogOut, DoorOpen, Calendar, Users,
+  Heart, DoorOpen, Calendar, Users,
   ClipboardList, Microscope, BarChart3, Stethoscope, Handshake,
   CalendarDays, Scissors, Printer, Settings2, UserPlus, Tag, FolderArchive,
   RotateCcw, FileText, Receipt, Scale, BedDouble, ShieldCheck, FlaskConical,
@@ -12,10 +12,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -221,13 +217,14 @@ const menuConfig: MenuItem[] = [
     ],
   },
   {
-    label: "Cadastros",
-    icon: Settings,
+    label: "CRM",
+    icon: Handshake,
     groups: [
       {
-        heading: "Profissionais",
         items: [
-          { label: "Solicitantes", icon: Stethoscope, iconName: "Stethoscope", path: "/cadastros/solicitantes" },
+          { label: "Solicitações", icon: FileText, iconName: "FileText", path: "/crm/solicitacoes" },
+          { label: "Negociação", icon: Handshake, iconName: "Handshake", path: "/crm/negociacao" },
+          { label: "Relacionamento", icon: Users, iconName: "Users", path: "/crm/relacionamento" },
         ],
       },
     ],
@@ -241,6 +238,26 @@ const menuConfig: MenuItem[] = [
           { label: "Solicitações", icon: FileText, iconName: "FileText", path: "/crm/solicitacoes" },
           { label: "Negociação", icon: Handshake, iconName: "Handshake", path: "/crm/negociacao" },
           { label: "Relacionamento", icon: Users, iconName: "Users", path: "/crm/relacionamento" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Configurações",
+    icon: Settings,
+    groups: [
+      {
+        heading: "Sistema",
+        items: [
+          { label: "Preferências", icon: Settings2, iconName: "Settings2", path: "/configuracoes/preferencias" },
+          { label: "Usuários e Permissões", icon: ShieldCheck, iconName: "ShieldCheck", path: "/configuracoes/usuarios" },
+          { label: "Integrações", icon: Settings, iconName: "Settings", path: "/configuracoes/integracoes" },
+        ],
+      },
+      {
+        heading: "Profissionais",
+        items: [
+          { label: "Solicitantes", icon: Stethoscope, iconName: "Stethoscope", path: "/cadastros/solicitantes" },
         ],
       },
     ],
@@ -487,17 +504,6 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      {/* Footer */}
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="sm" className="text-destructive hover:text-destructive">
-              <LogOut className="size-4" />
-              <span>Sair</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   );
 }
