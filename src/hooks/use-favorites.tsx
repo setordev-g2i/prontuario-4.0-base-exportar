@@ -9,18 +9,24 @@ export interface FavoriteItem {
 }
 
 export function useFavorites() {
-  const [favorites, setFavorites] = useState<FavoriteItem[]>(() => {
+  const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+
+  // Load from localStorage only on client (avoids SSR hydration mismatch)
+  useEffect(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : [];
+      if (stored) setFavorites(JSON.parse(stored));
     } catch {
-      return [];
+      // ignore
     }
-  });
+    setHydrated(true);
+  }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
-  }, [favorites]);
+  }, [favorites, hydrated]);
 
   const isFavorite = useCallback(
     (path: string) => favorites.some((f) => f.path === path),
