@@ -1,0 +1,359 @@
+import {
+  Heart, LogOut, User, DoorOpen, Calendar, Users,
+  ClipboardList, Microscope, BarChart3, Stethoscope, Handshake, Bell, Search,
+  CalendarDays, Scissors, Printer, Settings2, UserPlus, Tag, FolderArchive,
+  RotateCcw, FileText, Receipt, Scale, BedDouble, ShieldCheck, FlaskConical,
+  FileBarChart, Pill, Package, Utensils, Wallet, TrendingUp, CreditCard,
+  Activity, Home as HomeIcon, Siren, HeartPulse, Beaker, ShieldAlert,
+  ListChecks, Radiation, Settings, ChevronRight,
+} from "lucide-react";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@radix-ui/react-collapsible";
+import { Link, useLocation } from "@tanstack/react-router";
+import type { LucideIcon } from "lucide-react";
+
+/* ── types ── */
+interface SubItem {
+  label: string;
+  icon: LucideIcon;
+  path: string;
+}
+interface MenuGroup {
+  heading?: string;
+  items: SubItem[];
+}
+interface MenuItem {
+  label: string;
+  icon: LucideIcon;
+  groups: MenuGroup[];
+}
+
+/* ── menu config (from Zurich 2.0) ── */
+const menuConfig: MenuItem[] = [
+  {
+    label: "Salas",
+    icon: DoorOpen,
+    groups: [
+      {
+        items: [
+          { label: "Sala de Espera", icon: DoorOpen, path: "/salas/espera" },
+          { label: "Sala de Procedimentos", icon: Stethoscope, path: "/salas/procedimentos" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Agenda",
+    icon: Calendar,
+    groups: [
+      {
+        heading: "Operacional",
+        items: [
+          { label: "Calendário", icon: CalendarDays, path: "/agenda" },
+          { label: "Centro Cirúrgico", icon: Scissors, path: "/agenda/centro-cirurgico" },
+          { label: "Imprimir Agenda", icon: Printer, path: "/agenda/imprimir" },
+        ],
+      },
+      {
+        heading: "Administração",
+        items: [
+          { label: "Gestão de Agendas", icon: Settings2, path: "/agenda/admin" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Pacientes",
+    icon: Users,
+    groups: [
+      {
+        heading: "Cadastro",
+        items: [
+          { label: "Pacientes", icon: Users, path: "/patients" },
+          { label: "Cadastrar Paciente", icon: UserPlus, path: "/patients?new=1" },
+        ],
+      },
+      {
+        heading: "Gestão",
+        items: [
+          { label: "Gerenciar Retornos", icon: RotateCcw, path: "/pacientes/retornos" },
+          { label: "Tags", icon: Tag, path: "/pacientes/tags" },
+          { label: "SAME", icon: FolderArchive, path: "/pacientes/same" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Atendimentos",
+    icon: ClipboardList,
+    groups: [
+      {
+        heading: "Recepção",
+        items: [
+          { label: "Abertura de Atendimento", icon: ClipboardList, path: "/atendimentos/abertura" },
+          { label: "Orçamento", icon: Receipt, path: "/atendimentos/orcamento" },
+          { label: "Nota Fiscal", icon: FileText, path: "/atendimentos/nf" },
+        ],
+      },
+      {
+        heading: "Operacional",
+        items: [
+          { label: "Leitos", icon: BedDouble, path: "/atendimentos/leitos" },
+          { label: "Escalas", icon: Scale, path: "/atendimentos/escalas" },
+          { label: "Portaria", icon: ShieldCheck, path: "/atendimentos/portaria" },
+          { label: "Relatórios", icon: FileBarChart, path: "/atendimentos/relatorios" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Diagnóstico",
+    icon: Microscope,
+    groups: [
+      {
+        items: [
+          { label: "Laudos", icon: FileText, path: "/diagnostico/laudos" },
+          { label: "Fila de Exames", icon: ListChecks, path: "/diagnostico/fila" },
+          { label: "Gerar Etiquetas", icon: Tag, path: "/diagnostico/etiquetas" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Gerenciamento",
+    icon: BarChart3,
+    groups: [
+      {
+        heading: "Financeiro",
+        items: [
+          { label: "Dashboard Financeiro", icon: Wallet, path: "/gerenciamento/financeiro" },
+          { label: "Contas a Pagar", icon: TrendingUp, path: "/gerenciamento/contas-pagar" },
+          { label: "Contas a Receber", icon: CreditCard, path: "/gerenciamento/contas-receber" },
+          { label: "Faturamento", icon: Receipt, path: "/gerenciamento/faturamento" },
+        ],
+      },
+      {
+        heading: "Indicadores",
+        items: [
+          { label: "Dashboards", icon: TrendingUp, path: "/dashboards" },
+          { label: "Produtividade", icon: Activity, path: "/gerenciamento/produtividade" },
+        ],
+      },
+      {
+        heading: "Estoque",
+        items: [
+          { label: "Farmácia", icon: Pill, path: "/gerenciamento/estoque/farmacia" },
+          { label: "Almoxarifado", icon: Package, path: "/gerenciamento/estoque/almoxarifado" },
+          { label: "Laboratório", icon: Beaker, path: "/gerenciamento/estoque/laboratorio" },
+          { label: "Nutrição", icon: Utensils, path: "/gerenciamento/estoque/nutricao" },
+          { label: "CME", icon: FlaskConical, path: "/cme" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Assistencial",
+    icon: HeartPulse,
+    groups: [
+      {
+        heading: "Pacientes Admitidos",
+        items: [
+          { label: "Home Care", icon: HomeIcon, path: "/assistencial/homecare" },
+          { label: "Internados", icon: BedDouble, path: "/assistencial/internados" },
+          { label: "UTI", icon: HeartPulse, path: "/assistencial/uti" },
+          { label: "Pronto Atendimento", icon: Siren, path: "/assistencial/pa" },
+        ],
+      },
+      {
+        heading: "Setores Executores",
+        items: [
+          { label: "Enfermagem", icon: Activity, path: "/assistencial/enfermagem" },
+          { label: "Farmácia", icon: Pill, path: "/assistencial/farmacia" },
+          { label: "Procedimentos", icon: Stethoscope, path: "/assistencial/procedimentos" },
+          { label: "Nutrição", icon: Utensils, path: "/assistencial/nutricao" },
+          { label: "CME / Expurgo", icon: FlaskConical, path: "/assistencial/cme" },
+        ],
+      },
+      {
+        heading: "Especializado",
+        items: [
+          { label: "Laboratório", icon: FlaskConical, path: "/laboratorio" },
+          { label: "SCIH", icon: ShieldAlert, path: "/assistencial/scih" },
+          { label: "Triagem", icon: ListChecks, path: "/assistencial/triagem" },
+          { label: "Oncologia", icon: Radiation, path: "/assistencial/oncologia" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Cadastros",
+    icon: Settings,
+    groups: [
+      {
+        heading: "Profissionais",
+        items: [
+          { label: "Solicitantes", icon: Stethoscope, path: "/cadastros/solicitantes" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "CRM",
+    icon: Handshake,
+    groups: [
+      {
+        items: [
+          { label: "Solicitações", icon: FileText, path: "/crm/solicitacoes" },
+          { label: "Negociação", icon: Handshake, path: "/crm/negociacao" },
+          { label: "Relacionamento", icon: Users, path: "/crm/relacionamento" },
+        ],
+      },
+    ],
+  },
+];
+
+/* ── Sidebar Component ── */
+export function AppSidebar() {
+  const { state } = useSidebar();
+  const collapsed = state === "collapsed";
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  return (
+    <Sidebar collapsible="icon">
+      {/* Header */}
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <Link to="/">
+                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary/10">
+                  <Heart className="size-4 text-primary" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-semibold">Zurich</span>
+                  <span className="truncate text-xs text-muted-foreground">Sistema Hospitalar</span>
+                </div>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+
+      {/* Quick actions */}
+      {!collapsed && (
+        <div className="flex items-center gap-1 px-3 pb-1">
+          <button className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" title="Buscar">
+            <Search className="size-4" />
+          </button>
+          <button className="relative flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" title="Notificações">
+            <Bell className="size-4" />
+            <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-destructive" />
+          </button>
+          <button className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" title="Configurações">
+            <Settings className="size-4" />
+          </button>
+        </div>
+      )}
+
+      {/* Navigation */}
+      <SidebarContent>
+        {menuConfig.map((menu) => {
+          const hasActiveChild = menu.groups.some((g) =>
+            g.items.some((i) => currentPath === i.path)
+          );
+
+          return (
+            <Collapsible
+              key={menu.label}
+              defaultOpen={hasActiveChild}
+              className="group/collapsible"
+            >
+              <SidebarGroup>
+                <SidebarGroupLabel asChild>
+                  <CollapsibleTrigger className="flex w-full items-center gap-2">
+                    <menu.icon className="size-4 shrink-0" />
+                    <span className="flex-1 text-left">{menu.label}</span>
+                    <ChevronRight className="size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  </CollapsibleTrigger>
+                </SidebarGroupLabel>
+
+                <CollapsibleContent>
+                  <SidebarGroupContent>
+                    {menu.groups.map((group, gi) => (
+                      <div key={gi}>
+                        {group.heading && (
+                          <div className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                            {group.heading}
+                          </div>
+                        )}
+                        <SidebarMenu>
+                          {group.items.map((item) => (
+                            <SidebarMenuItem key={item.path + item.label}>
+                              <SidebarMenuButton
+                                asChild
+                                isActive={currentPath === item.path}
+                                size="sm"
+                              >
+                                <Link to={item.path}>
+                                  <item.icon className="size-4" />
+                                  <span>{item.label}</span>
+                                </Link>
+                              </SidebarMenuButton>
+                            </SidebarMenuItem>
+                          ))}
+                        </SidebarMenu>
+                      </div>
+                    ))}
+                  </SidebarGroupContent>
+                </CollapsibleContent>
+              </SidebarGroup>
+            </Collapsible>
+          );
+        })}
+      </SidebarContent>
+
+      {/* Footer - User */}
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg">
+              <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-primary/10">
+                <User className="size-4 text-primary" />
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-medium">Dr. João Silva</span>
+                <span className="truncate text-xs text-muted-foreground">Administrador</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="sm" className="text-destructive hover:text-destructive">
+              <LogOut className="size-4" />
+              <span>Sair</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}
