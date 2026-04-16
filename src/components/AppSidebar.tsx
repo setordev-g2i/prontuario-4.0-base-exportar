@@ -1,6 +1,6 @@
 import * as React from "react";
 import {
-  Heart, LogOut, DoorOpen, Calendar, Users,
+  Heart, DoorOpen, Calendar, Users,
   ClipboardList, Microscope, BarChart3, Stethoscope, Handshake,
   CalendarDays, Scissors, Printer, Settings2, UserPlus, Tag, FolderArchive,
   RotateCcw, FileText, Receipt, Scale, BedDouble, ShieldCheck, FlaskConical,
