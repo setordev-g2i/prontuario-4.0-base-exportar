@@ -1,6 +1,6 @@
 import {
-  Heart, LogOut, User, DoorOpen, Calendar, Users,
-  ClipboardList, Microscope, BarChart3, Stethoscope, Handshake, Bell, Search,
+  Heart, LogOut, DoorOpen, Calendar, Users,
+  ClipboardList, Microscope, BarChart3, Stethoscope, Handshake,
   CalendarDays, Scissors, Printer, Settings2, UserPlus, Tag, FolderArchive,
   RotateCcw, FileText, Receipt, Scale, BedDouble, ShieldCheck, FlaskConical,
   FileBarChart, Pill, Package, Utensils, Wallet, TrendingUp, CreditCard,
@@ -12,22 +12,16 @@ import {
   SidebarContent,
   SidebarHeader,
   SidebarFooter,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@radix-ui/react-collapsible";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Link, useLocation } from "@tanstack/react-router";
 import type { LucideIcon } from "lucide-react";
 
@@ -259,62 +253,65 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-
       {/* Navigation */}
       <SidebarContent>
-        {menuConfig.map((menu) => {
-          const hasActiveChild = menu.groups.some((g) =>
-            g.items.some((i) => currentPath === i.path)
-          );
+        <SidebarMenu>
+          {menuConfig.map((menu) => {
+            const hasActiveChild = menu.groups.some((g) =>
+              g.items.some((i) => currentPath === i.path)
+            );
 
-          return (
-            <Collapsible
-              key={menu.label}
-              defaultOpen={hasActiveChild}
-              className="group/collapsible"
-            >
-              <SidebarGroup>
-                <SidebarGroupLabel asChild>
-                  <CollapsibleTrigger className="flex w-full items-center gap-2">
-                    <menu.icon className="size-4 shrink-0" />
-                    <span className="flex-1 text-left">{menu.label}</span>
-                    <ChevronRight className="size-3 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                  </CollapsibleTrigger>
-                </SidebarGroupLabel>
-
-                <CollapsibleContent>
-                  <SidebarGroupContent>
+            return (
+              <SidebarMenuItem key={menu.label}>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <SidebarMenuButton
+                      isActive={hasActiveChild}
+                      tooltip={collapsed ? menu.label : undefined}
+                    >
+                      <menu.icon className="size-4" />
+                      <span className="flex-1">{menu.label}</span>
+                      <ChevronRight className="ml-auto size-3 text-muted-foreground" />
+                    </SidebarMenuButton>
+                  </PopoverTrigger>
+                  <PopoverContent
+                    side="right"
+                    align="start"
+                    sideOffset={4}
+                    className="w-56 p-2"
+                  >
+                    <div className="mb-1 px-2 text-xs font-semibold text-muted-foreground">
+                      {menu.label}
+                    </div>
                     {menu.groups.map((group, gi) => (
                       <div key={gi}>
                         {group.heading && (
-                          <div className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          <div className="mt-2 px-2 pb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                             {group.heading}
                           </div>
                         )}
-                        <SidebarMenu>
-                          {group.items.map((item) => (
-                            <SidebarMenuItem key={item.path + item.label}>
-                              <SidebarMenuButton
-                                asChild
-                                isActive={currentPath === item.path}
-                                size="sm"
-                              >
-                                <Link to={item.path}>
-                                  <item.icon className="size-4" />
-                                  <span>{item.label}</span>
-                                </Link>
-                              </SidebarMenuButton>
-                            </SidebarMenuItem>
-                          ))}
-                        </SidebarMenu>
+                        {group.items.map((item) => (
+                          <Link
+                            key={item.path + item.label}
+                            to={item.path}
+                            className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
+                              currentPath === item.path
+                                ? "bg-accent font-medium text-accent-foreground"
+                                : "text-foreground"
+                            }`}
+                          >
+                            <item.icon className="size-3.5 shrink-0" />
+                            <span>{item.label}</span>
+                          </Link>
+                        ))}
                       </div>
                     ))}
-                  </SidebarGroupContent>
-                </CollapsibleContent>
-              </SidebarGroup>
-            </Collapsible>
-          );
-        })}
+                  </PopoverContent>
+                </Popover>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
       </SidebarContent>
 
       {/* Footer */}
