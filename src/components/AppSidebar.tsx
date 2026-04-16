@@ -234,6 +234,19 @@ const menuConfig: MenuItem[] = [
     ],
   },
   {
+    label: "CRM",
+    icon: Handshake,
+    groups: [
+      {
+        items: [
+          { label: "Solicitações", icon: FileText, iconName: "FileText", path: "/crm/solicitacoes" },
+          { label: "Negociação", icon: Handshake, iconName: "Handshake", path: "/crm/negociacao" },
+          { label: "Relacionamento", icon: Users, iconName: "Users", path: "/crm/relacionamento" },
+        ],
+      },
+    ],
+  },
+  {
     label: "Configurações",
     icon: Settings,
     groups: [
@@ -249,19 +262,6 @@ const menuConfig: MenuItem[] = [
         heading: "Profissionais",
         items: [
           { label: "Solicitantes", icon: Stethoscope, iconName: "Stethoscope", path: "/cadastros/solicitantes" },
-        ],
-      },
-    ],
-  },
-  {
-    label: "CRM",
-    icon: Handshake,
-    groups: [
-      {
-        items: [
-          { label: "Solicitações", icon: FileText, iconName: "FileText", path: "/crm/solicitacoes" },
-          { label: "Negociação", icon: Handshake, iconName: "Handshake", path: "/crm/negociacao" },
-          { label: "Relacionamento", icon: Users, iconName: "Users", path: "/crm/relacionamento" },
         ],
       },
     ],
