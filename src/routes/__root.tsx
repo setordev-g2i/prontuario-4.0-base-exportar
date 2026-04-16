@@ -87,15 +87,38 @@ function RootComponent() {
                 <Bell className="size-4" />
                 <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />
               </button>
-              <div className="ml-2 flex items-center gap-2 rounded-md px-2 py-1 hover:bg-accent cursor-pointer">
-                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
-                  <User className="size-3.5 text-primary" />
-                </div>
-                <div className="hidden sm:block text-left text-sm leading-tight">
-                  <span className="font-medium text-foreground">Dr. João Silva</span>
-                  <span className="block text-[11px] text-muted-foreground">Administrador</span>
-                </div>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="ml-2 flex items-center gap-2 rounded-md px-2 py-1 hover:bg-accent transition-colors">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10">
+                      <User className="size-3.5 text-primary" />
+                    </div>
+                    <div className="hidden sm:block text-left text-sm leading-tight">
+                      <span className="font-medium text-foreground">Dr. João Silva</span>
+                      <span className="block text-[11px] text-muted-foreground">Administrador</span>
+                    </div>
+                    <ChevronDown className="size-3 text-muted-foreground" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">Dr. João Silva</span>
+                      <span className="text-xs text-muted-foreground">Administrador</span>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer">
+                    <User className="mr-2 size-4" />
+                    <span>Meu Perfil</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                    <LogOut className="mr-2 size-4" />
+                    <span>Sair</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </header>
           <main className="flex-1 p-4">
