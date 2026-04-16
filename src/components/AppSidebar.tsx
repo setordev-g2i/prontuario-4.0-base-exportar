@@ -221,9 +221,30 @@ const menuConfig: MenuItem[] = [
     ],
   },
   {
-    label: "Cadastros",
+    label: "CRM",
+    icon: Handshake,
+    groups: [
+      {
+        items: [
+          { label: "Solicitações", icon: FileText, iconName: "FileText", path: "/crm/solicitacoes" },
+          { label: "Negociação", icon: Handshake, iconName: "Handshake", path: "/crm/negociacao" },
+          { label: "Relacionamento", icon: Users, iconName: "Users", path: "/crm/relacionamento" },
+        ],
+      },
+    ],
+  },
+  {
+    label: "Configurações",
     icon: Settings,
     groups: [
+      {
+        heading: "Sistema",
+        items: [
+          { label: "Preferências", icon: Settings2, iconName: "Settings2", path: "/configuracoes/preferencias" },
+          { label: "Usuários e Permissões", icon: ShieldCheck, iconName: "ShieldCheck", path: "/configuracoes/usuarios" },
+          { label: "Integrações", icon: Settings, iconName: "Settings", path: "/configuracoes/integracoes" },
+        ],
+      },
       {
         heading: "Profissionais",
         items: [
