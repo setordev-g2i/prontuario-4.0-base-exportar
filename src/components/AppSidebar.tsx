@@ -247,8 +247,59 @@ const menuConfig: MenuItem[] = [
   },
 ];
 
+/* ── Submenu item with favorite toggle ── */
+function SubmenuItem({
+  item,
+  currentPath,
+  isFavorite,
+  toggleFavorite,
+}: {
+  item: SubItem;
+  currentPath: string;
+  isFavorite: (path: string) => boolean;
+  toggleFavorite: (item: { label: string; iconName: string; path: string }) => void;
+}) {
+  return (
+    <div className="group/fav-item flex items-center">
+      <Link
+        to={item.path}
+        className={`flex flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
+          currentPath === item.path
+            ? "bg-accent font-medium text-accent-foreground"
+            : "text-foreground"
+        }`}
+      >
+        <item.icon className="size-3.5 shrink-0" />
+        <span className="flex-1">{item.label}</span>
+      </Link>
+      <button
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation();
+          toggleFavorite({
+            label: item.label,
+            iconName: item.iconName,
+            path: item.path,
+          });
+        }}
+        className="ml-0.5 flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 transition-opacity hover:bg-accent group-hover/fav-item:opacity-100 data-[fav=true]:opacity-100"
+        data-fav={isFavorite(item.path) ? "true" : undefined}
+        title={isFavorite(item.path) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+      >
+        <Star
+          className={`size-3 ${
+            isFavorite(item.path)
+              ? "fill-yellow-400 text-yellow-400"
+              : "text-muted-foreground"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
+
 /* ── Sidebar Component ── */
-export function AppSidebar() {
+
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
