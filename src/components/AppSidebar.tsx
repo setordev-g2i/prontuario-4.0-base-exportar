@@ -278,36 +278,63 @@ export function AppSidebar() {
 
       {/* Navigation */}
       <SidebarContent>
-        {/* ★ Favoritos */}
+        {/* ★ Favoritos - flyout submenu */}
         {favorites.length > 0 && (
           <>
-            <SidebarGroup>
-              <SidebarGroupLabel>
-                <Star className="size-3.5 fill-yellow-400 text-yellow-400 mr-1" />
-                <span>Favoritos</span>
-              </SidebarGroupLabel>
-              <SidebarGroupContent>
-                <SidebarMenu>
-                  {favorites.map((fav) => {
-                    const FavIcon = getIconByName(fav.iconName);
-                    return (
-                      <SidebarMenuItem key={fav.path}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={currentPath === fav.path}
-                          size="sm"
-                        >
-                          <Link to={fav.path}>
-                            <FavIcon className="size-4" />
-                            <span>{fav.label}</span>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <HoverCard openDelay={100} closeDelay={200}>
+                  <HoverCardTrigger asChild>
+                    <SidebarMenuButton
+                      tooltip={collapsed ? "Favoritos" : undefined}
+                    >
+                      <Star className="size-4 fill-yellow-400 text-yellow-400" />
+                      <span className="flex-1">Favoritos</span>
+                      <ChevronRight className="ml-auto size-3 text-muted-foreground" />
+                    </SidebarMenuButton>
+                  </HoverCardTrigger>
+                  <HoverCardContent
+                    side="right"
+                    align="start"
+                    sideOffset={4}
+                    className="w-56 p-2"
+                  >
+                    <div className="mb-1 px-2 text-xs font-semibold text-muted-foreground">
+                      Favoritos
+                    </div>
+                    {favorites.map((fav) => {
+                      const FavIcon = getIconByName(fav.iconName);
+                      return (
+                        <div key={fav.path} className="group/fav-rm flex items-center">
+                          <Link
+                            to={fav.path}
+                            className={`flex flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent hover:text-accent-foreground ${
+                              currentPath === fav.path
+                                ? "bg-accent font-medium text-accent-foreground"
+                                : "text-foreground"
+                            }`}
+                          >
+                            <FavIcon className="size-3.5 shrink-0" />
+                            <span className="flex-1">{fav.label}</span>
                           </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    );
-                  })}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              toggleFavorite(fav);
+                            }}
+                            className="ml-0.5 flex size-6 shrink-0 items-center justify-center rounded-md opacity-0 transition-opacity hover:bg-accent group-hover/fav-rm:opacity-100"
+                            title="Remover dos favoritos"
+                          >
+                            <Star className="size-3 fill-yellow-400 text-yellow-400" />
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </HoverCardContent>
+                </HoverCard>
+              </SidebarMenuItem>
+            </SidebarMenu>
             <SidebarSeparator />
           </>
         )}
