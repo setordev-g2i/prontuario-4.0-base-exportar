@@ -259,21 +259,6 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarHeader>
 
-      {/* Quick actions */}
-      {!collapsed && (
-        <div className="flex items-center gap-1 px-3 pb-1">
-          <button className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" title="Buscar">
-            <Search className="size-4" />
-          </button>
-          <button className="relative flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" title="Notificações">
-            <Bell className="size-4" />
-            <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-destructive" />
-          </button>
-          <button className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" title="Configurações">
-            <Settings className="size-4" />
-          </button>
-        </div>
-      )}
 
       {/* Navigation */}
       <SidebarContent>
@@ -332,20 +317,9 @@ export function AppSidebar() {
         })}
       </SidebarContent>
 
-      {/* Footer - User */}
+      {/* Footer */}
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg">
-              <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-primary/10">
-                <User className="size-4 text-primary" />
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">Dr. João Silva</span>
-                <span className="truncate text-xs text-muted-foreground">Administrador</span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton size="sm" className="text-destructive hover:text-destructive">
               <LogOut className="size-4" />
