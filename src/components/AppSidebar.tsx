@@ -508,17 +508,6 @@ export function AppSidebar() {
         </SidebarMenu>
       </SidebarContent>
 
-      {/* Footer */}
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="sm" className="text-destructive hover:text-destructive">
-              <LogOut className="size-4" />
-              <span>Sair</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   );
 }
