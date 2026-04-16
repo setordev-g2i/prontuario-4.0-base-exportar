@@ -299,7 +299,7 @@ function SubmenuItem({
 }
 
 /* ── Sidebar Component ── */
-
+export function AppSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const location = useLocation();
