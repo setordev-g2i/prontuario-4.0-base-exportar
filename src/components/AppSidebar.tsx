@@ -263,8 +263,8 @@ export function AppSidebar() {
 
             return (
               <SidebarMenuItem key={menu.label}>
-                <Popover>
-                  <PopoverTrigger asChild>
+                <HoverCard openDelay={100} closeDelay={200}>
+                  <HoverCardTrigger asChild>
                     <SidebarMenuButton
                       isActive={hasActiveChild}
                       tooltip={collapsed ? menu.label : undefined}
@@ -273,8 +273,8 @@ export function AppSidebar() {
                       <span className="flex-1">{menu.label}</span>
                       <ChevronRight className="ml-auto size-3 text-muted-foreground" />
                     </SidebarMenuButton>
-                  </PopoverTrigger>
-                  <PopoverContent
+                  </HoverCardTrigger>
+                  <HoverCardContent
                     side="right"
                     align="start"
                     sideOffset={4}
@@ -306,8 +306,8 @@ export function AppSidebar() {
                         ))}
                       </div>
                     ))}
-                  </PopoverContent>
-                </Popover>
+                  </HoverCardContent>
+                </HoverCard>
               </SidebarMenuItem>
             );
           })}
