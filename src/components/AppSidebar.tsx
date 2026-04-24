@@ -230,19 +230,6 @@ const menuConfig: MenuItem[] = [
     ],
   },
   {
-    label: "CRM",
-    icon: Handshake,
-    groups: [
-      {
-        items: [
-          { label: "Solicitações", icon: FileText, iconName: "FileText", path: "/crm/solicitacoes" },
-          { label: "Negociação", icon: Handshake, iconName: "Handshake", path: "/crm/negociacao" },
-          { label: "Relacionamento", icon: Users, iconName: "Users", path: "/crm/relacionamento" },
-        ],
-      },
-    ],
-  },
-  {
     label: "Configurações",
     icon: Settings,
     groups: [
@@ -414,13 +401,13 @@ export function AppSidebar() {
 
         {/* Menu categories */}
         <SidebarMenu>
-          {menuConfig.map((menu) => {
+          {menuConfig.map((menu, menuIndex) => {
             const hasActiveChild = menu.groups.some((g) =>
               g.items.some((i) => currentPath === i.path)
             );
 
             return (
-              <SidebarMenuItem key={menu.label}>
+              <SidebarMenuItem key={`${menu.label}-${menuIndex}`}>
                 <HoverCard openDelay={100} closeDelay={200}>
                   <HoverCardTrigger asChild>
                     <SidebarMenuButton
