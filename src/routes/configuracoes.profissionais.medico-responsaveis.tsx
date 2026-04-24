@@ -1,10 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { MedicoResponsaveisPage } from "@/features/medico-responsaveis/page";
+import { Outlet, createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/configuracoes/profissionais/medico-responsaveis")({
-  component: MedicoResponsaveisListRoute,
+  component: MedicoResponsaveisLayoutRoute,
 });
 
-function MedicoResponsaveisListRoute() {
-  return <MedicoResponsaveisPage mode="list" />;
+function MedicoResponsaveisLayoutRoute() {
+  return <Outlet />;
 }
