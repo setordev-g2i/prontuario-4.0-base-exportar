@@ -794,7 +794,12 @@ export function MedicoResponsaveisPage({
                 </TabsContent>
 
                 <TabsContent value="sus" className="space-y-4 pt-4">
-                  <div className="flex flex-col gap-3 md:flex-row md:items-end">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <FieldShell label="Vínculo SUS">
+                      <Input value={record.vinculo_sus ?? ""} disabled={readOnly} onChange={(event) => updateField("vinculo_sus", event.target.value || null)} maxLength={100} />
+                    </FieldShell>
+                  </div>
+                  <div className="flex flex-col gap-3 border-t pt-4 md:flex-row md:items-end">
                     <FieldShell label="Nova data de exportação">
                       <Input type="date" value={newExportDate} disabled={readOnly} onChange={(event) => setNewExportDate(event.target.value)} />
                     </FieldShell>
