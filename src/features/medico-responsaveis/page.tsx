@@ -558,12 +558,15 @@ export function MedicoResponsaveisPage({
           ) : (
             <div className="space-y-6">
               <Tabs value={activeTab} onValueChange={setActiveTab}>
-                <TabsList className="grid h-auto w-full grid-cols-2 gap-2 md:grid-cols-5">
+                <TabsList className="flex h-auto w-full flex-wrap gap-2">
                   <TabsTrigger value="principais">Dados principais</TabsTrigger>
-                  <TabsTrigger value="complementares">Complementares</TabsTrigger>
+                  <TabsTrigger value="complementares1">Complementares I</TabsTrigger>
+                  <TabsTrigger value="complementares2">Complementares II</TabsTrigger>
+                  <TabsTrigger value="documentos">Documentos e Registros</TabsTrigger>
                   <TabsTrigger value="financeiro">Financeiro</TabsTrigger>
+                  <TabsTrigger value="configuracoes">Configurações</TabsTrigger>
+                  <TabsTrigger value="sus">SUS</TabsTrigger>
                   <TabsTrigger value="cbos">CBOs vinculados</TabsTrigger>
-                  <TabsTrigger value="sus">Exportação SUS</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="principais" className="space-y-4 pt-4">
@@ -571,24 +574,22 @@ export function MedicoResponsaveisPage({
                     <FieldShell label="Nome" error={errors.nome}>
                       <Input value={record.nome} disabled={readOnly} onChange={(event) => updateField("nome", event.target.value)} />
                     </FieldShell>
+                    <LookupSelectField label="Tipo de cadastro" table="medico_responsaveis_tipo_cadastro" options={lookupCollections.medico_responsaveis_tipo_cadastro} value={record.tipo_cadastro_id} onChange={(value) => updateField("tipo_cadastro_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <FieldShell label="CPF" error={errors.cpf}>
                       <Input value={record.cpf} disabled={readOnly} onChange={(event) => updateField("cpf", formatCpf(event.target.value))} maxLength={14} />
                     </FieldShell>
-                    <FieldShell label="CRM" error={errors.crm}>
-                      <Input value={record.crm} disabled={readOnly} onChange={(event) => updateField("crm", event.target.value)} />
-                    </FieldShell>
                     <LookupSelectField label="Situação" table="situacao_cadastros" options={lookupCollections.situacao_cadastros} value={record.situacao_id} onChange={(value) => updateField("situacao_id", value)} onQuickCreate={handleQuickCreate} error={errors.situacao_id} disabled={readOnly} />
-                    <LookupSelectField label="Usuário" table="users" options={lookupCollections.users} value={record.user_id} onChange={(value) => updateField("user_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
-                    <LookupSelectField label="Tipo de conselho profissional" table="tipo_conselho_profissional" options={lookupCollections.tipo_conselho_profissional} value={record.id_tipo_conselho_profissional} onChange={(value) => updateField("id_tipo_conselho_profissional", value)} onQuickCreate={handleQuickCreate} error={errors.id_tipo_conselho_profissional} disabled={readOnly} />
-                    <LookupSelectField label="Solicitante" table="solicitantes" options={lookupCollections.solicitantes} value={record.solicitante_id} onChange={(value) => updateField("solicitante_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
-                    <LookupSelectField label="CBO" table="solicitante_cbo" options={lookupCollections.solicitante_cbo} value={record.cbo_id} onChange={(value) => updateField("cbo_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
-                    <LookupSelectField label="Estado" table="configuracao_solicitantes_estados" options={lookupCollections.configuracao_solicitantes_estados} value={record.estado_id} onChange={(value) => updateField("estado_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
-                    <LookupSelectField label="Tipo de cadastro" table="medico_responsaveis_tipo_cadastro" options={lookupCollections.medico_responsaveis_tipo_cadastro} value={record.tipo_cadastro_id} onChange={(value) => updateField("tipo_cadastro_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
-                    <LookupSelectField label="Unidade" table="unidades" options={lookupCollections.unidades} value={record.unidade_id} onChange={(value) => updateField("unidade_id", value)} onQuickCreate={handleQuickCreate} error={errors.unidade_id} disabled={readOnly} />
                   </div>
                 </TabsContent>
 
-                <TabsContent value="complementares" className="space-y-4 pt-4">
+                <TabsContent value="complementares1" className="space-y-4 pt-4">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <LookupSelectField label="Estado" table="configuracao_solicitantes_estados" options={lookupCollections.configuracao_solicitantes_estados} value={record.estado_id} onChange={(value) => updateField("estado_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Os campos CEP, Endereço, Número, Complemento e Cidade ainda não estão disponíveis no banco de dados.</p>
+                </TabsContent>
+
+                <TabsContent value="complementares2" className="space-y-4 pt-4">
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                     <LookupSelectField label="Estado civil" table="estado_civis" options={lookupCollections.estado_civis} value={record.estado_civil_id} onChange={(value) => updateField("estado_civil_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Religião" table="religiao" options={lookupCollections.religiao} value={record.religiao_id} onChange={(value) => updateField("religiao_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
@@ -598,15 +599,36 @@ export function MedicoResponsaveisPage({
                   </div>
                 </TabsContent>
 
+                <TabsContent value="documentos" className="space-y-4 pt-4">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <LookupSelectField label="Conselho" table="tipo_conselho_profissional" options={lookupCollections.tipo_conselho_profissional} value={record.id_tipo_conselho_profissional} onChange={(value) => updateField("id_tipo_conselho_profissional", value)} onQuickCreate={handleQuickCreate} error={errors.id_tipo_conselho_profissional} disabled={readOnly} />
+                    <FieldShell label="CRM" error={errors.crm}>
+                      <Input value={record.crm} disabled={readOnly} onChange={(event) => updateField("crm", event.target.value)} />
+                    </FieldShell>
+                    <LookupSelectField label="CBO" table="solicitante_cbo" options={lookupCollections.solicitante_cbo} value={record.cbo_id} onChange={(value) => updateField("cbo_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
+                    <LookupSelectField label="Tipo de Pessoa" table="medico_responsaveis_tipo_cadastro" options={lookupCollections.medico_responsaveis_tipo_cadastro} value={record.tipo_cadastro_id} onChange={(value) => updateField("tipo_cadastro_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Os campos Sigla, Status Conselho, RQE, Nome Laudo, Conselho Laudo, Cartão Nacional Saúde, PIS e CNES ainda não estão disponíveis no banco de dados.</p>
+                </TabsContent>
+
                 <TabsContent value="financeiro" className="space-y-4 pt-4">
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <LookupSelectField label="Configuração Apuração" table="configuracao_apuracao" options={lookupCollections.configuracao_apuracao} value={record.configuracao_apuracao_id} onChange={(value) => updateField("configuracao_apuracao_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Contabilidade de produtividade" table="fin_contabilidades" options={lookupCollections.fin_contabilidades} value={record.produtividade_fin_contabilidade_id} onChange={(value) => updateField("produtividade_fin_contabilidade_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
-                    <LookupSelectField label="Configuração de apuração" table="configuracao_apuracao" options={lookupCollections.configuracao_apuracao} value={record.configuracao_apuracao_id} onChange={(value) => updateField("configuracao_apuracao_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Fornecedor financeiro" table="fin_fornecedores" options={lookupCollections.fin_fornecedores} value={record.fin_fornecedor_id} onChange={(value) => updateField("fin_fornecedor_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Plano de contas a pagar" table="fin_plano_contas" options={lookupCollections.fin_plano_contas} value={record.contas_pagar_plano_contas_id} onChange={(value) => updateField("contas_pagar_plano_contas_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Plano de contas a receber" table="fin_plano_contas" options={lookupCollections.fin_plano_contas} value={record.contas_receber_plano_contas_id} onChange={(value) => updateField("contas_receber_plano_contas_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Tabela padrão de repasse Home Care" table="homecare_escala_repasse_tabela_padrao" options={lookupCollections.homecare_escala_repasse_tabela_padrao} value={record.homecare_escala_repasse_tabela_padrao_id} onChange={(value) => updateField("homecare_escala_repasse_tabela_padrao_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                   </div>
+                  <p className="text-xs text-muted-foreground">Os campos Banco, Agência e Conta ainda não estão disponíveis no banco de dados.</p>
+                </TabsContent>
+
+                <TabsContent value="configuracoes" className="space-y-4 pt-4">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <LookupSelectField label="Unidade" table="unidades" options={lookupCollections.unidades} value={record.unidade_id} onChange={(value) => updateField("unidade_id", value)} onQuickCreate={handleQuickCreate} error={errors.unidade_id} disabled={readOnly} />
+                    <LookupSelectField label="Solicitante" table="solicitantes" options={lookupCollections.solicitantes} value={record.solicitante_id} onChange={(value) => updateField("solicitante_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
+                  </div>
+                  <p className="text-xs text-muted-foreground">Os campos "Atende Pacientes Psiquiátricos?" e "Cadastrar Agenda?" ainda não estão disponíveis no banco de dados.</p>
                 </TabsContent>
 
                 <TabsContent value="cbos" className="space-y-4 pt-4">
