@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { MedicoResponsaveisPage } from "@/features/medico-responsaveis/page";
 
-export const Route = createFileRoute("/configuracoes/profissionais/medico-responsaveis/$medicoId")({
+export const Route = createFileRoute("/configuracoes/profissionais/medico-responsaveis/")({
   validateSearch: (search: Record<string, unknown>) => ({
     modo: search.modo === "visualizar" ? "visualizar" : undefined,
   }),
