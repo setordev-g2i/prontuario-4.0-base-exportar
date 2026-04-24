@@ -13,7 +13,7 @@ import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ConfiguracoesProfissionaisMedicoResponsaveisRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis'
 import { Route as ConfiguracoesProfissionaisMedicoResponsaveisNovoRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis.novo'
-import { Route as ConfiguracoesProfissionaisMedicoResponsaveisRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis.'
+import { Route as ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis.$medicoId'
 
 const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
   id: '/configuracoes',
@@ -37,10 +37,10 @@ const ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute =
     path: '/novo',
     getParentRoute: () => ConfiguracoesProfissionaisMedicoResponsaveisRoute,
   } as any)
-const ConfiguracoesProfissionaisMedicoResponsaveisRoute =
-  ConfiguracoesProfissionaisMedicoResponsaveisRouteImport.update({
-    id: '/',
-    path: '/',
+const ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute =
+  ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRouteImport.update({
+    id: '/$medicoId',
+    path: '/$medicoId',
     getParentRoute: () => ConfiguracoesProfissionaisMedicoResponsaveisRoute,
   } as any)
 
@@ -48,13 +48,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/configuracoes': typeof ConfiguracoesRouteWithChildren
   '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
-  '/configuracoes/profissionais/medico-responsaveis/': typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
+  '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
   '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/configuracoes': typeof ConfiguracoesRouteWithChildren
-  '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
+  '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
+  '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
   '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
 }
 export interface FileRoutesById {
@@ -62,7 +63,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/configuracoes': typeof ConfiguracoesRouteWithChildren
   '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
-  '/configuracoes/profissionais/medico-responsaveis/': typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
+  '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
   '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
 }
 export interface FileRouteTypes {
@@ -71,20 +72,21 @@ export interface FileRouteTypes {
     | '/'
     | '/configuracoes'
     | '/configuracoes/profissionais/medico-responsaveis'
-    | '/configuracoes/profissionais/medico-responsaveis/'
+    | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
     | '/configuracoes/profissionais/medico-responsaveis/novo'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/configuracoes'
     | '/configuracoes/profissionais/medico-responsaveis'
+    | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
     | '/configuracoes/profissionais/medico-responsaveis/novo'
   id:
     | '__root__'
     | '/'
     | '/configuracoes'
     | '/configuracoes/profissionais/medico-responsaveis'
-    | '/configuracoes/profissionais/medico-responsaveis/'
+    | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
     | '/configuracoes/profissionais/medico-responsaveis/novo'
   fileRoutesById: FileRoutesById
 }
@@ -123,25 +125,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRouteImport
       parentRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
     }
-    '/configuracoes/profissionais/medico-responsaveis/': {
-      id: '/configuracoes/profissionais/medico-responsaveis/'
-      path: '/'
-      fullPath: '/configuracoes/profissionais/medico-responsaveis/'
-      preLoaderRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteImport
+    '/configuracoes/profissionais/medico-responsaveis/$medicoId': {
+      id: '/configuracoes/profissionais/medico-responsaveis/$medicoId'
+      path: '/$medicoId'
+      fullPath: '/configuracoes/profissionais/medico-responsaveis/$medicoId'
+      preLoaderRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRouteImport
       parentRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
     }
   }
 }
 
 interface ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren {
-  ConfiguracoesProfissionaisMedicoResponsaveisRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
+  ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
   ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
 }
 
 const ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren: ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren =
   {
-    ConfiguracoesProfissionaisMedicoResponsaveisRoute:
-      ConfiguracoesProfissionaisMedicoResponsaveisRoute,
+    ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute:
+      ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute,
     ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute:
       ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute,
   }
