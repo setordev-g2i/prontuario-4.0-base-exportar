@@ -53,6 +53,9 @@ const lookupTableSchema = z.enum([
   "unidades",
 ]);
 
+const nullableString = (max: number) =>
+  z.string().trim().max(max).nullable().optional().transform((v) => (v && v.length > 0 ? v : null));
+
 const medicoSchema = z.object({
   id: z.number().optional(),
   nome: z.string().trim().min(1, "Nome obrigatório").max(150),
@@ -79,6 +82,31 @@ const medicoSchema = z.object({
   unidade_id: z.number().min(1, "Unidade obrigatória"),
   cbo_ids: z.array(z.number()).default([]),
   exportacoes_sus: z.array(z.string().regex(/^\d{4}-\d{2}-\d{2}$/)).default([]),
+  rg: nullableString(20),
+  data_nascimento: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable().optional().transform((v) => v ?? null),
+  sexo: nullableString(20),
+  email: nullableString(150),
+  celular: nullableString(20),
+  telefone: nullableString(20),
+  cep: nullableString(10),
+  endereco: nullableString(200),
+  numero: nullableString(20),
+  complemento: nullableString(100),
+  cidade: nullableString(100),
+  sigla: nullableString(20),
+  status_conselho: nullableString(50),
+  rqe: nullableString(50),
+  nome_laudo: nullableString(150),
+  conselho_laudo: nullableString(50),
+  cartao_nacional_saude: nullableString(30),
+  pis: nullableString(20),
+  cnes: nullableString(20),
+  banco: nullableString(100),
+  agencia: nullableString(20),
+  conta: nullableString(30),
+  atende_psiquiatricos: z.boolean().default(false),
+  cadastrar_agenda: z.boolean().default(false),
+  vinculo_sus: nullableString(100),
 });
 
 function assertNoError(error: any, fallback: string) {
@@ -208,6 +236,31 @@ export const saveMedicoResponsavel = createServerFn({ method: "POST" })
       contas_pagar_plano_contas_id: data.contas_pagar_plano_contas_id ?? null,
       contas_receber_plano_contas_id: data.contas_receber_plano_contas_id ?? null,
       unidade_id: data.unidade_id,
+      rg: data.rg,
+      data_nascimento: data.data_nascimento,
+      sexo: data.sexo,
+      email: data.email,
+      celular: data.celular,
+      telefone: data.telefone,
+      cep: data.cep,
+      endereco: data.endereco,
+      numero: data.numero,
+      complemento: data.complemento,
+      cidade: data.cidade,
+      sigla: data.sigla,
+      status_conselho: data.status_conselho,
+      rqe: data.rqe,
+      nome_laudo: data.nome_laudo,
+      conselho_laudo: data.conselho_laudo,
+      cartao_nacional_saude: data.cartao_nacional_saude,
+      pis: data.pis,
+      cnes: data.cnes,
+      banco: data.banco,
+      agencia: data.agencia,
+      conta: data.conta,
+      atende_psiquiatricos: data.atende_psiquiatricos,
+      cadastrar_agenda: data.cadastrar_agenda,
+      vinculo_sus: data.vinculo_sus,
     };
 
     let medicoId = data.id;

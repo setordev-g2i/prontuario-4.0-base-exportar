@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -85,6 +86,31 @@ const emptyRecord: MedicoResponsavelRecord = {
   unidade_id: null,
   cbo_ids: [],
   exportacoes_sus: [],
+  rg: null,
+  data_nascimento: null,
+  sexo: null,
+  email: null,
+  celular: null,
+  telefone: null,
+  cep: null,
+  endereco: null,
+  numero: null,
+  complemento: null,
+  cidade: null,
+  sigla: null,
+  status_conselho: null,
+  rqe: null,
+  nome_laudo: null,
+  conselho_laudo: null,
+  cartao_nacional_saude: null,
+  pis: null,
+  cnes: null,
+  banco: null,
+  agencia: null,
+  conta: null,
+  atende_psiquiatricos: false,
+  cadastrar_agenda: false,
+  vinculo_sus: null,
 };
 
 const fieldLabels: Record<string, string> = {
@@ -578,15 +604,57 @@ export function MedicoResponsaveisPage({
                     <FieldShell label="CPF" error={errors.cpf}>
                       <Input value={record.cpf} disabled={readOnly} onChange={(event) => updateField("cpf", formatCpf(event.target.value))} maxLength={14} />
                     </FieldShell>
+                    <FieldShell label="RG">
+                      <Input value={record.rg ?? ""} disabled={readOnly} onChange={(event) => updateField("rg", event.target.value || null)} maxLength={20} />
+                    </FieldShell>
+                    <FieldShell label="Dt. Nascimento">
+                      <Input type="date" value={record.data_nascimento ?? ""} disabled={readOnly} onChange={(event) => updateField("data_nascimento", event.target.value || null)} />
+                    </FieldShell>
+                    <FieldShell label="Sexo">
+                      <Select disabled={readOnly} value={record.sexo ?? "__none__"} onValueChange={(value) => updateField("sexo", value === "__none__" ? null : value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Selecione" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="__none__">Não informado</SelectItem>
+                          <SelectItem value="Masculino">Masculino</SelectItem>
+                          <SelectItem value="Feminino">Feminino</SelectItem>
+                          <SelectItem value="Outro">Outro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FieldShell>
+                    <FieldShell label="Email">
+                      <Input type="email" value={record.email ?? ""} disabled={readOnly} onChange={(event) => updateField("email", event.target.value || null)} maxLength={150} />
+                    </FieldShell>
+                    <FieldShell label="Celular">
+                      <Input value={record.celular ?? ""} disabled={readOnly} onChange={(event) => updateField("celular", event.target.value || null)} maxLength={20} />
+                    </FieldShell>
+                    <FieldShell label="Telefone">
+                      <Input value={record.telefone ?? ""} disabled={readOnly} onChange={(event) => updateField("telefone", event.target.value || null)} maxLength={20} />
+                    </FieldShell>
                     <LookupSelectField label="Situação" table="situacao_cadastros" options={lookupCollections.situacao_cadastros} value={record.situacao_id} onChange={(value) => updateField("situacao_id", value)} onQuickCreate={handleQuickCreate} error={errors.situacao_id} disabled={readOnly} />
                   </div>
                 </TabsContent>
 
                 <TabsContent value="complementares1" className="space-y-4 pt-4">
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <FieldShell label="CEP">
+                      <Input value={record.cep ?? ""} disabled={readOnly} onChange={(event) => updateField("cep", event.target.value || null)} maxLength={10} />
+                    </FieldShell>
+                    <FieldShell label="Endereço">
+                      <Input value={record.endereco ?? ""} disabled={readOnly} onChange={(event) => updateField("endereco", event.target.value || null)} maxLength={200} />
+                    </FieldShell>
+                    <FieldShell label="Número">
+                      <Input value={record.numero ?? ""} disabled={readOnly} onChange={(event) => updateField("numero", event.target.value || null)} maxLength={20} />
+                    </FieldShell>
+                    <FieldShell label="Complemento">
+                      <Input value={record.complemento ?? ""} disabled={readOnly} onChange={(event) => updateField("complemento", event.target.value || null)} maxLength={100} />
+                    </FieldShell>
+                    <FieldShell label="Cidade">
+                      <Input value={record.cidade ?? ""} disabled={readOnly} onChange={(event) => updateField("cidade", event.target.value || null)} maxLength={100} />
+                    </FieldShell>
                     <LookupSelectField label="Estado" table="configuracao_solicitantes_estados" options={lookupCollections.configuracao_solicitantes_estados} value={record.estado_id} onChange={(value) => updateField("estado_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                   </div>
-                  <p className="text-xs text-muted-foreground">Os campos CEP, Endereço, Número, Complemento e Cidade ainda não estão disponíveis no banco de dados.</p>
                 </TabsContent>
 
                 <TabsContent value="complementares2" className="space-y-4 pt-4">
@@ -601,18 +669,50 @@ export function MedicoResponsaveisPage({
 
                 <TabsContent value="documentos" className="space-y-4 pt-4">
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <FieldShell label="Sigla">
+                      <Input value={record.sigla ?? ""} disabled={readOnly} onChange={(event) => updateField("sigla", event.target.value || null)} maxLength={20} />
+                    </FieldShell>
                     <LookupSelectField label="Conselho" table="tipo_conselho_profissional" options={lookupCollections.tipo_conselho_profissional} value={record.id_tipo_conselho_profissional} onChange={(value) => updateField("id_tipo_conselho_profissional", value)} onQuickCreate={handleQuickCreate} error={errors.id_tipo_conselho_profissional} disabled={readOnly} />
                     <FieldShell label="CRM" error={errors.crm}>
                       <Input value={record.crm} disabled={readOnly} onChange={(event) => updateField("crm", event.target.value)} />
                     </FieldShell>
+                    <FieldShell label="Status Conselho">
+                      <Input value={record.status_conselho ?? ""} disabled={readOnly} onChange={(event) => updateField("status_conselho", event.target.value || null)} maxLength={50} />
+                    </FieldShell>
+                    <FieldShell label="RQE">
+                      <Input value={record.rqe ?? ""} disabled={readOnly} onChange={(event) => updateField("rqe", event.target.value || null)} maxLength={50} />
+                    </FieldShell>
+                    <FieldShell label="Nome Laudo">
+                      <Input value={record.nome_laudo ?? ""} disabled={readOnly} onChange={(event) => updateField("nome_laudo", event.target.value || null)} maxLength={150} />
+                    </FieldShell>
+                    <FieldShell label="Conselho Laudo">
+                      <Input value={record.conselho_laudo ?? ""} disabled={readOnly} onChange={(event) => updateField("conselho_laudo", event.target.value || null)} maxLength={50} />
+                    </FieldShell>
+                    <FieldShell label="Cartão Nacional Saúde">
+                      <Input value={record.cartao_nacional_saude ?? ""} disabled={readOnly} onChange={(event) => updateField("cartao_nacional_saude", event.target.value || null)} maxLength={30} />
+                    </FieldShell>
+                    <FieldShell label="PIS">
+                      <Input value={record.pis ?? ""} disabled={readOnly} onChange={(event) => updateField("pis", event.target.value || null)} maxLength={20} />
+                    </FieldShell>
                     <LookupSelectField label="CBO" table="solicitante_cbo" options={lookupCollections.solicitante_cbo} value={record.cbo_id} onChange={(value) => updateField("cbo_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
+                    <FieldShell label="CNES">
+                      <Input value={record.cnes ?? ""} disabled={readOnly} onChange={(event) => updateField("cnes", event.target.value || null)} maxLength={20} />
+                    </FieldShell>
                     <LookupSelectField label="Tipo de Pessoa" table="medico_responsaveis_tipo_cadastro" options={lookupCollections.medico_responsaveis_tipo_cadastro} value={record.tipo_cadastro_id} onChange={(value) => updateField("tipo_cadastro_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                   </div>
-                  <p className="text-xs text-muted-foreground">Os campos Sigla, Status Conselho, RQE, Nome Laudo, Conselho Laudo, Cartão Nacional Saúde, PIS e CNES ainda não estão disponíveis no banco de dados.</p>
                 </TabsContent>
 
                 <TabsContent value="financeiro" className="space-y-4 pt-4">
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <FieldShell label="Banco">
+                      <Input value={record.banco ?? ""} disabled={readOnly} onChange={(event) => updateField("banco", event.target.value || null)} maxLength={100} />
+                    </FieldShell>
+                    <FieldShell label="Agência">
+                      <Input value={record.agencia ?? ""} disabled={readOnly} onChange={(event) => updateField("agencia", event.target.value || null)} maxLength={20} />
+                    </FieldShell>
+                    <FieldShell label="Conta">
+                      <Input value={record.conta ?? ""} disabled={readOnly} onChange={(event) => updateField("conta", event.target.value || null)} maxLength={30} />
+                    </FieldShell>
                     <LookupSelectField label="Configuração Apuração" table="configuracao_apuracao" options={lookupCollections.configuracao_apuracao} value={record.configuracao_apuracao_id} onChange={(value) => updateField("configuracao_apuracao_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Contabilidade de produtividade" table="fin_contabilidades" options={lookupCollections.fin_contabilidades} value={record.produtividade_fin_contabilidade_id} onChange={(value) => updateField("produtividade_fin_contabilidade_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Fornecedor financeiro" table="fin_fornecedores" options={lookupCollections.fin_fornecedores} value={record.fin_fornecedor_id} onChange={(value) => updateField("fin_fornecedor_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
@@ -620,15 +720,21 @@ export function MedicoResponsaveisPage({
                     <LookupSelectField label="Plano de contas a receber" table="fin_plano_contas" options={lookupCollections.fin_plano_contas} value={record.contas_receber_plano_contas_id} onChange={(value) => updateField("contas_receber_plano_contas_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                     <LookupSelectField label="Tabela padrão de repasse Home Care" table="homecare_escala_repasse_tabela_padrao" options={lookupCollections.homecare_escala_repasse_tabela_padrao} value={record.homecare_escala_repasse_tabela_padrao_id} onChange={(value) => updateField("homecare_escala_repasse_tabela_padrao_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                   </div>
-                  <p className="text-xs text-muted-foreground">Os campos Banco, Agência e Conta ainda não estão disponíveis no banco de dados.</p>
                 </TabsContent>
 
                 <TabsContent value="configuracoes" className="space-y-4 pt-4">
                   <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <div className="flex items-center justify-between rounded-lg border p-3">
+                      <span className="text-sm font-medium text-foreground">Atende Pacientes Psiquiátricos?</span>
+                      <Switch disabled={readOnly} checked={record.atende_psiquiatricos} onCheckedChange={(value) => updateField("atende_psiquiatricos", value)} />
+                    </div>
+                    <div className="flex items-center justify-between rounded-lg border p-3">
+                      <span className="text-sm font-medium text-foreground">Cadastrar Agenda?</span>
+                      <Switch disabled={readOnly} checked={record.cadastrar_agenda} onCheckedChange={(value) => updateField("cadastrar_agenda", value)} />
+                    </div>
                     <LookupSelectField label="Unidade" table="unidades" options={lookupCollections.unidades} value={record.unidade_id} onChange={(value) => updateField("unidade_id", value)} onQuickCreate={handleQuickCreate} error={errors.unidade_id} disabled={readOnly} />
                     <LookupSelectField label="Solicitante" table="solicitantes" options={lookupCollections.solicitantes} value={record.solicitante_id} onChange={(value) => updateField("solicitante_id", value)} onQuickCreate={handleQuickCreate} disabled={readOnly} />
                   </div>
-                  <p className="text-xs text-muted-foreground">Os campos "Atende Pacientes Psiquiátricos?" e "Cadastrar Agenda?" ainda não estão disponíveis no banco de dados.</p>
                 </TabsContent>
 
                 <TabsContent value="cbos" className="space-y-4 pt-4">
@@ -688,7 +794,12 @@ export function MedicoResponsaveisPage({
                 </TabsContent>
 
                 <TabsContent value="sus" className="space-y-4 pt-4">
-                  <div className="flex flex-col gap-3 md:flex-row md:items-end">
+                  <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <FieldShell label="Vínculo SUS">
+                      <Input value={record.vinculo_sus ?? ""} disabled={readOnly} onChange={(event) => updateField("vinculo_sus", event.target.value || null)} maxLength={100} />
+                    </FieldShell>
+                  </div>
+                  <div className="flex flex-col gap-3 border-t pt-4 md:flex-row md:items-end">
                     <FieldShell label="Nova data de exportação">
                       <Input type="date" value={newExportDate} disabled={readOnly} onChange={(event) => setNewExportDate(event.target.value)} />
                     </FieldShell>

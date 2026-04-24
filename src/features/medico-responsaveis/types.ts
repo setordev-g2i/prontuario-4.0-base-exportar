@@ -60,6 +60,37 @@ export type MedicoResponsavelRecord = {
   unidade_id: number | null;
   cbo_ids: number[];
   exportacoes_sus: string[];
+  // Dados pessoais
+  rg: string | null;
+  data_nascimento: string | null;
+  sexo: string | null;
+  email: string | null;
+  celular: string | null;
+  telefone: string | null;
+  // Endereço
+  cep: string | null;
+  endereco: string | null;
+  numero: string | null;
+  complemento: string | null;
+  cidade: string | null;
+  // Documentos
+  sigla: string | null;
+  status_conselho: string | null;
+  rqe: string | null;
+  nome_laudo: string | null;
+  conselho_laudo: string | null;
+  cartao_nacional_saude: string | null;
+  pis: string | null;
+  cnes: string | null;
+  // Financeiro
+  banco: string | null;
+  agencia: string | null;
+  conta: string | null;
+  // Configurações
+  atende_psiquiatricos: boolean;
+  cadastrar_agenda: boolean;
+  // SUS
+  vinculo_sus: string | null;
   created_at?: string;
   updated_at?: string;
 };

@@ -166,13 +166,28 @@ export type Database = {
       }
       medico_responsaveis: {
         Row: {
+          agencia: string | null
+          atende_psiquiatricos: boolean
+          banco: string | null
+          cadastrar_agenda: boolean
+          cartao_nacional_saude: string | null
           cbo_id: number | null
+          celular: string | null
+          cep: string | null
+          cidade: string | null
+          cnes: string | null
+          complemento: string | null
           configuracao_apuracao_id: number | null
+          conselho_laudo: string | null
+          conta: string | null
           contas_pagar_plano_contas_id: number | null
           contas_receber_plano_contas_id: number | null
           cpf: string
           created_at: string
           crm: string
+          data_nascimento: string | null
+          email: string | null
+          endereco: string | null
           escolaridade_id: number | null
           estado_civil_id: number | null
           estado_id: number | null
@@ -183,23 +198,48 @@ export type Database = {
           id: number
           id_tipo_conselho_profissional: number
           nome: string
+          nome_laudo: string | null
+          numero: string | null
+          pis: string | null
           produtividade_fin_contabilidade_id: number | null
           religiao_id: number | null
+          rg: string | null
+          rqe: string | null
+          sexo: string | null
+          sigla: string | null
           situacao_id: number
           solicitante_id: number | null
+          status_conselho: string | null
+          telefone: string | null
           tipo_cadastro_id: number | null
           unidade_id: number
           updated_at: string
           user_id: number | null
+          vinculo_sus: string | null
         }
         Insert: {
+          agencia?: string | null
+          atende_psiquiatricos?: boolean
+          banco?: string | null
+          cadastrar_agenda?: boolean
+          cartao_nacional_saude?: string | null
           cbo_id?: number | null
+          celular?: string | null
+          cep?: string | null
+          cidade?: string | null
+          cnes?: string | null
+          complemento?: string | null
           configuracao_apuracao_id?: number | null
+          conselho_laudo?: string | null
+          conta?: string | null
           contas_pagar_plano_contas_id?: number | null
           contas_receber_plano_contas_id?: number | null
           cpf: string
           created_at?: string
           crm: string
+          data_nascimento?: string | null
+          email?: string | null
+          endereco?: string | null
           escolaridade_id?: number | null
           estado_civil_id?: number | null
           estado_id?: number | null
@@ -210,23 +250,48 @@ export type Database = {
           id?: number
           id_tipo_conselho_profissional: number
           nome: string
+          nome_laudo?: string | null
+          numero?: string | null
+          pis?: string | null
           produtividade_fin_contabilidade_id?: number | null
           religiao_id?: number | null
+          rg?: string | null
+          rqe?: string | null
+          sexo?: string | null
+          sigla?: string | null
           situacao_id: number
           solicitante_id?: number | null
+          status_conselho?: string | null
+          telefone?: string | null
           tipo_cadastro_id?: number | null
           unidade_id: number
           updated_at?: string
           user_id?: number | null
+          vinculo_sus?: string | null
         }
         Update: {
+          agencia?: string | null
+          atende_psiquiatricos?: boolean
+          banco?: string | null
+          cadastrar_agenda?: boolean
+          cartao_nacional_saude?: string | null
           cbo_id?: number | null
+          celular?: string | null
+          cep?: string | null
+          cidade?: string | null
+          cnes?: string | null
+          complemento?: string | null
           configuracao_apuracao_id?: number | null
+          conselho_laudo?: string | null
+          conta?: string | null
           contas_pagar_plano_contas_id?: number | null
           contas_receber_plano_contas_id?: number | null
           cpf?: string
           created_at?: string
           crm?: string
+          data_nascimento?: string | null
+          email?: string | null
+          endereco?: string | null
           escolaridade_id?: number | null
           estado_civil_id?: number | null
           estado_id?: number | null
@@ -237,14 +302,24 @@ export type Database = {
           id?: number
           id_tipo_conselho_profissional?: number
           nome?: string
+          nome_laudo?: string | null
+          numero?: string | null
+          pis?: string | null
           produtividade_fin_contabilidade_id?: number | null
           religiao_id?: number | null
+          rg?: string | null
+          rqe?: string | null
+          sexo?: string | null
+          sigla?: string | null
           situacao_id?: number
           solicitante_id?: number | null
+          status_conselho?: string | null
+          telefone?: string | null
           tipo_cadastro_id?: number | null
           unidade_id?: number
           updated_at?: string
           user_id?: number | null
+          vinculo_sus?: string | null
         }
         Relationships: [
           {
