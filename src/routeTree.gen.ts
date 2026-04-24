@@ -9,38 +9,101 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConfiguracoesProfissionaisMedicoResponsaveisRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis'
+import { Route as ConfiguracoesProfissionaisMedicoResponsaveisNovoRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis.novo'
+import { Route as ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis.$medicoId'
 
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfiguracoesProfissionaisMedicoResponsaveisRoute =
+  ConfiguracoesProfissionaisMedicoResponsaveisRouteImport.update({
+    id: '/profissionais/medico-responsaveis',
+    path: '/profissionais/medico-responsaveis',
+    getParentRoute: () => ConfiguracoesRoute,
+  } as any)
+const ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute =
+  ConfiguracoesProfissionaisMedicoResponsaveisNovoRouteImport.update({
+    id: '/novo',
+    path: '/novo',
+    getParentRoute: () => ConfiguracoesProfissionaisMedicoResponsaveisRoute,
+  } as any)
+const ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute =
+  ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRouteImport.update({
+    id: '/$medicoId',
+    path: '/$medicoId',
+    getParentRoute: () => ConfiguracoesProfissionaisMedicoResponsaveisRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRouteWithChildren
+  '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
+  '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
+  '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRouteWithChildren
+  '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
+  '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
+  '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRouteWithChildren
+  '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
+  '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
+  '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/configuracoes'
+    | '/configuracoes/profissionais/medico-responsaveis'
+    | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
+    | '/configuracoes/profissionais/medico-responsaveis/novo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/configuracoes'
+    | '/configuracoes/profissionais/medico-responsaveis'
+    | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
+    | '/configuracoes/profissionais/medico-responsaveis/novo'
+  id:
+    | '__root__'
+    | '/'
+    | '/configuracoes'
+    | '/configuracoes/profissionais/medico-responsaveis'
+    | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
+    | '/configuracoes/profissionais/medico-responsaveis/novo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +111,64 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/configuracoes/profissionais/medico-responsaveis': {
+      id: '/configuracoes/profissionais/medico-responsaveis'
+      path: '/profissionais/medico-responsaveis'
+      fullPath: '/configuracoes/profissionais/medico-responsaveis'
+      preLoaderRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteImport
+      parentRoute: typeof ConfiguracoesRoute
+    }
+    '/configuracoes/profissionais/medico-responsaveis/novo': {
+      id: '/configuracoes/profissionais/medico-responsaveis/novo'
+      path: '/novo'
+      fullPath: '/configuracoes/profissionais/medico-responsaveis/novo'
+      preLoaderRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRouteImport
+      parentRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
+    }
+    '/configuracoes/profissionais/medico-responsaveis/$medicoId': {
+      id: '/configuracoes/profissionais/medico-responsaveis/$medicoId'
+      path: '/$medicoId'
+      fullPath: '/configuracoes/profissionais/medico-responsaveis/$medicoId'
+      preLoaderRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRouteImport
+      parentRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
+    }
   }
 }
 
+interface ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren {
+  ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
+  ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
+}
+
+const ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren: ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren =
+  {
+    ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute:
+      ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute,
+    ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute:
+      ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute,
+  }
+
+const ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren =
+  ConfiguracoesProfissionaisMedicoResponsaveisRoute._addFileChildren(
+    ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren,
+  )
+
+interface ConfiguracoesRouteChildren {
+  ConfiguracoesProfissionaisMedicoResponsaveisRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
+}
+
+const ConfiguracoesRouteChildren: ConfiguracoesRouteChildren = {
+  ConfiguracoesProfissionaisMedicoResponsaveisRoute:
+    ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren,
+}
+
+const ConfiguracoesRouteWithChildren = ConfiguracoesRoute._addFileChildren(
+  ConfiguracoesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConfiguracoesRoute: ConfiguracoesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

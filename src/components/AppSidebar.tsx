@@ -257,7 +257,12 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Profissionais",
         items: [
-          { label: "Solicitantes", icon: Stethoscope, iconName: "Stethoscope", path: "/cadastros/solicitantes" },
+          {
+            label: "Profissionais Responsáveis",
+            icon: Stethoscope,
+            iconName: "Stethoscope",
+            path: "/configuracoes/profissionais/medico-responsaveis",
+          },
         ],
       },
     ],
