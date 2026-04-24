@@ -258,7 +258,7 @@ const menuConfig: MenuItem[] = [
         heading: "Profissionais",
         items: [
           {
-            label: "Profissionais Responsáveis",
+            label: "Profissionais",
             icon: Stethoscope,
             iconName: "Stethoscope",
             path: "/configuracoes/profissionais/medico-responsaveis",
