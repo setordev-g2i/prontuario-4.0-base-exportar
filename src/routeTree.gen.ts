@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ConfiguracoesProfissionaisMedicoResponsaveisRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis'
+import { Route as ConfiguracoesProfissionaisMedicoResponsaveisIndexRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis.index'
 import { Route as ConfiguracoesProfissionaisMedicoResponsaveisNovoRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis.novo'
 import { Route as ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRouteImport } from './routes/configuracoes.profissionais.medico-responsaveis.$medicoId'
 
@@ -30,6 +31,12 @@ const ConfiguracoesProfissionaisMedicoResponsaveisRoute =
     id: '/profissionais/medico-responsaveis',
     path: '/profissionais/medico-responsaveis',
     getParentRoute: () => ConfiguracoesRoute,
+  } as any)
+const ConfiguracoesProfissionaisMedicoResponsaveisIndexRoute =
+  ConfiguracoesProfissionaisMedicoResponsaveisIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ConfiguracoesProfissionaisMedicoResponsaveisRoute,
   } as any)
 const ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute =
   ConfiguracoesProfissionaisMedicoResponsaveisNovoRouteImport.update({
@@ -50,13 +57,14 @@ export interface FileRoutesByFullPath {
   '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
   '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
   '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
+  '/configuracoes/profissionais/medico-responsaveis/': typeof ConfiguracoesProfissionaisMedicoResponsaveisIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/configuracoes': typeof ConfiguracoesRouteWithChildren
-  '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
   '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
   '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
+  '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -65,6 +73,7 @@ export interface FileRoutesById {
   '/configuracoes/profissionais/medico-responsaveis': typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren
   '/configuracoes/profissionais/medico-responsaveis/$medicoId': typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
   '/configuracoes/profissionais/medico-responsaveis/novo': typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
+  '/configuracoes/profissionais/medico-responsaveis/': typeof ConfiguracoesProfissionaisMedicoResponsaveisIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -74,13 +83,14 @@ export interface FileRouteTypes {
     | '/configuracoes/profissionais/medico-responsaveis'
     | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
     | '/configuracoes/profissionais/medico-responsaveis/novo'
+    | '/configuracoes/profissionais/medico-responsaveis/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/configuracoes'
-    | '/configuracoes/profissionais/medico-responsaveis'
     | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
     | '/configuracoes/profissionais/medico-responsaveis/novo'
+    | '/configuracoes/profissionais/medico-responsaveis'
   id:
     | '__root__'
     | '/'
@@ -88,6 +98,7 @@ export interface FileRouteTypes {
     | '/configuracoes/profissionais/medico-responsaveis'
     | '/configuracoes/profissionais/medico-responsaveis/$medicoId'
     | '/configuracoes/profissionais/medico-responsaveis/novo'
+    | '/configuracoes/profissionais/medico-responsaveis/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -118,6 +129,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRouteImport
       parentRoute: typeof ConfiguracoesRoute
     }
+    '/configuracoes/profissionais/medico-responsaveis/': {
+      id: '/configuracoes/profissionais/medico-responsaveis/'
+      path: '/'
+      fullPath: '/configuracoes/profissionais/medico-responsaveis/'
+      preLoaderRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisIndexRouteImport
+      parentRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisRoute
+    }
     '/configuracoes/profissionais/medico-responsaveis/novo': {
       id: '/configuracoes/profissionais/medico-responsaveis/novo'
       path: '/novo'
@@ -138,6 +156,7 @@ declare module '@tanstack/react-router' {
 interface ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren {
   ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute
   ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute
+  ConfiguracoesProfissionaisMedicoResponsaveisIndexRoute: typeof ConfiguracoesProfissionaisMedicoResponsaveisIndexRoute
 }
 
 const ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren: ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren =
@@ -146,6 +165,8 @@ const ConfiguracoesProfissionaisMedicoResponsaveisRouteChildren: ConfiguracoesPr
       ConfiguracoesProfissionaisMedicoResponsaveisMedicoIdRoute,
     ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute:
       ConfiguracoesProfissionaisMedicoResponsaveisNovoRoute,
+    ConfiguracoesProfissionaisMedicoResponsaveisIndexRoute:
+      ConfiguracoesProfissionaisMedicoResponsaveisIndexRoute,
   }
 
 const ConfiguracoesProfissionaisMedicoResponsaveisRouteWithChildren =
@@ -173,3 +194,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
