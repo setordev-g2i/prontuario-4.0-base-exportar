@@ -12,6 +12,10 @@ import {
   ProfissionalCBOsDialog,
   type ProfissionalCBO,
 } from "./ProfissionalCBOsDialog";
+import {
+  ProfissionalEspecialidadesDialog,
+  type ProfissionalEspecialidade,
+} from "./ProfissionalEspecialidadesDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -266,6 +270,7 @@ export function ProfissionaisPage() {
   const [showSenha, setShowSenha] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [cbosOpenForId, setCbosOpenForId] = useState<string | null>(null);
+  const [especialidadesOpenForId, setEspecialidadesOpenForId] = useState<string | null>(null);
   const [profissionalCbos, setProfissionalCbos] = useState<ProfissionalCBO[]>([
     {
       id: "cbo1", medico_responsaveis_id: "p1", cbo_id: "225125", situacao_id: "1",
@@ -280,6 +285,20 @@ export function ProfissionaisPage() {
     {
       id: "cbo3", medico_responsaveis_id: "p2", cbo_id: "223505", situacao_id: "1",
       user_created: "usuario.logado", user_modified: "usuario.logado",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+  ]);
+  const [profissionalEspecialidades, setProfissionalEspecialidades] = useState<ProfissionalEspecialidade[]>([
+    {
+      id: "esp1", medico_id: "p1", especialidade_id: "1", situacao_id: "1",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+    {
+      id: "esp2", medico_id: "p1", especialidade_id: "2", situacao_id: "2",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+    {
+      id: "esp3", medico_id: "p2", especialidade_id: "9", situacao_id: "1",
       created: new Date().toISOString(), modified: new Date().toISOString(),
     },
   ]);
@@ -501,6 +520,9 @@ export function ProfissionaisPage() {
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => setCbosOpenForId(p.id)}>
                                 <Briefcase className="size-4" /> CBO
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => setEspecialidadesOpenForId(p.id)}>
+                                <Stethoscope className="size-4" /> Especialidades
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => setDeletingId(p.id)}
@@ -940,6 +962,25 @@ export function ProfissionaisPage() {
           })()}
           cbos={profissionalCbos}
           onChange={setProfissionalCbos}
+        />
+
+        {/* Especialidades do Profissional */}
+        <ProfissionalEspecialidadesDialog
+          open={!!especialidadesOpenForId}
+          onOpenChange={(o) => !o && setEspecialidadesOpenForId(null)}
+          profissional={(() => {
+            const p = list.find((x) => x.id === especialidadesOpenForId);
+            if (!p) return null;
+            return {
+              id: p.id,
+              nome: p.nome,
+              cpf: p.cpf,
+              tipo_cadastro_label: labelOf(TIPOS_CADASTRO, p.tipo_cadastro_id),
+              conselho: p.conselho,
+            };
+          })()}
+          especialidades={profissionalEspecialidades}
+          onChange={setProfissionalEspecialidades}
         />
       </div>
     </TooltipProvider>
