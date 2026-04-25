@@ -270,6 +270,7 @@ export function ProfissionaisPage() {
   const [showSenha, setShowSenha] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
   const [cbosOpenForId, setCbosOpenForId] = useState<string | null>(null);
+  const [especialidadesOpenForId, setEspecialidadesOpenForId] = useState<string | null>(null);
   const [profissionalCbos, setProfissionalCbos] = useState<ProfissionalCBO[]>([
     {
       id: "cbo1", medico_responsaveis_id: "p1", cbo_id: "225125", situacao_id: "1",
@@ -284,6 +285,20 @@ export function ProfissionaisPage() {
     {
       id: "cbo3", medico_responsaveis_id: "p2", cbo_id: "223505", situacao_id: "1",
       user_created: "usuario.logado", user_modified: "usuario.logado",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+  ]);
+  const [profissionalEspecialidades, setProfissionalEspecialidades] = useState<ProfissionalEspecialidade[]>([
+    {
+      id: "esp1", medico_id: "p1", especialidade_id: "1", situacao_id: "1",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+    {
+      id: "esp2", medico_id: "p1", especialidade_id: "2", situacao_id: "2",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+    {
+      id: "esp3", medico_id: "p2", especialidade_id: "9", situacao_id: "1",
       created: new Date().toISOString(), modified: new Date().toISOString(),
     },
   ]);
