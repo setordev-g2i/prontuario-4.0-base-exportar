@@ -521,6 +521,9 @@ export function ProfissionaisPage() {
                               <DropdownMenuItem onClick={() => setCbosOpenForId(p.id)}>
                                 <Briefcase className="size-4" /> CBO
                               </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => setEspecialidadesOpenForId(p.id)}>
+                                <Stethoscope className="size-4" /> Especialidades
+                              </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => setDeletingId(p.id)}
                                 className="text-destructive focus:text-destructive"
