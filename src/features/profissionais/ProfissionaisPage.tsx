@@ -494,22 +494,28 @@ export function ProfissionaisPage() {
           </CardContent>
         </Card>
 
-        {/* Formulário */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              {editingId ? (
-                <>
-                  <Pencil className="size-4" /> Editando: {form.nome || "Profissional"}
-                </>
-              ) : (
-                <>
-                  <Plus className="size-4" /> Novo cadastro
-                </>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+        {/* Formulário (Dialog) */}
+        <Dialog open={formOpen} onOpenChange={setFormOpen}>
+          <DialogContent className="max-w-5xl max-h-[92vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {editingId ? (
+                  <>
+                    <Pencil className="size-4" /> Editar Profissional
+                  </>
+                ) : (
+                  <>
+                    <Plus className="size-4" /> Novo Profissional
+                  </>
+                )}
+              </DialogTitle>
+              <DialogDescription>
+                {editingId
+                  ? `Editando: ${form.nome || "Profissional"}`
+                  : "Preencha os dados para cadastrar um novo profissional."}
+              </DialogDescription>
+            </DialogHeader>
+            <div>
             <Tabs value={tab} onValueChange={setTab}>
               <TabsList className="flex flex-wrap h-auto">
                 <TabsTrigger value="dados">Dados Principais</TabsTrigger>
