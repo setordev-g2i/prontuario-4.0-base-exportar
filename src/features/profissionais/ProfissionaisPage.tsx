@@ -922,6 +922,25 @@ export function ProfissionaisPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* CBOs do Profissional */}
+        <ProfissionalCBOsDialog
+          open={!!cbosOpenForId}
+          onOpenChange={(o) => !o && setCbosOpenForId(null)}
+          profissional={(() => {
+            const p = list.find((x) => x.id === cbosOpenForId);
+            if (!p) return null;
+            return {
+              id: p.id,
+              nome: p.nome,
+              cpf: p.cpf,
+              tipo_cadastro_label: labelOf(TIPOS_CADASTRO, p.tipo_cadastro_id),
+              conselho: p.conselho,
+            };
+          })()}
+          cbos={profissionalCbos}
+          onChange={setProfissionalCbos}
+        />
       </div>
     </TooltipProvider>
   );
