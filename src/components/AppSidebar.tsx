@@ -241,6 +241,12 @@ const menuConfig: MenuItem[] = [
           { label: "Integrações", icon: Settings, iconName: "Settings", path: "/configuracoes/integracoes" },
         ],
       },
+      {
+        heading: "Profissionais",
+        items: [
+          { label: "Profissionais", icon: Stethoscope, iconName: "Stethoscope", path: "/configuracoes/profissionais" },
+        ],
+      },
     ],
   },
 ];
