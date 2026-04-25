@@ -463,32 +463,27 @@ export function ProfissionaisPage() {
                         </TableCell>
                         <TableCell>{p.conselho || "—"}</TableCell>
                         <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button size="icon" variant="ghost" onClick={() => setViewing(p)}>
-                                  <Eye className="size-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Visualizar</TooltipContent>
-                            </Tooltip>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button size="icon" variant="ghost" onClick={() => handleEditar(p)}>
-                                  <Pencil className="size-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Editar</TooltipContent>
-                            </Tooltip>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button size="icon" variant="ghost" onClick={() => setDeletingId(p.id)}>
-                                  <Trash2 className="size-4 text-destructive" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Excluir</TooltipContent>
-                            </Tooltip>
-                          </div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline" className="gap-1">
+                                Opções <ChevronDown className="size-3.5" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40">
+                              <DropdownMenuItem onClick={() => setViewing(p)}>
+                                <Eye className="size-4" /> Visualizar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleEditar(p)}>
+                                <Pencil className="size-4" /> Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => setDeletingId(p.id)}
+                                className="text-destructive focus:text-destructive"
+                              >
+                                <Trash2 className="size-4" /> Excluir
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
                       </TableRow>
                     ))
