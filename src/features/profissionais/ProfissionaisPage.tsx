@@ -259,6 +259,7 @@ export function ProfissionaisPage() {
   const [viewing, setViewing] = useState<Profissional | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showSenha, setShowSenha] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
   const fotoInput = useRef<HTMLInputElement>(null);
   const pfxInput = useRef<HTMLInputElement>(null);
 
