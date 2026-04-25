@@ -7,6 +7,11 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Briefcase } from "lucide-react";
+import {
+  ProfissionalCBOsDialog,
+  type ProfissionalCBO,
+} from "./ProfissionalCBOsDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -260,6 +265,24 @@ export function ProfissionaisPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showSenha, setShowSenha] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [cbosOpenForId, setCbosOpenForId] = useState<string | null>(null);
+  const [profissionalCbos, setProfissionalCbos] = useState<ProfissionalCBO[]>([
+    {
+      id: "cbo1", medico_responsaveis_id: "p1", cbo_id: "225125", situacao_id: "1",
+      user_created: "usuario.logado", user_modified: "usuario.logado",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+    {
+      id: "cbo2", medico_responsaveis_id: "p1", cbo_id: "225170", situacao_id: "2",
+      user_created: "usuario.logado", user_modified: "usuario.logado",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+    {
+      id: "cbo3", medico_responsaveis_id: "p2", cbo_id: "223505", situacao_id: "1",
+      user_created: "usuario.logado", user_modified: "usuario.logado",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+  ]);
   const fotoInput = useRef<HTMLInputElement>(null);
   const pfxInput = useRef<HTMLInputElement>(null);
 
@@ -475,6 +498,9 @@ export function ProfissionaisPage() {
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleEditar(p)}>
                                 <Pencil className="size-4" /> Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => setCbosOpenForId(p.id)}>
+                                <Briefcase className="size-4" /> CBO
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => setDeletingId(p.id)}
@@ -896,6 +922,25 @@ export function ProfissionaisPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        {/* CBOs do Profissional */}
+        <ProfissionalCBOsDialog
+          open={!!cbosOpenForId}
+          onOpenChange={(o) => !o && setCbosOpenForId(null)}
+          profissional={(() => {
+            const p = list.find((x) => x.id === cbosOpenForId);
+            if (!p) return null;
+            return {
+              id: p.id,
+              nome: p.nome,
+              cpf: p.cpf,
+              tipo_cadastro_label: labelOf(TIPOS_CADASTRO, p.tipo_cadastro_id),
+              conselho: p.conselho,
+            };
+          })()}
+          cbos={profissionalCbos}
+          onChange={setProfissionalCbos}
+        />
       </div>
     </TooltipProvider>
   );
