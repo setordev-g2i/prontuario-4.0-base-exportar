@@ -852,8 +852,17 @@ export function ProfissionaisPage() {
                 </div>
               </TabsContent>
             </Tabs>
-          </CardContent>
-        </Card>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setFormOpen(false)}>
+                Fechar
+              </Button>
+              <Button onClick={handleSalvar}>
+                <Save className="size-4" /> Salvar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* View Modal */}
         <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
