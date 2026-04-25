@@ -2,8 +2,11 @@ import { useMemo, useRef, useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
 import {
   Plus, Save, Pencil, Trash2, Eye, Upload, X, Search,
-  Eye as EyeIcon, EyeOff, FileBadge, Stethoscope,
+  Eye as EyeIcon, EyeOff, FileBadge, Stethoscope, ChevronDown,
 } from "lucide-react";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -256,6 +259,7 @@ export function ProfissionaisPage() {
   const [viewing, setViewing] = useState<Profissional | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showSenha, setShowSenha] = useState(false);
+  const [formOpen, setFormOpen] = useState(false);
   const fotoInput = useRef<HTMLInputElement>(null);
   const pfxInput = useRef<HTMLInputElement>(null);
 
@@ -280,6 +284,7 @@ export function ProfissionaisPage() {
     setEditingId(null);
     setTab("dados");
     setShowSenha(false);
+    setFormOpen(true);
   };
 
   const handleSalvar = () => {
@@ -318,20 +323,28 @@ export function ProfissionaisPage() {
       setList((l) => [...l, novo]);
       toast.success("Profissional cadastrado com sucesso");
     }
-    handleNovo();
+    setForm(empty());
+    setEditingId(null);
+    setTab("dados");
+    setShowSenha(false);
+    setFormOpen(false);
   };
 
   const handleEditar = (p: Profissional) => {
     setForm({ ...p });
     setEditingId(p.id);
     setTab("dados");
-    toast("Profissional carregado para edição");
+    setFormOpen(true);
   };
 
   const confirmDelete = () => {
     if (!deletingId) return;
     setList((l) => l.filter((p) => p.id !== deletingId));
-    if (editingId === deletingId) handleNovo();
+    if (editingId === deletingId) {
+      setForm(empty());
+      setEditingId(null);
+      setFormOpen(false);
+    }
     setDeletingId(null);
     toast.success("Profissional excluído com sucesso");
   };
@@ -385,11 +398,8 @@ export function ProfissionaisPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={handleNovo}>
+            <Button onClick={handleNovo}>
               <Plus className="size-4" /> Novo Profissional
-            </Button>
-            <Button onClick={handleSalvar}>
-              <Save className="size-4" /> Salvar
             </Button>
           </div>
         </div>
@@ -453,32 +463,27 @@ export function ProfissionaisPage() {
                         </TableCell>
                         <TableCell>{p.conselho || "—"}</TableCell>
                         <TableCell className="text-right">
-                          <div className="flex justify-end gap-1">
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button size="icon" variant="ghost" onClick={() => setViewing(p)}>
-                                  <Eye className="size-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Visualizar</TooltipContent>
-                            </Tooltip>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button size="icon" variant="ghost" onClick={() => handleEditar(p)}>
-                                  <Pencil className="size-4" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Editar</TooltipContent>
-                            </Tooltip>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button size="icon" variant="ghost" onClick={() => setDeletingId(p.id)}>
-                                  <Trash2 className="size-4 text-destructive" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Excluir</TooltipContent>
-                            </Tooltip>
-                          </div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="sm" variant="outline" className="gap-1">
+                                Opções <ChevronDown className="size-3.5" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-40">
+                              <DropdownMenuItem onClick={() => setViewing(p)}>
+                                <Eye className="size-4" /> Visualizar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => handleEditar(p)}>
+                                <Pencil className="size-4" /> Editar
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => setDeletingId(p.id)}
+                                className="text-destructive focus:text-destructive"
+                              >
+                                <Trash2 className="size-4" /> Excluir
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
                       </TableRow>
                     ))
@@ -489,22 +494,28 @@ export function ProfissionaisPage() {
           </CardContent>
         </Card>
 
-        {/* Formulário */}
-        <Card>
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              {editingId ? (
-                <>
-                  <Pencil className="size-4" /> Editando: {form.nome || "Profissional"}
-                </>
-              ) : (
-                <>
-                  <Plus className="size-4" /> Novo cadastro
-                </>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+        {/* Formulário (Dialog) */}
+        <Dialog open={formOpen} onOpenChange={setFormOpen}>
+          <DialogContent className="max-w-5xl max-h-[92vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {editingId ? (
+                  <>
+                    <Pencil className="size-4" /> Editar Profissional
+                  </>
+                ) : (
+                  <>
+                    <Plus className="size-4" /> Novo Profissional
+                  </>
+                )}
+              </DialogTitle>
+              <DialogDescription>
+                {editingId
+                  ? `Editando: ${form.nome || "Profissional"}`
+                  : "Preencha os dados para cadastrar um novo profissional."}
+              </DialogDescription>
+            </DialogHeader>
+            <div>
             <Tabs value={tab} onValueChange={setTab}>
               <TabsList className="flex flex-wrap h-auto">
                 <TabsTrigger value="dados">Dados Principais</TabsTrigger>
@@ -841,8 +852,17 @@ export function ProfissionaisPage() {
                 </div>
               </TabsContent>
             </Tabs>
-          </CardContent>
-        </Card>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setFormOpen(false)}>
+                Fechar
+              </Button>
+              <Button onClick={handleSalvar}>
+                <Save className="size-4" /> Salvar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* View Modal */}
         <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
