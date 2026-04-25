@@ -7,6 +7,11 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Briefcase } from "lucide-react";
+import {
+  ProfissionalCBOsDialog,
+  type ProfissionalCBO,
+} from "./ProfissionalCBOsDialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
