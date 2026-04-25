@@ -284,6 +284,7 @@ export function ProfissionaisPage() {
     setEditingId(null);
     setTab("dados");
     setShowSenha(false);
+    setFormOpen(true);
   };
 
   const handleSalvar = () => {
@@ -322,20 +323,28 @@ export function ProfissionaisPage() {
       setList((l) => [...l, novo]);
       toast.success("Profissional cadastrado com sucesso");
     }
-    handleNovo();
+    setForm(empty());
+    setEditingId(null);
+    setTab("dados");
+    setShowSenha(false);
+    setFormOpen(false);
   };
 
   const handleEditar = (p: Profissional) => {
     setForm({ ...p });
     setEditingId(p.id);
     setTab("dados");
-    toast("Profissional carregado para edição");
+    setFormOpen(true);
   };
 
   const confirmDelete = () => {
     if (!deletingId) return;
     setList((l) => l.filter((p) => p.id !== deletingId));
-    if (editingId === deletingId) handleNovo();
+    if (editingId === deletingId) {
+      setForm(empty());
+      setEditingId(null);
+      setFormOpen(false);
+    }
     setDeletingId(null);
     toast.success("Profissional excluído com sucesso");
   };
