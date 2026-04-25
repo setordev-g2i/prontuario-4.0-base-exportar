@@ -398,11 +398,8 @@ export function ProfissionaisPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={handleNovo}>
+            <Button onClick={handleNovo}>
               <Plus className="size-4" /> Novo Profissional
-            </Button>
-            <Button onClick={handleSalvar}>
-              <Save className="size-4" /> Salvar
             </Button>
           </div>
         </div>
