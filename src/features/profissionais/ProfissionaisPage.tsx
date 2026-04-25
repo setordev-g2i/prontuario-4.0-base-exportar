@@ -499,6 +499,9 @@ export function ProfissionaisPage() {
                               <DropdownMenuItem onClick={() => handleEditar(p)}>
                                 <Pencil className="size-4" /> Editar
                               </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => setCbosOpenForId(p.id)}>
+                                <Briefcase className="size-4" /> CBO
+                              </DropdownMenuItem>
                               <DropdownMenuItem
                                 onClick={() => setDeletingId(p.id)}
                                 className="text-destructive focus:text-destructive"
