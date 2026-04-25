@@ -963,6 +963,25 @@ export function ProfissionaisPage() {
           cbos={profissionalCbos}
           onChange={setProfissionalCbos}
         />
+
+        {/* Especialidades do Profissional */}
+        <ProfissionalEspecialidadesDialog
+          open={!!especialidadesOpenForId}
+          onOpenChange={(o) => !o && setEspecialidadesOpenForId(null)}
+          profissional={(() => {
+            const p = list.find((x) => x.id === especialidadesOpenForId);
+            if (!p) return null;
+            return {
+              id: p.id,
+              nome: p.nome,
+              cpf: p.cpf,
+              tipo_cadastro_label: labelOf(TIPOS_CADASTRO, p.tipo_cadastro_id),
+              conselho: p.conselho,
+            };
+          })()}
+          especialidades={profissionalEspecialidades}
+          onChange={setProfissionalEspecialidades}
+        />
       </div>
     </TooltipProvider>
   );
