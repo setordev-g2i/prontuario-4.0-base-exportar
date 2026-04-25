@@ -265,6 +265,24 @@ export function ProfissionaisPage() {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showSenha, setShowSenha] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [cbosOpenForId, setCbosOpenForId] = useState<string | null>(null);
+  const [profissionalCbos, setProfissionalCbos] = useState<ProfissionalCBO[]>([
+    {
+      id: "cbo1", medico_responsaveis_id: "p1", cbo_id: "225125", situacao_id: "1",
+      user_created: "usuario.logado", user_modified: "usuario.logado",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+    {
+      id: "cbo2", medico_responsaveis_id: "p1", cbo_id: "225170", situacao_id: "2",
+      user_created: "usuario.logado", user_modified: "usuario.logado",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+    {
+      id: "cbo3", medico_responsaveis_id: "p2", cbo_id: "223505", situacao_id: "1",
+      user_created: "usuario.logado", user_modified: "usuario.logado",
+      created: new Date().toISOString(), modified: new Date().toISOString(),
+    },
+  ]);
   const fotoInput = useRef<HTMLInputElement>(null);
   const pfxInput = useRef<HTMLInputElement>(null);
 
