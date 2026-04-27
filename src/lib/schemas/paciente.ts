@@ -24,7 +24,7 @@ export const pacienteSchema = z.object({
   bairro: z.string().optional().or(z.literal("")),
   cidade: z.string().optional().or(z.literal("")),
   estadoId: z.union([z.string(), z.number()]).optional(),
-  situacaoId: z.number().default(1),
+  situacaoId: z.number(),
 });
 
 export type PacienteFormValues = z.infer<typeof pacienteSchema>;
