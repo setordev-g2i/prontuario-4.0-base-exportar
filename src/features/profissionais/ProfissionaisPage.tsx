@@ -373,33 +373,62 @@ export function ProfissionaisPage() {
     setFormOpen(true);
   };
 
+  // Schema Zod para os campos obrigatórios principais
+  const mainSchema = z.object({
+    nome: z.string().min(1, "O campo Nome é obrigatório"),
+    tipo_cadastro_id: z
+      .string()
+      .min(1, "O campo Tipo de Cadastro é obrigatório"),
+    cpf: z
+      .string()
+      .min(1, "O campo CPF é obrigatório")
+      .refine(
+        (v) => v.replace(/\D/g, "").length === 11,
+        "CPF deve ter 11 dígitos",
+      )
+      .refine(isValidCPF, "CPF inválido"),
+    situacao_id: z.string().min(1, "O campo Situação é obrigatório"),
+  });
+
   const handleSalvar = () => {
-    // Validation
-    const errors: string[] = [];
-    if (!form.nome.trim()) errors.push("Nome");
-    if (!form.tipo_cadastro_id) errors.push("Tipo de Cadastro");
-    if (!form.cpf || form.cpf.replace(/\D/g, "").length !== 11) errors.push("CPF");
-    if (!form.situacao_id) errors.push("Situação");
+    const result = mainSchema.safeParse({
+      nome: form.nome,
+      tipo_cadastro_id: form.tipo_cadastro_id,
+      cpf: form.cpf,
+      situacao_id: form.situacao_id,
+    });
+
+    if (!result.success) {
+      const zodErrors = (result.error as z.ZodError).issues;
+      zodErrors.forEach((err) => toast.error(err.message));
+      setFieldErrors(zodErrors.map((e) => e.path[0] as string));
+      setTab("dados");
+      return;
+    }
+
     if (form.email && !isValidEmail(form.email)) {
       toast.error("E-mail inválido");
+      setFieldErrors(["email"]);
       setTab("complementares");
       return;
     }
+
+    // Certificado digital
     if (form.possui_certificado === "sim") {
-      if (!form.arquivo_certificado_pfx) errors.push("Arquivo Certificado PFX");
-      if (!form.senha_certificado) errors.push("Senha do Certificado");
-      if (!form.validade_inicio_certificado) errors.push("Validade Início");
-      if (!form.validade_fim_certificado) errors.push("Validade Fim");
-    }
-    if (errors.length) {
-      toast.error(`Campos obrigatórios: ${errors.join(", ")}`);
-      if (errors.some((e) => ["Nome", "Tipo de Cadastro", "CPF", "Situação"].includes(e))) {
-        setTab("dados");
-      } else if (errors.some((e) => e.includes("Certificado") || e.includes("Validade") || e.includes("Senha"))) {
+      const certErrors: string[] = [];
+      if (!form.arquivo_certificado_pfx) certErrors.push("arquivo_certificado_pfx");
+      if (!form.senha_certificado) certErrors.push("senha_certificado");
+      if (!form.validade_inicio_certificado) certErrors.push("validade_inicio_certificado");
+      if (!form.validade_fim_certificado) certErrors.push("validade_fim_certificado");
+      if (certErrors.length) {
+        toast.error("Preencha todos os campos obrigatórios do Certificado Digital");
+        setFieldErrors(certErrors);
         setTab("certificado");
+        return;
       }
-      return;
     }
+
+    setFieldErrors([]);
 
     if (editingId) {
       setList((l) => l.map((p) => (p.id === editingId ? { ...form, id: editingId } : p)));
