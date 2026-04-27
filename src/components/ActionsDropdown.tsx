@@ -18,16 +18,16 @@ export interface CustomAction {
 interface ActionsDropdownProps {
   onView?: () => void;
   onEdit: () => void;
-  onDeactivate: () => void;
-  deactivateLabel?: string;
+  onInactivate: () => void;
+  inactivateLabel?: string;
   customActions?: CustomAction[];
 }
 
 export function ActionsDropdown({
   onView,
   onEdit,
-  onDeactivate,
-  deactivateLabel = "Desativar",
+  onInactivate,
+  inactivateLabel = "Inativar",
   customActions,
 }: ActionsDropdownProps) {
   return (
@@ -59,11 +59,11 @@ export function ActionsDropdown({
           </DropdownMenuItem>
         ))}
         <DropdownMenuItem
-          onClick={onDeactivate}
+          onClick={onInactivate}
           className={cn("text-destructive focus:text-destructive")}
         >
           <XCircle className="mr-2 h-4 w-4" />
-          {deactivateLabel}
+          {inactivateLabel}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
