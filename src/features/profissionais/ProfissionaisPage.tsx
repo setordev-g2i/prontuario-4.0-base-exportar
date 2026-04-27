@@ -389,14 +389,14 @@ export function ProfissionaisPage() {
 
   const confirmDelete = () => {
     if (!deletingId) return;
-    setList((l) => l.filter((p) => p.id !== deletingId));
-    if (editingId === deletingId) {
-      setForm(empty());
-      setEditingId(null);
-      setFormOpen(false);
-    }
+    // Exclusão lógica: situacao_id = "2" (Inativo)
+    setList((l) =>
+      l.map((p) =>
+        p.id === deletingId ? { ...p, situacao_id: "2" } : p,
+      ),
+    );
     setDeletingId(null);
-    toast.success("Profissional excluído com sucesso");
+    toast.success("Profissional desativado com sucesso");
   };
 
   /* ── Foto upload ── */
