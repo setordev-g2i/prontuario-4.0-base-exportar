@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Plus, Search, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,14 +25,14 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ActionsDropdown } from "@/components/ActionsDropdown";
 import { useDebounce } from "@/hooks/useDebounce";
-import {
-  fetchPacientes,
-  inactivatePaciente,
-} from "@/services/pacientes";
+import { fetchPacientes, inactivatePaciente } from "@/services/pacientes";
 import type { Paciente } from "@/types/entities/Paciente";
+import {
+  PacienteModal,
+  type PacienteModalMode,
+} from "./components/PacienteModal";
 
 export default function PacientesListPage() {
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Paciente[]>([]);
   const [search, setSearch] = useState("");
@@ -41,6 +40,16 @@ export default function PacientesListPage() {
   const [inactivatingId, setInactivatingId] = useState<Paciente["id"] | null>(
     null,
   );
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<PacienteModalMode>("create");
+  const [selected, setSelected] = useState<Paciente | null>(null);
+
+  function openModal(mode: PacienteModalMode, p: Paciente | null) {
+    setModalMode(mode);
+    setSelected(p);
+    setModalOpen(true);
+  }
 
   async function load() {
     setLoading(true);
@@ -82,7 +91,7 @@ export default function PacientesListPage() {
             Cadastro e gestão de pacientes
           </p>
         </div>
-        <Button onClick={() => navigate("/pacientes/novo")}>
+        <Button onClick={() => openModal("create", null)}>
           <Plus className="mr-1 size-4" />
           Novo paciente
         </Button>
@@ -139,7 +148,9 @@ export default function PacientesListPage() {
                       <TableCell>{p.cpf}</TableCell>
                       <TableCell>
                         {p.dataNascimento
-                          ? new Date(p.dataNascimento).toLocaleDateString("pt-BR")
+                          ? new Date(p.dataNascimento).toLocaleDateString(
+                              "pt-BR",
+                            )
                           : "—"}
                       </TableCell>
                       <TableCell>{p.celular ?? "—"}</TableCell>
@@ -152,8 +163,8 @@ export default function PacientesListPage() {
                       </TableCell>
                       <TableCell>
                         <ActionsDropdown
-                          onView={() => navigate(`/pacientes/${p.id}`)}
-                          onEdit={() => navigate(`/pacientes/${p.id}/editar`)}
+                          onView={() => openModal("view", p)}
+                          onEdit={() => openModal("edit", p)}
                           onInactivate={() => setInactivatingId(p.id)}
                         />
                       </TableCell>
@@ -165,6 +176,14 @@ export default function PacientesListPage() {
           </div>
         </CardContent>
       </Card>
+
+      <PacienteModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        mode={modalMode}
+        paciente={selected}
+        onSaved={load}
+      />
 
       <AlertDialog
         open={!!inactivatingId}

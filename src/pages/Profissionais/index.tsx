@@ -31,6 +31,10 @@ import {
   inactivateProfissional,
 } from "@/services/profissionais";
 import type { Profissional } from "@/types/entities/Profissional";
+import {
+  ProfissionalModal,
+  type ProfissionalModalMode,
+} from "./components/ProfissionalModal";
 
 export default function ProfissionaisListPage() {
   const navigate = useNavigate();
@@ -41,6 +45,16 @@ export default function ProfissionaisListPage() {
   const [inactivatingId, setInactivatingId] = useState<
     Profissional["id"] | null
   >(null);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<ProfissionalModalMode>("create");
+  const [selected, setSelected] = useState<Profissional | null>(null);
+
+  function openModal(mode: ProfissionalModalMode, p: Profissional | null) {
+    setModalMode(mode);
+    setSelected(p);
+    setModalOpen(true);
+  }
 
   async function load() {
     setLoading(true);
@@ -82,7 +96,7 @@ export default function ProfissionaisListPage() {
             Cadastro e gestão de profissionais de saúde
           </p>
         </div>
-        <Button onClick={() => navigate("/configuracoes/profissionais/novo")}>
+        <Button onClick={() => openModal("create", null)}>
           <Plus className="mr-1 size-4" />
           Novo profissional
         </Button>
@@ -150,14 +164,8 @@ export default function ProfissionaisListPage() {
                       </TableCell>
                       <TableCell>
                         <ActionsDropdown
-                          onView={() =>
-                            navigate(`/configuracoes/profissionais/${p.id}`)
-                          }
-                          onEdit={() =>
-                            navigate(
-                              `/configuracoes/profissionais/${p.id}/editar`,
-                            )
-                          }
+                          onView={() => openModal("view", p)}
+                          onEdit={() => openModal("edit", p)}
                           onInactivate={() => setInactivatingId(p.id)}
                           customActions={[
                             {
@@ -187,6 +195,14 @@ export default function ProfissionaisListPage() {
           </div>
         </CardContent>
       </Card>
+
+      <ProfissionalModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        mode={modalMode}
+        profissional={selected}
+        onSaved={load}
+      />
 
       <AlertDialog
         open={!!inactivatingId}
