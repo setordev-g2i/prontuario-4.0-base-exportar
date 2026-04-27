@@ -581,7 +581,7 @@ export function ProfissionaisPage() {
                           <ActionsDropdown
                             onView={() => setViewing(p)}
                             onEdit={() => handleEditar(p)}
-                            onDeactivate={() => setDeletingId(p.id)}
+                            onInactivate={() => setDeletingId(p.id)}
                             customActions={[
                               {
                                 icon: <Briefcase className="mr-2 h-4 w-4" />,
@@ -1072,11 +1072,11 @@ export function ProfissionaisPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Desativar confirm (exclusão lógica) */}
+        {/* Inativar confirm (exclusão lógica) */}
         <AlertDialog open={!!deletingId} onOpenChange={(o) => !o && setDeletingId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Desativar profissional?</AlertDialogTitle>
+              <AlertDialogTitle>Inativar profissional?</AlertDialogTitle>
               <AlertDialogDescription>
                 O profissional será marcado como <strong>Inativo</strong>. Você poderá reativá-lo posteriormente na edição.
               </AlertDialogDescription>
@@ -1085,7 +1085,7 @@ export function ProfissionaisPage() {
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                Desativar
+                Inativar
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
