@@ -1,13 +1,17 @@
-import { useMemo, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { z } from "zod";
 import { toast } from "sonner";
 import {
-  Plus, Save, Pencil, Trash2, Eye, Upload, X, Search,
-  Eye as EyeIcon, EyeOff, FileBadge, Stethoscope, ChevronDown,
+  Plus, Save, Pencil, Eye, Upload, X, Search, Loader2,
+  Eye as EyeIcon, EyeOff, FileBadge, Stethoscope, Briefcase,
 } from "lucide-react";
-import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Briefcase } from "lucide-react";
+import { ActionsDropdown } from "@/components/ActionsDropdown";
+import { InputMasked } from "@/components/InputMasked";
+import { MASKS } from "@/lib/masks";
+import { normalize } from "@/lib/normalize";
+import { buildPaginationItems } from "@/lib/pagination";
+import { useDebounce } from "@/hooks/useDebounce";
+import { isValidCPF } from "@/lib/validators";
 import {
   ProfissionalCBOsDialog,
   type ProfissionalCBO,
@@ -40,6 +44,10 @@ import {
 import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Pagination, PaginationContent, PaginationItem, PaginationLink,
+  PaginationPrevious, PaginationNext, PaginationEllipsis,
+} from "@/components/ui/pagination";
 
 /* ───────────────── Types ───────────────── */
 
