@@ -162,7 +162,7 @@ export async function updateProfissional(
   );
 }
 
-export async function deactivateProfissional(id: number | string) {
+export async function inactivateProfissional(id: number | string) {
   return tryApi(
     async () => {
       const res = await api.patch<ApiSuccessResponse<Profissional>>(
