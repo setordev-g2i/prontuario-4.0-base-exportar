@@ -16,6 +16,7 @@ import { InputMasked } from "@/components/InputMasked";
 import { MASKS } from "@/lib/masks";
 import { Loader2, Save, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { notifyRequiredErrors } from "@/lib/forms/notifyRequired";
 
 export type PacienteFormMode = "create" | "edit";
 
@@ -25,7 +26,26 @@ interface PacienteFormProps {
   onSubmit: (values: PacienteFormValues) => Promise<void> | void;
   onCancel: () => void;
   submitting?: boolean;
+  readOnly?: boolean;
 }
+
+const PACIENTE_FIELD_LABELS: Record<string, string> = {
+  nome: "Nome",
+  cpf: "CPF",
+  rg: "RG",
+  dataNascimento: "Dt. Nascimento",
+  sexo: "Sexo",
+  email: "Email",
+  telefone: "Telefone",
+  celular: "Celular",
+  cep: "CEP",
+  endereco: "Endereço",
+  numero: "Número",
+  complemento: "Complemento",
+  bairro: "Bairro",
+  cidade: "Cidade",
+  estadoId: "UF",
+};
 
 const defaultValues: PacienteFormValues = {
   nome: "",
@@ -46,18 +66,17 @@ const defaultValues: PacienteFormValues = {
   situacaoId: 1,
 };
 
-/**
- * Form compartilhado entre cadastro (novo) e edição de Pacientes.
- */
 export function PacienteForm({
   mode,
   initialData,
   onSubmit,
   onCancel,
   submitting = false,
+  readOnly = false,
 }: PacienteFormProps) {
   const form = useForm<PacienteFormValues>({
     resolver: zodResolver(pacienteSchema),
+    mode: "onChange",
     defaultValues: { ...defaultValues, ...initialData },
   });
 
@@ -68,13 +87,22 @@ export function PacienteForm({
     formState: { errors },
   } = form;
 
+  const disabled = readOnly;
+
   return (
     <form
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit, (errs) =>
+        notifyRequiredErrors(errs, PACIENTE_FIELD_LABELS),
+      )}
       className="space-y-6"
-      aria-label={mode === "create" ? "Cadastrar paciente" : "Editar paciente"}
+      aria-label={
+        readOnly
+          ? "Visualizar paciente"
+          : mode === "create"
+            ? "Cadastrar paciente"
+            : "Editar paciente"
+      }
     >
-      {/* Dados principais */}
       <section className="space-y-4">
         <h2 className="text-lg font-semibold">Dados principais</h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -82,6 +110,7 @@ export function PacienteForm({
             <Label htmlFor="nome">Nome completo *</Label>
             <Input
               id="nome"
+              disabled={disabled}
               {...register("nome")}
               className={cn(errors.nome && "border-destructive")}
             />
@@ -101,7 +130,8 @@ export function PacienteForm({
                   mask={MASKS.CPF}
                   value={field.value}
                   onChange={(val: string) => field.onChange(val)}
-                  className={cn(errors.cpf && "border-destructive")}
+                  hasError={!!errors.cpf}
+                  disabled={disabled}
                 />
               )}
             />
@@ -112,7 +142,7 @@ export function PacienteForm({
 
           <div>
             <Label htmlFor="rg">RG</Label>
-            <Input id="rg" {...register("rg")} />
+            <Input id="rg" disabled={disabled} {...register("rg")} />
           </div>
 
           <div>
@@ -120,6 +150,7 @@ export function PacienteForm({
             <Input
               id="dataNascimento"
               type="date"
+              disabled={disabled}
               {...register("dataNascimento")}
               className={cn(errors.dataNascimento && "border-destructive")}
             />
@@ -141,6 +172,7 @@ export function PacienteForm({
                   onValueChange={(v) =>
                     field.onChange(v as "masculino" | "feminino" | "outro")
                   }
+                  disabled={disabled}
                 >
                   <SelectTrigger id="sexo">
                     <SelectValue placeholder="Selecione" />
@@ -157,7 +189,6 @@ export function PacienteForm({
         </div>
       </section>
 
-      {/* Contato */}
       <section className="space-y-4">
         <h2 className="text-lg font-semibold">Contato</h2>
         <div className="grid gap-4 md:grid-cols-2">
@@ -166,6 +197,7 @@ export function PacienteForm({
             <Input
               id="email"
               type="email"
+              disabled={disabled}
               {...register("email")}
               className={cn(errors.email && "border-destructive")}
             />
@@ -185,6 +217,7 @@ export function PacienteForm({
                   mask={MASKS.CELULAR}
                   value={field.value ?? ""}
                   onChange={(val: string) => field.onChange(val)}
+                  disabled={disabled}
                 />
               )}
             />
@@ -201,6 +234,7 @@ export function PacienteForm({
                   mask={MASKS.TELEFONE}
                   value={field.value ?? ""}
                   onChange={(val: string) => field.onChange(val)}
+                  disabled={disabled}
                 />
               )}
             />
@@ -208,7 +242,6 @@ export function PacienteForm({
         </div>
       </section>
 
-      {/* Endereço */}
       <section className="space-y-4">
         <h2 className="text-lg font-semibold">Endereço</h2>
         <div className="grid gap-4 md:grid-cols-6">
@@ -223,50 +256,62 @@ export function PacienteForm({
                   mask={MASKS.CEP}
                   value={field.value ?? ""}
                   onChange={(val: string) => field.onChange(val)}
+                  disabled={disabled}
                 />
               )}
             />
           </div>
           <div className="md:col-span-4">
             <Label htmlFor="endereco">Endereço</Label>
-            <Input id="endereco" {...register("endereco")} />
+            <Input id="endereco" disabled={disabled} {...register("endereco")} />
           </div>
           <div className="md:col-span-1">
             <Label htmlFor="numero">Número</Label>
-            <Input id="numero" {...register("numero")} />
+            <Input id="numero" disabled={disabled} {...register("numero")} />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="complemento">Complemento</Label>
-            <Input id="complemento" {...register("complemento")} />
+            <Input
+              id="complemento"
+              disabled={disabled}
+              {...register("complemento")}
+            />
           </div>
           <div className="md:col-span-3">
             <Label htmlFor="bairro">Bairro</Label>
-            <Input id="bairro" {...register("bairro")} />
+            <Input id="bairro" disabled={disabled} {...register("bairro")} />
           </div>
           <div className="md:col-span-4">
             <Label htmlFor="cidade">Cidade</Label>
-            <Input id="cidade" {...register("cidade")} />
+            <Input id="cidade" disabled={disabled} {...register("cidade")} />
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="estadoId">UF</Label>
-            <Input id="estadoId" {...register("estadoId")} />
+            <Input id="estadoId" disabled={disabled} {...register("estadoId")} />
           </div>
         </div>
       </section>
 
       <div className="flex items-center justify-end gap-2 border-t pt-4">
-        <Button type="button" variant="outline" onClick={onCancel} disabled={submitting}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onCancel}
+          disabled={submitting}
+        >
           <X className="mr-1 size-4" />
-          Cancelar
+          {readOnly ? "Fechar" : "Cancelar"}
         </Button>
-        <Button type="submit" disabled={submitting}>
-          {submitting ? (
-            <Loader2 className="mr-1 size-4 animate-spin" />
-          ) : (
-            <Save className="mr-1 size-4" />
-          )}
-          {mode === "create" ? "Cadastrar" : "Salvar alterações"}
-        </Button>
+        {!readOnly && (
+          <Button type="submit" disabled={submitting}>
+            {submitting ? (
+              <Loader2 className="mr-1 size-4 animate-spin" />
+            ) : (
+              <Save className="mr-1 size-4" />
+            )}
+            {mode === "create" ? "Cadastrar" : "Salvar alterações"}
+          </Button>
+        )}
       </div>
     </form>
   );
