@@ -273,6 +273,10 @@ export function ProfissionaisPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [tab, setTab] = useState("dados");
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
+  const [page, setPage] = useState(1);
+  const [fieldErrors, setFieldErrors] = useState<string[]>([]);
+  const PAGE_SIZE = 10;
   const [viewing, setViewing] = useState<Profissional | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showSenha, setShowSenha] = useState(false);
@@ -317,15 +321,46 @@ export function ProfissionaisPage() {
     setForm((f) => ({ ...f, [k]: v }));
 
   const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return list;
-    return list.filter(
-      (p) =>
-        p.nome.toLowerCase().includes(q) ||
-        p.cpf.includes(q) ||
-        p.conselho.toLowerCase().includes(q),
-    );
-  }, [list, search]);
+    const term = normalize(debouncedSearch.trim());
+    if (!term) return list;
+    const termDigits = term.replace(/\D/g, "");
+    return list.filter((p) => {
+      const matchNome = normalize(p.nome).includes(term);
+      const matchCpf =
+        !!termDigits && p.cpf.replace(/\D/g, "").includes(termDigits);
+      const matchConselho = normalize(p.conselho ?? "").includes(term);
+      return matchNome || matchCpf || matchConselho;
+    });
+  }, [list, debouncedSearch]);
+
+  // Reset para a página 1 quando busca muda
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  // Paginação
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginationItems = buildPaginationItems(currentPage, totalPages);
+  const pageItems = useMemo(
+    () =>
+      filtered.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        (currentPage - 1) * PAGE_SIZE + PAGE_SIZE,
+      ),
+    [filtered, currentPage],
+  );
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+  const endItem =
+    totalItems === 0
+      ? 0
+      : Math.min(totalItems, (currentPage - 1) * PAGE_SIZE + PAGE_SIZE);
+
+  const handlePageChange = (nextPage: number) => {
+    if (nextPage < 1 || nextPage > totalPages || nextPage === currentPage) return;
+    setPage(nextPage);
+  };
 
   /* ── Actions ── */
 
@@ -334,6 +369,7 @@ export function ProfissionaisPage() {
     setEditingId(null);
     setTab("dados");
     setShowSenha(false);
+    setFieldErrors([]);
     setFormOpen(true);
   };
 
