@@ -746,8 +746,16 @@ export function ProfissionaisPage() {
                       </Select>
                     </Field>
                     <Field label="CPF" required>
-                      <Input value={form.cpf} placeholder="000.000.000-00"
-                        onChange={(e) => update("cpf", maskCPF(e.target.value))} />
+                      <InputMasked
+                        mask={MASKS.CPF}
+                        value={form.cpf}
+                        placeholder="000.000.000-00"
+                        hasError={fieldErrors.includes("cpf")}
+                        onChange={(v) => {
+                          update("cpf", v);
+                          setFieldErrors((prev) => prev.filter((f) => f !== "cpf"));
+                        }}
+                      />
                     </Field>
                     <Field label="RG">
                       <Input value={form.rg} onChange={(e) => update("rg", e.target.value)} />
@@ -784,8 +792,12 @@ export function ProfissionaisPage() {
               <TabsContent value="complementares" className="mt-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Field label="CEP">
-                    <Input value={form.cep} placeholder="00000-000"
-                      onChange={(e) => update("cep", maskCEP(e.target.value))} />
+                    <InputMasked
+                      mask={MASKS.CEP}
+                      value={form.cep}
+                      placeholder="00000-000"
+                      onChange={(v) => update("cep", v)}
+                    />
                   </Field>
                   <Field label="Endereço" className="md:col-span-2">
                     <Input value={form.endereco} onChange={(e) => update("endereco", e.target.value)} />
@@ -814,12 +826,20 @@ export function ProfissionaisPage() {
                     <Input value={form.estado_id} onChange={(e) => update("estado_id", e.target.value)} />
                   </Field>
                   <Field label="Telefone">
-                    <Input value={form.telefone} placeholder="(00) 0000-0000"
-                      onChange={(e) => update("telefone", maskTelefone(e.target.value))} />
+                    <InputMasked
+                      mask={MASKS.TELEFONE}
+                      value={form.telefone}
+                      placeholder="(00) 0000-0000"
+                      onChange={(v) => update("telefone", v)}
+                    />
                   </Field>
                   <Field label="Celular">
-                    <Input value={form.celular} placeholder="(00) 00000-0000"
-                      onChange={(e) => update("celular", maskCelular(e.target.value))} />
+                    <InputMasked
+                      mask={MASKS.CELULAR}
+                      value={form.celular}
+                      placeholder="(00) 00000-0000"
+                      onChange={(v) => update("celular", v)}
+                    />
                   </Field>
                   <Field label="E-mail">
                     <Input type="email" value={form.email}
