@@ -23,7 +23,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Link, useLocation } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 import { useFavorites } from "@/hooks/use-favorites";
 
@@ -100,8 +100,8 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Cadastro",
         items: [
-          { label: "Pacientes", icon: Users, iconName: "Users", path: "/patients" },
-          { label: "Cadastrar Paciente", icon: UserPlus, iconName: "UserPlus", path: "/patients?new=1" },
+          { label: "Pacientes", icon: Users, iconName: "Users", path: "/pacientes" },
+          { label: "Cadastrar Paciente", icon: UserPlus, iconName: "UserPlus", path: "/pacientes/novo" },
         ],
       },
       {
