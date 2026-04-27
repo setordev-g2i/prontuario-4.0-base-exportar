@@ -924,20 +924,20 @@ export function ProfissionaisPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Delete confirm */}
+        {/* Desativar confirm (exclusão lógica) */}
         <AlertDialog open={!!deletingId} onOpenChange={(o) => !o && setDeletingId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Excluir profissional?</AlertDialogTitle>
+              <AlertDialogTitle>Desativar profissional?</AlertDialogTitle>
               <AlertDialogDescription>
-                Esta ação não pode ser desfeita.
+                O profissional será marcado como <strong>Inativo</strong>. Você poderá reativá-lo posteriormente na edição.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                Excluir
+                Desativar
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
