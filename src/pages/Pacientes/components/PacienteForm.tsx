@@ -98,9 +98,9 @@ export function PacienteForm({
               render={({ field }) => (
                 <InputMasked
                   id="cpf"
-                  mask={MASKS.cpf}
+                  mask={MASKS.CPF}
                   value={field.value}
-                  onAccept={(val: string) => field.onChange(val)}
+                  onChange={(val: string) => field.onChange(val)}
                   className={cn(errors.cpf && "border-destructive")}
                 />
               )}
@@ -182,9 +182,9 @@ export function PacienteForm({
               render={({ field }) => (
                 <InputMasked
                   id="celular"
-                  mask={MASKS.celular}
+                  mask={MASKS.CELULAR}
                   value={field.value ?? ""}
-                  onAccept={(val: string) => field.onChange(val)}
+                  onChange={(val: string) => field.onChange(val)}
                 />
               )}
             />
@@ -198,9 +198,9 @@ export function PacienteForm({
               render={({ field }) => (
                 <InputMasked
                   id="telefone"
-                  mask={MASKS.telefone}
+                  mask={MASKS.TELEFONE}
                   value={field.value ?? ""}
-                  onAccept={(val: string) => field.onChange(val)}
+                  onChange={(val: string) => field.onChange(val)}
                 />
               )}
             />
@@ -220,9 +220,9 @@ export function PacienteForm({
               render={({ field }) => (
                 <InputMasked
                   id="cep"
-                  mask={MASKS.cep}
+                  mask={MASKS.CEP}
                   value={field.value ?? ""}
-                  onAccept={(val: string) => field.onChange(val)}
+                  onChange={(val: string) => field.onChange(val)}
                 />
               )}
             />
