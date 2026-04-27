@@ -513,33 +513,23 @@ export function ProfissionaisPage() {
                         </TableCell>
                         <TableCell>{p.conselho || "—"}</TableCell>
                         <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="sm" variant="outline" className="gap-1">
-                                Opções <ChevronDown className="size-3.5" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-40">
-                              <DropdownMenuItem onClick={() => setViewing(p)}>
-                                <Eye className="size-4" /> Visualizar
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleEditar(p)}>
-                                <Pencil className="size-4" /> Editar
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => setCbosOpenForId(p.id)}>
-                                <Briefcase className="size-4" /> CBO
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => setEspecialidadesOpenForId(p.id)}>
-                                <Stethoscope className="size-4" /> Especialidades
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => setDeletingId(p.id)}
-                                className="text-destructive focus:text-destructive"
-                              >
-                                <Trash2 className="size-4" /> Excluir
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <ActionsDropdown
+                            onView={() => setViewing(p)}
+                            onEdit={() => handleEditar(p)}
+                            onDeactivate={() => setDeletingId(p.id)}
+                            customActions={[
+                              {
+                                icon: <Briefcase className="mr-2 h-4 w-4" />,
+                                label: "CBO",
+                                onClick: () => setCbosOpenForId(p.id),
+                              },
+                              {
+                                icon: <Stethoscope className="mr-2 h-4 w-4" />,
+                                label: "Especialidades",
+                                onClick: () => setEspecialidadesOpenForId(p.id),
+                              },
+                            ]}
+                          />
                         </TableCell>
                       </TableRow>
                     ))
