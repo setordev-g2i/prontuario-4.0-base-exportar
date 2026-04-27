@@ -1,13 +1,17 @@
-import { useMemo, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent } from "react";
+import { z } from "zod";
 import { toast } from "sonner";
 import {
-  Plus, Save, Pencil, Trash2, Eye, Upload, X, Search,
-  Eye as EyeIcon, EyeOff, FileBadge, Stethoscope, ChevronDown,
+  Plus, Save, Pencil, Eye, Upload, X, Search, Loader2,
+  Eye as EyeIcon, EyeOff, FileBadge, Stethoscope, Briefcase,
 } from "lucide-react";
-import {
-  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Briefcase } from "lucide-react";
+import { ActionsDropdown } from "@/components/ActionsDropdown";
+import { InputMasked } from "@/components/InputMasked";
+import { MASKS } from "@/lib/masks";
+import { normalize } from "@/lib/normalize";
+import { buildPaginationItems } from "@/lib/pagination";
+import { useDebounce } from "@/hooks/useDebounce";
+import { isValidCPF } from "@/lib/validators";
 import {
   ProfissionalCBOsDialog,
   type ProfissionalCBO,
@@ -40,6 +44,10 @@ import {
 import {
   Tooltip, TooltipContent, TooltipProvider, TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Pagination, PaginationContent, PaginationItem, PaginationLink,
+  PaginationPrevious, PaginationNext, PaginationEllipsis,
+} from "@/components/ui/pagination";
 
 /* ───────────────── Types ───────────────── */
 
@@ -265,6 +273,10 @@ export function ProfissionaisPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [tab, setTab] = useState("dados");
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
+  const [page, setPage] = useState(1);
+  const [fieldErrors, setFieldErrors] = useState<string[]>([]);
+  const PAGE_SIZE = 10;
   const [viewing, setViewing] = useState<Profissional | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showSenha, setShowSenha] = useState(false);
@@ -309,15 +321,46 @@ export function ProfissionaisPage() {
     setForm((f) => ({ ...f, [k]: v }));
 
   const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return list;
-    return list.filter(
-      (p) =>
-        p.nome.toLowerCase().includes(q) ||
-        p.cpf.includes(q) ||
-        p.conselho.toLowerCase().includes(q),
-    );
-  }, [list, search]);
+    const term = normalize(debouncedSearch.trim());
+    if (!term) return list;
+    const termDigits = term.replace(/\D/g, "");
+    return list.filter((p) => {
+      const matchNome = normalize(p.nome).includes(term);
+      const matchCpf =
+        !!termDigits && p.cpf.replace(/\D/g, "").includes(termDigits);
+      const matchConselho = normalize(p.conselho ?? "").includes(term);
+      return matchNome || matchCpf || matchConselho;
+    });
+  }, [list, debouncedSearch]);
+
+  // Reset para a página 1 quando busca muda
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  // Paginação
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginationItems = buildPaginationItems(currentPage, totalPages);
+  const pageItems = useMemo(
+    () =>
+      filtered.slice(
+        (currentPage - 1) * PAGE_SIZE,
+        (currentPage - 1) * PAGE_SIZE + PAGE_SIZE,
+      ),
+    [filtered, currentPage],
+  );
+  const startItem = totalItems === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+  const endItem =
+    totalItems === 0
+      ? 0
+      : Math.min(totalItems, (currentPage - 1) * PAGE_SIZE + PAGE_SIZE);
+
+  const handlePageChange = (nextPage: number) => {
+    if (nextPage < 1 || nextPage > totalPages || nextPage === currentPage) return;
+    setPage(nextPage);
+  };
 
   /* ── Actions ── */
 
@@ -326,36 +369,66 @@ export function ProfissionaisPage() {
     setEditingId(null);
     setTab("dados");
     setShowSenha(false);
+    setFieldErrors([]);
     setFormOpen(true);
   };
 
+  // Schema Zod para os campos obrigatórios principais
+  const mainSchema = z.object({
+    nome: z.string().min(1, "O campo Nome é obrigatório"),
+    tipo_cadastro_id: z
+      .string()
+      .min(1, "O campo Tipo de Cadastro é obrigatório"),
+    cpf: z
+      .string()
+      .min(1, "O campo CPF é obrigatório")
+      .refine(
+        (v) => v.replace(/\D/g, "").length === 11,
+        "CPF deve ter 11 dígitos",
+      )
+      .refine(isValidCPF, "CPF inválido"),
+    situacao_id: z.string().min(1, "O campo Situação é obrigatório"),
+  });
+
   const handleSalvar = () => {
-    // Validation
-    const errors: string[] = [];
-    if (!form.nome.trim()) errors.push("Nome");
-    if (!form.tipo_cadastro_id) errors.push("Tipo de Cadastro");
-    if (!form.cpf || form.cpf.replace(/\D/g, "").length !== 11) errors.push("CPF");
-    if (!form.situacao_id) errors.push("Situação");
+    const result = mainSchema.safeParse({
+      nome: form.nome,
+      tipo_cadastro_id: form.tipo_cadastro_id,
+      cpf: form.cpf,
+      situacao_id: form.situacao_id,
+    });
+
+    if (!result.success) {
+      const zodErrors = (result.error as z.ZodError).issues;
+      zodErrors.forEach((err) => toast.error(err.message));
+      setFieldErrors(zodErrors.map((e) => e.path[0] as string));
+      setTab("dados");
+      return;
+    }
+
     if (form.email && !isValidEmail(form.email)) {
       toast.error("E-mail inválido");
+      setFieldErrors(["email"]);
       setTab("complementares");
       return;
     }
+
+    // Certificado digital
     if (form.possui_certificado === "sim") {
-      if (!form.arquivo_certificado_pfx) errors.push("Arquivo Certificado PFX");
-      if (!form.senha_certificado) errors.push("Senha do Certificado");
-      if (!form.validade_inicio_certificado) errors.push("Validade Início");
-      if (!form.validade_fim_certificado) errors.push("Validade Fim");
-    }
-    if (errors.length) {
-      toast.error(`Campos obrigatórios: ${errors.join(", ")}`);
-      if (errors.some((e) => ["Nome", "Tipo de Cadastro", "CPF", "Situação"].includes(e))) {
-        setTab("dados");
-      } else if (errors.some((e) => e.includes("Certificado") || e.includes("Validade") || e.includes("Senha"))) {
+      const certErrors: string[] = [];
+      if (!form.arquivo_certificado_pfx) certErrors.push("arquivo_certificado_pfx");
+      if (!form.senha_certificado) certErrors.push("senha_certificado");
+      if (!form.validade_inicio_certificado) certErrors.push("validade_inicio_certificado");
+      if (!form.validade_fim_certificado) certErrors.push("validade_fim_certificado");
+      if (certErrors.length) {
+        toast.error("Preencha todos os campos obrigatórios do Certificado Digital");
+        setFieldErrors(certErrors);
         setTab("certificado");
+        return;
       }
-      return;
     }
+
+    setFieldErrors([]);
 
     if (editingId) {
       setList((l) => l.map((p) => (p.id === editingId ? { ...form, id: editingId } : p)));
@@ -381,14 +454,14 @@ export function ProfissionaisPage() {
 
   const confirmDelete = () => {
     if (!deletingId) return;
-    setList((l) => l.filter((p) => p.id !== deletingId));
-    if (editingId === deletingId) {
-      setForm(empty());
-      setEditingId(null);
-      setFormOpen(false);
-    }
+    // Exclusão lógica: situacao_id = "2" (Inativo)
+    setList((l) =>
+      l.map((p) =>
+        p.id === deletingId ? { ...p, situacao_id: "2" } : p,
+      ),
+    );
     setDeletingId(null);
-    toast.success("Profissional excluído com sucesso");
+    toast.success("Profissional desativado com sucesso");
   };
 
   /* ── Foto upload ── */
@@ -477,14 +550,14 @@ export function ProfissionaisPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filtered.length === 0 ? (
+                  {pageItems.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                         Nenhum profissional encontrado.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filtered.map((p) => (
+                    pageItems.map((p) => (
                       <TableRow key={p.id} className={editingId === p.id ? "bg-accent/40" : ""}>
                         <TableCell>
                           {p.foto ? (
@@ -505,33 +578,23 @@ export function ProfissionaisPage() {
                         </TableCell>
                         <TableCell>{p.conselho || "—"}</TableCell>
                         <TableCell className="text-right">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button size="sm" variant="outline" className="gap-1">
-                                Opções <ChevronDown className="size-3.5" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="w-40">
-                              <DropdownMenuItem onClick={() => setViewing(p)}>
-                                <Eye className="size-4" /> Visualizar
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleEditar(p)}>
-                                <Pencil className="size-4" /> Editar
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => setCbosOpenForId(p.id)}>
-                                <Briefcase className="size-4" /> CBO
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => setEspecialidadesOpenForId(p.id)}>
-                                <Stethoscope className="size-4" /> Especialidades
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => setDeletingId(p.id)}
-                                className="text-destructive focus:text-destructive"
-                              >
-                                <Trash2 className="size-4" /> Excluir
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <ActionsDropdown
+                            onView={() => setViewing(p)}
+                            onEdit={() => handleEditar(p)}
+                            onDeactivate={() => setDeletingId(p.id)}
+                            customActions={[
+                              {
+                                icon: <Briefcase className="mr-2 h-4 w-4" />,
+                                label: "CBO",
+                                onClick: () => setCbosOpenForId(p.id),
+                              },
+                              {
+                                icon: <Stethoscope className="mr-2 h-4 w-4" />,
+                                label: "Especialidades",
+                                onClick: () => setEspecialidadesOpenForId(p.id),
+                              },
+                            ]}
+                          />
                         </TableCell>
                       </TableRow>
                     ))
@@ -539,6 +602,69 @@ export function ProfissionaisPage() {
                 </TableBody>
               </Table>
             </div>
+
+            {/* Paginação */}
+            {totalItems > 0 && (
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-4">
+                <div className="text-xs text-muted-foreground">
+                  Exibindo {startItem}–{endItem} de {totalItems} profissional
+                  {totalItems !== 1 ? "is" : ""}
+                  {debouncedSearch.trim() && (
+                    <span className="ml-2">• Busca ativa por “{debouncedSearch}”</span>
+                  )}
+                </div>
+                {totalPages > 1 && (
+                  <Pagination className="mx-0 w-auto justify-end">
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage - 1);
+                          }}
+                          className={
+                            currentPage <= 1 ? "pointer-events-none opacity-50" : undefined
+                          }
+                        />
+                      </PaginationItem>
+                      {paginationItems.map((item, index) => (
+                        <PaginationItem key={index}>
+                          {item === "ellipsis" ? (
+                            <PaginationEllipsis />
+                          ) : (
+                            <PaginationLink
+                              href="#"
+                              isActive={item === currentPage}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handlePageChange(item);
+                              }}
+                            >
+                              {item}
+                            </PaginationLink>
+                          )}
+                        </PaginationItem>
+                      ))}
+                      <PaginationItem>
+                        <PaginationNext
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage + 1);
+                          }}
+                          className={
+                            currentPage >= totalPages
+                              ? "pointer-events-none opacity-50"
+                              : undefined
+                          }
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -620,8 +746,16 @@ export function ProfissionaisPage() {
                       </Select>
                     </Field>
                     <Field label="CPF" required>
-                      <Input value={form.cpf} placeholder="000.000.000-00"
-                        onChange={(e) => update("cpf", maskCPF(e.target.value))} />
+                      <InputMasked
+                        mask={MASKS.CPF}
+                        value={form.cpf}
+                        placeholder="000.000.000-00"
+                        hasError={fieldErrors.includes("cpf")}
+                        onChange={(v) => {
+                          update("cpf", v);
+                          setFieldErrors((prev) => prev.filter((f) => f !== "cpf"));
+                        }}
+                      />
                     </Field>
                     <Field label="RG">
                       <Input value={form.rg} onChange={(e) => update("rg", e.target.value)} />
@@ -658,8 +792,12 @@ export function ProfissionaisPage() {
               <TabsContent value="complementares" className="mt-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Field label="CEP">
-                    <Input value={form.cep} placeholder="00000-000"
-                      onChange={(e) => update("cep", maskCEP(e.target.value))} />
+                    <InputMasked
+                      mask={MASKS.CEP}
+                      value={form.cep}
+                      placeholder="00000-000"
+                      onChange={(v) => update("cep", v)}
+                    />
                   </Field>
                   <Field label="Endereço" className="md:col-span-2">
                     <Input value={form.endereco} onChange={(e) => update("endereco", e.target.value)} />
@@ -688,12 +826,20 @@ export function ProfissionaisPage() {
                     <Input value={form.estado_id} onChange={(e) => update("estado_id", e.target.value)} />
                   </Field>
                   <Field label="Telefone">
-                    <Input value={form.telefone} placeholder="(00) 0000-0000"
-                      onChange={(e) => update("telefone", maskTelefone(e.target.value))} />
+                    <InputMasked
+                      mask={MASKS.TELEFONE}
+                      value={form.telefone}
+                      placeholder="(00) 0000-0000"
+                      onChange={(v) => update("telefone", v)}
+                    />
                   </Field>
                   <Field label="Celular">
-                    <Input value={form.celular} placeholder="(00) 00000-0000"
-                      onChange={(e) => update("celular", maskCelular(e.target.value))} />
+                    <InputMasked
+                      mask={MASKS.CELULAR}
+                      value={form.celular}
+                      placeholder="(00) 00000-0000"
+                      onChange={(v) => update("celular", v)}
+                    />
                   </Field>
                   <Field label="E-mail">
                     <Input type="email" value={form.email}
@@ -926,20 +1072,20 @@ export function ProfissionaisPage() {
           </DialogContent>
         </Dialog>
 
-        {/* Delete confirm */}
+        {/* Desativar confirm (exclusão lógica) */}
         <AlertDialog open={!!deletingId} onOpenChange={(o) => !o && setDeletingId(null)}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Excluir profissional?</AlertDialogTitle>
+              <AlertDialogTitle>Desativar profissional?</AlertDialogTitle>
               <AlertDialogDescription>
-                Esta ação não pode ser desfeita.
+                O profissional será marcado como <strong>Inativo</strong>. Você poderá reativá-lo posteriormente na edição.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancelar</AlertDialogCancel>
               <AlertDialogAction onClick={confirmDelete}
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                Excluir
+                Desativar
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
