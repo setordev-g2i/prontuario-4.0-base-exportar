@@ -550,14 +550,14 @@ export function ProfissionaisPage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filtered.length === 0 ? (
+                  {pageItems.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                         Nenhum profissional encontrado.
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filtered.map((p) => (
+                    pageItems.map((p) => (
                       <TableRow key={p.id} className={editingId === p.id ? "bg-accent/40" : ""}>
                         <TableCell>
                           {p.foto ? (
@@ -602,6 +602,69 @@ export function ProfissionaisPage() {
                 </TableBody>
               </Table>
             </div>
+
+            {/* Paginação */}
+            {totalItems > 0 && (
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mt-4">
+                <div className="text-xs text-muted-foreground">
+                  Exibindo {startItem}–{endItem} de {totalItems} profissional
+                  {totalItems !== 1 ? "is" : ""}
+                  {debouncedSearch.trim() && (
+                    <span className="ml-2">• Busca ativa por “{debouncedSearch}”</span>
+                  )}
+                </div>
+                {totalPages > 1 && (
+                  <Pagination className="mx-0 w-auto justify-end">
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage - 1);
+                          }}
+                          className={
+                            currentPage <= 1 ? "pointer-events-none opacity-50" : undefined
+                          }
+                        />
+                      </PaginationItem>
+                      {paginationItems.map((item, index) => (
+                        <PaginationItem key={index}>
+                          {item === "ellipsis" ? (
+                            <PaginationEllipsis />
+                          ) : (
+                            <PaginationLink
+                              href="#"
+                              isActive={item === currentPage}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                handlePageChange(item);
+                              }}
+                            >
+                              {item}
+                            </PaginationLink>
+                          )}
+                        </PaginationItem>
+                      ))}
+                      <PaginationItem>
+                        <PaginationNext
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(currentPage + 1);
+                          }}
+                          className={
+                            currentPage >= totalPages
+                              ? "pointer-events-none opacity-50"
+                              : undefined
+                          }
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 
