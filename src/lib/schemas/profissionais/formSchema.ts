@@ -61,8 +61,8 @@ export const profissionalFormSchema = z.object({
   tabelaRepasse: z.string().optional().or(z.literal("")),
 
   // Configurações
-  atendePsiquiatricos: z.boolean().optional().default(false),
-  cadastrarAgenda: z.boolean().optional().default(false),
+  atendePsiquiatricos: z.boolean().optional(),
+  cadastrarAgenda: z.boolean().optional(),
   unidadeId: z.string().optional().or(z.literal("")),
   solicitanteSusId: z.string().optional().or(z.literal("")),
 
