@@ -37,6 +37,7 @@ export default function PacientesListPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Paciente[]>([]);
   const [search, setSearch] = useState("");
+  const [, setPage] = useState(1);
   const debounced = useDebounce(search, 300);
   const [inactivatingId, setInactivatingId] = useState<Paciente["id"] | null>(
     null,
@@ -50,6 +51,11 @@ export default function PacientesListPage() {
     setModalMode(mode);
     setSelected(p);
     setModalOpen(true);
+  }
+
+  function handleSearchChange(value: string) {
+    setSearch(value);
+    setPage(1);
   }
 
   async function load() {
@@ -81,7 +87,16 @@ export default function PacientesListPage() {
     }
   }
 
-  const visible = useMemo(() => data, [data]);
+  // Filtro frontend complementar (normalize nome + dígitos CPF)
+  const visible = useMemo(() => {
+    if (!debounced.trim()) return data;
+    const { term, digits } = parseSearchTerm(debounced);
+    return data.filter((p) => {
+      const matchNome = term ? normalize(p.nome).includes(term) : false;
+      const matchCpf = digits ? onlyDigits(p.cpf).includes(digits) : false;
+      return matchNome || matchCpf;
+    });
+  }, [data, debounced]);
 
   return (
     <div className="space-y-4">
