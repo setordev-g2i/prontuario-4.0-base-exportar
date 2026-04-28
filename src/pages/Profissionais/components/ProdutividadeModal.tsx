@@ -40,6 +40,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ActionsDropdown } from "@/components/ActionsDropdown";
 import {
+  CONVENIO_OPTIONS,
   convenioLabel,
   fetchProdutividades,
   inactivateProdutividade,
