@@ -104,12 +104,11 @@ export default function ProfissionaisEspecialidadesPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <Link
-            to={`/configuracoes/profissionais/${profissional.id}`}
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="mr-1 size-3.5" /> Voltar ao profissional
-          </Link>
+          <BackButton
+            fallback="/configuracoes/profissionais"
+            label="Voltar"
+            className="mb-1 -ml-2"
+          />
           <h1 className="text-2xl font-bold">Especialidades do profissional</h1>
           <p className="text-sm text-muted-foreground">{profissional.nome}</p>
         </div>
