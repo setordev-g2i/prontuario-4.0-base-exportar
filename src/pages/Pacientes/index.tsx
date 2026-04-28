@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ActionsDropdown } from "@/components/ActionsDropdown";
 import { useDebounce } from "@/hooks/useDebounce";
+import { parseSearchTerm, normalize, onlyDigits } from "@/lib/search";
 import { fetchPacientes, inactivatePaciente } from "@/services/pacientes";
 import type { Paciente } from "@/types/entities/Paciente";
 import {
