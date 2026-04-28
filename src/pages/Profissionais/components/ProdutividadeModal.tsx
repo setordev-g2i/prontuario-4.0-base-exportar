@@ -62,6 +62,7 @@ interface Props {
 export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) {
   const [list, setList] = useState<ProfissionalProdutividade[]>([]);
   const [procedimentos, setProcedimentos] = useState<Procedimento[]>([]);
+  const [grupos, setGrupos] = useState<GrupoProcedimento[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [formOpen, setFormOpen] = useState(false);
@@ -72,6 +73,10 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
   const [inactivatingId, setInactivatingId] = useState<
     string | number | null
   >(null);
+
+  const [convenioFilter, setConvenioFilter] = useState<string>("");
+  const [procedimentoFilter, setProcedimentoFilter] = useState<string>("");
+  const [grupoFilter, setGrupoFilter] = useState<string>("");
 
   async function load() {
     if (!profissional) return;
