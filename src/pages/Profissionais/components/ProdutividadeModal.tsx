@@ -1,6 +1,16 @@
 import { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, X } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { fetchGruposProcedimentos } from "@/services/gruposProcedimentos";
+import type { GrupoProcedimento } from "@/types/entities/GrupoProcedimento";
 import {
   Dialog,
   DialogContent,
