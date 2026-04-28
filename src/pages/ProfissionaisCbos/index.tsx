@@ -36,7 +36,6 @@ import type { ProfissionalCbo } from "@/types/entities/ProfissionalCbo";
 import { ProfissionalCboDialog } from "./components/ProfissionalCboDialog";
 
 export default function ProfissionaisCbosPage() {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const [loading, setLoading] = useState(true);
