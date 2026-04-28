@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ActionsDropdown } from "@/components/ActionsDropdown";
 import { useDebounce } from "@/hooks/useDebounce";
+import { parseSearchTerm, normalize, onlyDigits } from "@/lib/search";
 import {
   fetchProfissionais,
   inactivateProfissional,
