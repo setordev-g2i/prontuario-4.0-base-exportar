@@ -232,6 +232,12 @@ export default function ProfissionaisListPage() {
         onSaved={load}
       />
 
+      <ProdutividadeModal
+        open={produtividadeOpen}
+        onOpenChange={setProdutividadeOpen}
+        profissional={produtividadeProf}
+      />
+
       <AlertDialog
         open={!!inactivatingId}
         onOpenChange={(o) => !o && setInactivatingId(null)}
