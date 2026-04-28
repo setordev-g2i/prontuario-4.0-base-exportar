@@ -242,17 +242,19 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
                       Carregando...
                     </TableCell>
                   </TableRow>
-                ) : list.length === 0 ? (
+                ) : visibleList.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={8}
                       className="text-center py-6 text-muted-foreground"
                     >
-                      Nenhuma produtividade cadastrada
+                      {list.length === 0
+                        ? "Nenhuma produtividade cadastrada"
+                        : "Nenhum registro para os filtros selecionados"}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  list.map((p) => (
+                  visibleList.map((p) => (
                     <TableRow key={p.id}>
                       <TableCell>{convenioLabel(p.convenioId)}</TableCell>
                       <TableCell>{procedimentoLabel(p.procedimentoId)}</TableCell>
