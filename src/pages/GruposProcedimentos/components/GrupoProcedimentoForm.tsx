@@ -15,8 +15,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { DicomModalitySelector } from "./DicomModalitySelector";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import {
   Select,
@@ -548,15 +548,20 @@ export function GrupoProcedimentoForm({
         <TabsContent value="config" className="mt-4">
           <div className="grid gap-4">
             <div>
-              <Label htmlFor="modalidadedicom" className="flex items-center">
+              <Label className="flex items-center">
                 Modalidade DICOM
-                <HelpTip text="Campo técnico para modalidades DICOM quando aplicável." />
+                <HelpTip text="Selecione uma ou mais modalidades DICOM. Você também pode incluir outras siglas." />
               </Label>
-              <Textarea
-                id="modalidadedicom"
-                rows={3}
-                disabled={disabled}
-                {...register("modalidadedicom")}
+              <Controller
+                control={control}
+                name="modalidadedicom"
+                render={({ field }) => (
+                  <DicomModalitySelector
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                    disabled={disabled}
+                  />
+                )}
               />
             </div>
 
