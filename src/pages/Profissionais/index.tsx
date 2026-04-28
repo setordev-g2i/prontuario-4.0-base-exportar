@@ -127,7 +127,7 @@ export default function ProfissionaisListPage() {
               className="pl-8"
               placeholder="Buscar por nome ou CPF..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               aria-label="Buscar profissionais"
             />
           </div>
