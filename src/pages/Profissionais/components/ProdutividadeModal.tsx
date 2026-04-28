@@ -167,11 +167,57 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex justify-end">
-            <Button onClick={() => openForm("create", null)} disabled={!profissional}>
-              <Plus className="mr-1 size-4" />
-              Novo
-            </Button>
+          <div className="flex flex-wrap items-end gap-3 justify-between">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1">
+              <div>
+                <Label className="text-xs">Convênio</Label>
+                <Select value={convenioFilter || "all"} onValueChange={(v) => setConvenioFilter(v === "all" ? "" : v)}>
+                  <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    {CONVENIO_OPTIONS.map((c) => (
+                      <SelectItem key={c.id} value={String(c.id)}>{c.value}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs">Procedimento</Label>
+                <Select value={procedimentoFilter || "all"} onValueChange={(v) => setProcedimentoFilter(v === "all" ? "" : v)}>
+                  <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    {procedimentos.map((p) => (
+                      <SelectItem key={p.id} value={String(p.id)}>{p.nome}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs">Grupo de Procedimentos</Label>
+                <Select value={grupoFilter || "all"} onValueChange={(v) => setGrupoFilter(v === "all" ? "" : v)}>
+                  <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    {grupos.map((g) => (
+                      <SelectItem key={g.id} value={String(g.id)}>{g.nome}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              {(convenioFilter || procedimentoFilter || grupoFilter) && (
+                <Button variant="outline" size="sm" onClick={clearFilters}>
+                  <X className="mr-1 size-4" />
+                  Limpar
+                </Button>
+              )}
+              <Button onClick={() => openForm("create", null)} disabled={!profissional}>
+                <Plus className="mr-1 size-4" />
+                Novo
+              </Button>
+            </div>
           </div>
 
           <div className="rounded-md border mt-2">
