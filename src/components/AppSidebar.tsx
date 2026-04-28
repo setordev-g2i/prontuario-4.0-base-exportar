@@ -247,6 +247,12 @@ const menuConfig: MenuItem[] = [
           { label: "Profissionais", icon: Stethoscope, iconName: "Stethoscope", path: "/configuracoes/profissionais" },
         ],
       },
+      {
+        heading: "Procedimentos",
+        items: [
+          { label: "Grupo de Procedimentos", icon: FolderArchive, iconName: "FolderArchive", path: "/configuracoes/procedimentos/grupos" },
+        ],
+      },
     ],
   },
 ];

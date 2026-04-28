@@ -10,6 +10,9 @@ import ProfissionaisEspecialidadesPage from "@/pages/ProfissionaisEspecialidades
 // Pacientes
 import PacientesListPage from "@/pages/Pacientes";
 
+// Grupos de Procedimentos
+import GruposProcedimentosPage from "@/pages/GruposProcedimentos";
+
 export function AppRoutes() {
   return (
     <Routes>
@@ -32,6 +35,12 @@ export function AppRoutes() {
 
         {/* Pacientes — todas as ações em modal */}
         <Route path="/pacientes" element={<PacientesListPage />} />
+
+        {/* Configurações → Procedimentos → Grupo de Procedimentos */}
+        <Route
+          path="/configuracoes/procedimentos/grupos"
+          element={<GruposProcedimentosPage />}
+        />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
