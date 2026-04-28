@@ -36,7 +36,6 @@ import type { ProfissionalEspecialidade } from "@/types/entities/ProfissionalEsp
 import { ProfissionalEspecialidadeDialog } from "./components/ProfissionalEspecialidadeDialog";
 
 export default function ProfissionaisEspecialidadesPage() {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const [loading, setLoading] = useState(true);
