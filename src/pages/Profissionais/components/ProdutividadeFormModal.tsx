@@ -31,6 +31,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   CONVENIO_OPTIONS,
   createProdutividade,
+  fetchProdutividades,
   updateProdutividade,
 } from "@/services/profissionaisProdutividade";
 import { fetchProcedimentos } from "@/services/procedimentos";
@@ -78,8 +79,6 @@ interface FormState {
   opcaoDtatendimentoCalculaProdutividadeVlcaixa: boolean;
   opcaoDtatendimentoCalculaProdutividadeVlfaturado: boolean;
   operacaoCreditoOuDebito: string;
-  created: string;
-  modified: string;
 }
 
 const emptyForm = (): FormState => ({
@@ -105,8 +104,6 @@ const emptyForm = (): FormState => ({
   opcaoDtatendimentoCalculaProdutividadeVlcaixa: false,
   opcaoDtatendimentoCalculaProdutividadeVlfaturado: false,
   operacaoCreditoOuDebito: "1",
-  created: "",
-  modified: "",
 });
 
 function fromEntity(p: ProfissionalProdutividade): FormState {
@@ -139,8 +136,6 @@ function fromEntity(p: ProfissionalProdutividade): FormState {
     opcaoDtatendimentoCalculaProdutividadeVlfaturado:
       !!p.opcaoDtatendimentoCalculaProdutividadeVlfaturado,
     operacaoCreditoOuDebito: String(p.operacaoCreditoOuDebito ?? 1),
-    created: p.created ?? "",
-    modified: p.modified ?? "",
   };
 }
 
@@ -174,6 +169,7 @@ export function ProdutividadeFormModal({
   const [procedimentos, setProcedimentos] = useState<Procedimento[]>([]);
   const [grupos, setGrupos] = useState<GrupoProcedimento[]>([]);
   const [profissionalOpts, setProfissionalOpts] = useState<SelectOption[]>([]);
+  const [existentes, setExistentes] = useState<ProfissionalProdutividade[]>([]);
 
   const isView = mode === "view";
   const isEdit = mode === "edit";
@@ -188,10 +184,13 @@ export function ProdutividadeFormModal({
     }
     (async () => {
       try {
-        const [procs, grps, profs] = await Promise.all([
+        const [procs, grps, profs, exist] = await Promise.all([
           fetchProcedimentos(),
           fetchGruposProcedimentos(),
           fetchProfissionaisOptions(),
+          profissional
+            ? fetchProdutividades(profissional.id)
+            : Promise.resolve([] as ProfissionalProdutividade[]),
         ]);
         setProcedimentos(procs);
         setGrupos(grps);
@@ -200,6 +199,7 @@ export function ProdutividadeFormModal({
             ? profs.filter((p) => String(p.id) !== String(profissional.id))
             : profs,
         );
+        setExistentes(exist);
       } catch {
         toast.error("Erro ao carregar listas de apoio");
       }
@@ -248,12 +248,12 @@ export function ProdutividadeFormModal({
       setActiveTab("principal");
       return;
     }
-    if (!isEdit && form.alvo === "grupo" && !form.grupoId) {
+    if (form.alvo === "grupo" && !form.grupoId) {
       toast.error("Selecione um Grupo");
       setActiveTab("principal");
       return;
     }
-    if ((isEdit || form.alvo === "procedimento") && !form.procedimentoId) {
+    if (form.alvo === "procedimento" && !form.procedimentoId) {
       toast.error("O campo Procedimento é obrigatório");
       setActiveTab("principal");
       return;
@@ -269,19 +269,13 @@ export function ProdutividadeFormModal({
       form.vigenciaFinal < form.vigenciaInicial
     ) {
       toast.error("Vigência Final não pode ser menor que Vigência Inicial");
-      setActiveTab("produtividade");
+      setActiveTab("principal");
       return;
     }
 
     setSaving(true);
     try {
-      if (isEdit && initial) {
-        await updateProdutividade(initial.id, {
-          ...buildPayloadBase(),
-          procedimentoId: Number(form.procedimentoId),
-        });
-        toast.success("Produtividade atualizada com sucesso!");
-      } else if (form.alvo === "grupo") {
+      if (form.alvo === "grupo") {
         const grupoId = Number(form.grupoId);
         const procsDoGrupo = procedimentos.filter(
           (p) => p.grupoId === grupoId && p.situacaoId === 1,
@@ -291,23 +285,46 @@ export function ProdutividadeFormModal({
           setSaving(false);
           return;
         }
-        let ok = 0;
+        let updated = 0;
+        let created = 0;
         let skip = 0;
+        const convenioId = Number(form.convenioId);
         for (const proc of procsDoGrupo) {
+          const procId = Number(proc.id);
+          const existente = existentes.find(
+            (e) =>
+              e.convenioId === convenioId &&
+              Number(e.procedimentoId) === procId,
+          );
           try {
-            await createProdutividade({
-              ...buildPayloadBase(),
-              procedimentoId: Number(proc.id),
-            });
-            ok++;
+            if (existente) {
+              await updateProdutividade(existente.id, {
+                ...buildPayloadBase(),
+                procedimentoId: procId,
+              });
+              updated++;
+            } else {
+              await createProdutividade({
+                ...buildPayloadBase(),
+                procedimentoId: procId,
+              });
+              created++;
+            }
           } catch {
             skip++;
           }
         }
-        toast.success(
-          `${ok} produtividade(s) cadastrada(s)` +
-            (skip > 0 ? ` • ${skip} ignorada(s) por duplicidade` : ""),
-        );
+        const partes = [];
+        if (updated > 0) partes.push(`${updated} atualizada(s)`);
+        if (created > 0) partes.push(`${created} criada(s)`);
+        if (skip > 0) partes.push(`${skip} ignorada(s)`);
+        toast.success(partes.join(" • ") || "Operação concluída");
+      } else if (isEdit && initial) {
+        await updateProdutividade(initial.id, {
+          ...buildPayloadBase(),
+          procedimentoId: Number(form.procedimentoId),
+        });
+        toast.success("Produtividade atualizada com sucesso!");
       } else {
         await createProdutividade({
           ...buildPayloadBase(),
@@ -350,14 +367,15 @@ export function ProdutividadeFormModal({
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList>
             <TabsTrigger value="principal">Dados Principais</TabsTrigger>
-            <TabsTrigger value="produtividade">Produtividade</TabsTrigger>
             <TabsTrigger value="config">Configurações</TabsTrigger>
           </TabsList>
 
           <TabsContent value="principal" className="mt-4 space-y-4">
-            {!isEdit && !isView && (
+            {!isView && (
               <div className="rounded border p-3">
-                <Label className="mb-2 block">Cadastrar por</Label>
+                <Label className="mb-2 block">
+                  {isEdit ? "Aplicar alterações por" : "Cadastrar por"}
+                </Label>
                 <RadioGroup
                   value={form.alvo}
                   onValueChange={(v) =>
@@ -374,7 +392,9 @@ export function ProdutividadeFormModal({
                   <div className="flex items-center gap-2">
                     <RadioGroupItem value="grupo" id="alvo-grupo" />
                     <Label htmlFor="alvo-grupo" className="cursor-pointer">
-                      Grupo (gera para todos os procedimentos ativos)
+                      Grupo {isEdit
+                        ? "(aplica a todos os procedimentos ativos)"
+                        : "(gera para todos os procedimentos ativos)"}
                     </Label>
                   </div>
                 </RadioGroup>
@@ -402,7 +422,7 @@ export function ProdutividadeFormModal({
                 </Select>
               </div>
 
-              {!isEdit && !isView && form.alvo === "grupo" ? (
+              {!isView && form.alvo === "grupo" ? (
                 <div>
                   <Label>Grupo *</Label>
                   <Select
@@ -464,49 +484,50 @@ export function ProdutividadeFormModal({
                 </Select>
               </div>
             </div>
-          </TabsContent>
 
-          <TabsContent value="produtividade" className="mt-4 space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <PercField label="% Recebimento" value={form.percRecebimento}
-                onChange={(v) => setF("percRecebimento", v)} disabled={isView} />
-              <PercField label="% Caixa" tooltip="% Produtividade Sobre Valor do Caixa"
-                value={form.percProdCaixa} onChange={(v) => setF("percProdCaixa", v)} disabled={isView} />
-              <PercField label="% Imposto" tooltip="Valor em % Imposto a descontar"
-                value={form.percImposto} onChange={(v) => setF("percImposto", v)} disabled={isView} />
-              <CurrencyField label="Valor Fixo" value={form.vlFixo}
-                onChange={(v) => setF("vlFixo", v)} disabled={isView} />
-              <PercField label="% Imposto Caixa" tooltip="Percentual Imposto Caixa a Descontar"
-                value={form.percImpostoCaixa} onChange={(v) => setF("percImpostoCaixa", v)} disabled={isView} />
-              <PercField label="% Clínica" value={form.percClinica}
-                onChange={(v) => setF("percClinica", v)} disabled={isView} />
-              <CurrencyField label="Vl. Fixo Clínica" tooltip="Valor Fixo Clínica"
-                value={form.fixoClinica} onChange={(v) => setF("fixoClinica", v)} disabled={isView} />
-              <CurrencyField label="Vl. Fixo Laudo" tooltip="Valor Fixo Laudo"
-                value={form.laudoVlFixo} onChange={(v) => setF("laudoVlFixo", v)} disabled={isView} />
-              <div>
-                <Label>Terceiro Profissional</Label>
-                <Select value={form.terceiroProfissionalId}
-                  onValueChange={(v) => setF("terceiroProfissionalId", v)} disabled={isView}>
-                  <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
-                  <SelectContent>
-                    {profissionalOpts.map((p) => (
-                      <SelectItem key={p.id} value={String(p.id)}>{p.value}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <PercField label="% Terceiro" value={form.terceiroPerc}
-                onChange={(v) => setF("terceiroPerc", v)} disabled={isView} />
-              <div>
-                <Label>Vigência Inicial</Label>
-                <Input type="date" value={form.vigenciaInicial}
-                  onChange={(e) => setF("vigenciaInicial", e.target.value)} disabled={isView} />
-              </div>
-              <div>
-                <Label>Vigência Final</Label>
-                <Input type="date" value={form.vigenciaFinal}
-                  onChange={(e) => setF("vigenciaFinal", e.target.value)} disabled={isView} />
+            <div className="rounded border p-4 space-y-3">
+              <h3 className="text-sm font-semibold">Produtividade</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <PercField label="% Recebimento" value={form.percRecebimento}
+                  onChange={(v) => setF("percRecebimento", v)} disabled={isView} />
+                <PercField label="% Caixa" tooltip="% Produtividade Sobre Valor do Caixa"
+                  value={form.percProdCaixa} onChange={(v) => setF("percProdCaixa", v)} disabled={isView} />
+                <PercField label="% Imposto" tooltip="Valor em % Imposto a descontar"
+                  value={form.percImposto} onChange={(v) => setF("percImposto", v)} disabled={isView} />
+                <CurrencyField label="Valor Fixo" value={form.vlFixo}
+                  onChange={(v) => setF("vlFixo", v)} disabled={isView} />
+                <PercField label="% Imposto Caixa" tooltip="Percentual Imposto Caixa a Descontar"
+                  value={form.percImpostoCaixa} onChange={(v) => setF("percImpostoCaixa", v)} disabled={isView} />
+                <PercField label="% Clínica" value={form.percClinica}
+                  onChange={(v) => setF("percClinica", v)} disabled={isView} />
+                <CurrencyField label="Vl. Fixo Clínica" tooltip="Valor Fixo Clínica"
+                  value={form.fixoClinica} onChange={(v) => setF("fixoClinica", v)} disabled={isView} />
+                <CurrencyField label="Vl. Fixo Laudo" tooltip="Valor Fixo Laudo"
+                  value={form.laudoVlFixo} onChange={(v) => setF("laudoVlFixo", v)} disabled={isView} />
+                <div>
+                  <Label>Terceiro Profissional</Label>
+                  <Select value={form.terceiroProfissionalId}
+                    onValueChange={(v) => setF("terceiroProfissionalId", v)} disabled={isView}>
+                    <SelectTrigger><SelectValue placeholder="Selecione..." /></SelectTrigger>
+                    <SelectContent>
+                      {profissionalOpts.map((p) => (
+                        <SelectItem key={p.id} value={String(p.id)}>{p.value}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <PercField label="% Terceiro" value={form.terceiroPerc}
+                  onChange={(v) => setF("terceiroPerc", v)} disabled={isView} />
+                <div>
+                  <Label>Vigência Inicial</Label>
+                  <Input type="date" value={form.vigenciaInicial}
+                    onChange={(e) => setF("vigenciaInicial", e.target.value)} disabled={isView} />
+                </div>
+                <div>
+                  <Label>Vigência Final</Label>
+                  <Input type="date" value={form.vigenciaFinal}
+                    onChange={(e) => setF("vigenciaFinal", e.target.value)} disabled={isView} />
+                </div>
               </div>
             </div>
           </TabsContent>
@@ -557,26 +578,6 @@ export function ProdutividadeFormModal({
                     <SelectItem value="2">Débito</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              <div>
-                <Label>Usuário de Cadastro</Label>
-                <Input value={MOCK_USER_ID} readOnly disabled />
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label>Criado em</Label>
-                  <Input
-                    value={form.created ? new Date(form.created).toLocaleString("pt-BR") : "—"}
-                    readOnly disabled
-                  />
-                </div>
-                <div>
-                  <Label>Alterado em</Label>
-                  <Input
-                    value={form.modified ? new Date(form.modified).toLocaleString("pt-BR") : "—"}
-                    readOnly disabled
-                  />
-                </div>
               </div>
             </div>
           </TabsContent>
