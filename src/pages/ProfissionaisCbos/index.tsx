@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { Plus, Loader2, ArrowLeft } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
+import { BackButton } from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +36,6 @@ import type { ProfissionalCbo } from "@/types/entities/ProfissionalCbo";
 import { ProfissionalCboDialog } from "./components/ProfissionalCboDialog";
 
 export default function ProfissionaisCbosPage() {
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   const [loading, setLoading] = useState(true);
@@ -102,12 +102,11 @@ export default function ProfissionaisCbosPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <Link
-            to={`/configuracoes/profissionais/${profissional.id}`}
-            className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
-          >
-            <ArrowLeft className="mr-1 size-3.5" /> Voltar ao profissional
-          </Link>
+          <BackButton
+            fallback="/configuracoes/profissionais"
+            label="Voltar"
+            className="mb-1 -ml-2"
+          />
           <h1 className="text-2xl font-bold">CBOs do profissional</h1>
           <p className="text-sm text-muted-foreground">{profissional.nome}</p>
         </div>

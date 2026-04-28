@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ActionsDropdown } from "@/components/ActionsDropdown";
 import { useDebounce } from "@/hooks/useDebounce";
+import { parseSearchTerm, normalize, onlyDigits } from "@/lib/search";
 import {
   fetchProfissionais,
   inactivateProfissional,
@@ -41,6 +42,7 @@ export default function ProfissionaisListPage() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<Profissional[]>([]);
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
   const debounced = useDebounce(search, 300);
   const [inactivatingId, setInactivatingId] = useState<
     Profissional["id"] | null
@@ -54,6 +56,11 @@ export default function ProfissionaisListPage() {
     setModalMode(mode);
     setSelected(p);
     setModalOpen(true);
+  }
+
+  function handleSearchChange(value: string) {
+    setSearch(value);
+    setPage(1);
   }
 
   async function load() {
@@ -85,7 +92,16 @@ export default function ProfissionaisListPage() {
     }
   }
 
-  const visible = useMemo(() => data, [data]);
+  // Filtro frontend complementar — normalize do nome + dígitos do CPF
+  const visible = useMemo(() => {
+    if (!debounced.trim()) return data;
+    const { term, digits } = parseSearchTerm(debounced);
+    return data.filter((p) => {
+      const matchNome = term ? normalize(p.nome).includes(term) : false;
+      const matchCpf = digits ? onlyDigits(p.cpf).includes(digits) : false;
+      return matchNome || matchCpf;
+    });
+  }, [data, debounced]);
 
   return (
     <div className="space-y-4">
@@ -111,7 +127,7 @@ export default function ProfissionaisListPage() {
               className="pl-8"
               placeholder="Buscar por nome ou CPF..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
               aria-label="Buscar profissionais"
             />
           </div>
