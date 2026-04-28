@@ -82,12 +82,14 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
     if (!profissional) return;
     setLoading(true);
     try {
-      const [items, procs] = await Promise.all([
+      const [items, procs, grps] = await Promise.all([
         fetchProdutividades(profissional.id),
         fetchProcedimentos(),
+        fetchGruposProcedimentos(),
       ]);
       setList(items);
       setProcedimentos(procs);
+      setGrupos(grps);
     } catch {
       toast.error("Erro ao carregar produtividade");
     } finally {
