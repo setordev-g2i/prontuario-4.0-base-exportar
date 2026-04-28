@@ -6,7 +6,7 @@ export const grupoProcedimentoSchema = z.object({
   situacaoId: z.union([z.literal(1), z.literal(2)]),
   color: z.string().min(1, "Cor é obrigatória"),
   procedimentoSubGrupoId: z
-    .number({ invalid_type_error: "Subgrupo é obrigatório" })
+    .number({ message: "Subgrupo é obrigatório" })
     .int()
     .min(1, "Subgrupo é obrigatório"),
 
