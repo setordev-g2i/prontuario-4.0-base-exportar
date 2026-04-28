@@ -107,6 +107,30 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
     return (id: number) => map.get(id) ?? String(id);
   }, [procedimentos]);
 
+  const procGrupoMap = useMemo(() => {
+    const map = new Map<number, number | undefined>();
+    procedimentos.forEach((p) => map.set(Number(p.id), p.grupoId));
+    return map;
+  }, [procedimentos]);
+
+  const visibleList = useMemo(() => {
+    return list.filter((p) => {
+      if (convenioFilter && String(p.convenioId) !== convenioFilter) return false;
+      if (procedimentoFilter && String(p.procedimentoId) !== procedimentoFilter) return false;
+      if (grupoFilter) {
+        const g = procGrupoMap.get(Number(p.procedimentoId));
+        if (String(g ?? "") !== grupoFilter) return false;
+      }
+      return true;
+    });
+  }, [list, convenioFilter, procedimentoFilter, grupoFilter, procGrupoMap]);
+
+  function clearFilters() {
+    setConvenioFilter("");
+    setProcedimentoFilter("");
+    setGrupoFilter("");
+  }
+
   function openForm(mode: ProdutividadeFormMode, item: ProfissionalProdutividade | null) {
     setFormMode(mode);
     setSelected(item);
