@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { CbosModal } from "./components/CbosModal";
 import { Plus, Search, Loader2, Briefcase, Stethoscope, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,9 @@ export default function ProfissionaisListPage() {
 
   const [produtividadeOpen, setProdutividadeOpen] = useState(false);
   const [produtividadeProf, setProdutividadeProf] = useState<Profissional | null>(null);
+
+  const [cbosOpen, setCbosOpen] = useState(false);
+  const [cbosProf, setCbosProf] = useState<Profissional | null>(null);
 
   function openModal(mode: ProfissionalModalMode, p: Profissional | null) {
     setModalMode(mode);
@@ -191,10 +195,10 @@ export default function ProfissionaisListPage() {
                             {
                               icon: <Briefcase className="mr-2 h-4 w-4" />,
                               label: "CBOs",
-                              onClick: () =>
-                                navigate(
-                                  `/configuracoes/profissionais/${p.id}/cbos`,
-                                ),
+                              onClick: () => {
+                                setCbosProf(p);
+                                setCbosOpen(true);
+                              },
                             },
                             {
                               icon: <Stethoscope className="mr-2 h-4 w-4" />,
@@ -236,6 +240,12 @@ export default function ProfissionaisListPage() {
         open={produtividadeOpen}
         onOpenChange={setProdutividadeOpen}
         profissional={produtividadeProf}
+      />
+
+      <CbosModal
+        open={cbosOpen}
+        onOpenChange={setCbosOpen}
+        profissional={cbosProf}
       />
 
       <AlertDialog
