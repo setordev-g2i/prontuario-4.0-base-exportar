@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Plus, Search, Loader2, Briefcase, Stethoscope } from "lucide-react";
+import { Plus, Search, Loader2, Briefcase, Stethoscope, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,7 @@ import {
   ProfissionalModal,
   type ProfissionalModalMode,
 } from "./components/ProfissionalModal";
+import { ProdutividadeModal } from "./components/ProdutividadeModal";
 
 export default function ProfissionaisListPage() {
   const navigate = useNavigate();
@@ -51,6 +52,9 @@ export default function ProfissionaisListPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalMode, setModalMode] = useState<ProfissionalModalMode>("create");
   const [selected, setSelected] = useState<Profissional | null>(null);
+
+  const [produtividadeOpen, setProdutividadeOpen] = useState(false);
+  const [produtividadeProf, setProdutividadeProf] = useState<Profissional | null>(null);
 
   function openModal(mode: ProfissionalModalMode, p: Profissional | null) {
     setModalMode(mode);
@@ -200,6 +204,14 @@ export default function ProfissionaisListPage() {
                                   `/configuracoes/profissionais/${p.id}/especialidades`,
                                 ),
                             },
+                            {
+                              icon: <TrendingUp className="mr-2 h-4 w-4" />,
+                              label: "Produtividade",
+                              onClick: () => {
+                                setProdutividadeProf(p);
+                                setProdutividadeOpen(true);
+                              },
+                            },
                           ]}
                         />
                       </TableCell>
@@ -218,6 +230,12 @@ export default function ProfissionaisListPage() {
         mode={modalMode}
         profissional={selected}
         onSaved={load}
+      />
+
+      <ProdutividadeModal
+        open={produtividadeOpen}
+        onOpenChange={setProdutividadeOpen}
+        profissional={produtividadeProf}
       />
 
       <AlertDialog
