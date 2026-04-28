@@ -252,6 +252,12 @@ export default function ProfissionaisListPage() {
         profissional={cbosProf}
       />
 
+      <EspecialidadesModal
+        open={espOpen}
+        onOpenChange={setEspOpen}
+        profissional={espProf}
+      />
+
       <AlertDialog
         open={!!inactivatingId}
         onOpenChange={(o) => !o && setInactivatingId(null)}
