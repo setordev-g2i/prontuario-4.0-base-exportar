@@ -250,7 +250,7 @@ const menuConfig: MenuItem[] = [
       {
         heading: "Procedimentos",
         items: [
-          { label: "Grupo de Procedimentos", icon: FolderArchive, iconName: "FolderArchive", path: "/configuracoes/procedimentos/grupos" },
+          { label: "Grupo", icon: FolderArchive, iconName: "FolderArchive", path: "/configuracoes/procedimentos/grupos" },
           { label: "Procedimentos", icon: Stethoscope, iconName: "Stethoscope", path: "/configuracoes/procedimentos" },
         ],
       },
