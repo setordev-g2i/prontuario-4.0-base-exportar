@@ -13,6 +13,9 @@ import PacientesListPage from "@/pages/Pacientes";
 // Grupos de Procedimentos
 import GruposProcedimentosPage from "@/pages/GruposProcedimentos";
 
+// Procedimentos
+import ProcedimentosPage from "@/pages/Procedimentos";
+
 export function AppRoutes() {
   return (
     <Routes>
@@ -40,6 +43,10 @@ export function AppRoutes() {
         <Route
           path="/configuracoes/procedimentos/grupos"
           element={<GruposProcedimentosPage />}
+        />
+        <Route
+          path="/configuracoes/procedimentos"
+          element={<ProcedimentosPage />}
         />
 
         {/* 404 */}
