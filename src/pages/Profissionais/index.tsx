@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { Plus, Search, Loader2, Briefcase, Stethoscope } from "lucide-react";
+import { Plus, Search, Loader2, Briefcase, Stethoscope, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,6 +36,7 @@ import {
   ProfissionalModal,
   type ProfissionalModalMode,
 } from "./components/ProfissionalModal";
+import { ProdutividadeModal } from "./components/ProdutividadeModal";
 
 export default function ProfissionaisListPage() {
   const navigate = useNavigate();
