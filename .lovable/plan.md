@@ -1,130 +1,60 @@
-# Plano: modais de ação + feedback de validação + abas no cadastro de Profissional
+## Ajustes no módulo Produtividade do Profissional
 
-Três frentes: (1) transformar **Novo/Editar/Visualizar** em **modais** (mantendo rotas como atalhos opcionais), (2) disparar **toast "O campo X é obrigatório"** no submit inválido, e (3) **reestruturar o form de Profissional em 7 abas** conforme spec.
+Alterações em 3 arquivos existentes — sem mudanças em banco, services ou tipos.
 
-## 1. Ações da listagem em modal
+### 1. `ProdutividadeFormModal.tsx` — permitir edição por Grupo + reorganizar tabs
 
-Hoje `Visualizar`, `Editar` e `Novo` navegam para páginas dedicadas (`/novo`, `/:id/editar`, `/:id`). Passaremos tudo para **modais** abertos diretamente da listagem, usando o `FormModal` existente (já com suporte a tabs).
+**Edição por Grupo (item 1):**
+- Remover a restrição que mostra o seletor "Cadastrar por: Procedimento | Grupo" apenas em modo create. Passar a exibi-lo também em modo `edit`.
+- No modo `edit`, ao salvar com `alvo = "grupo"`:
+  - Buscar todos os procedimentos ativos do grupo selecionado.
+  - Para cada procedimento do grupo, verificar se já existe uma produtividade ativa daquele profissional + convênio + procedimento:
+    - Se existir → chamar `updateProdutividade(existente.id, payload)` com os novos valores (produtividade, configurações, vigência, situação).
+    - Se não existir → chamar `createProdutividade(...)` para gerar a nova entrada.
+  - Mostrar toast: `X atualizada(s) • Y criada(s)`.
+- No modo `edit` com `alvo = "procedimento"`, manter o comportamento atual (update do registro original).
+- Para suportar isso, no `useEffect` de abertura em modo edit, pré-carregar a lista existente do profissional (via `fetchProdutividades`) e armazenar em estado para uso na hora de fazer o "update em lote".
 
-**Mudanças nas listagens** (`Profissionais/index.tsx`, `Pacientes/index.tsx`, `ProfissionaisCbos/index.tsx`, `ProfissionaisEspecialidades/index.tsx`):
-- Remover `navigate(...)` nos handlers `onView`, `onEdit`, botão "Novo".
-- Controlar estado local: `modalMode: "create" | "edit" | "view" | null` + `selected: Entity | null`.
-- Botão "Novo" abre modal em modo `create`. `ActionsDropdown.onView/onEdit` abrem modal com a entidade.
-- O modal renderiza o form compartilhado (`PacienteForm`, `ProfissionalForm`) dentro do `FormModal` (com título "Novo/Editar/Visualizar X").
-- Modo `view`: form recebe nova prop `readOnly` → todos os inputs com `disabled` e apenas botão "Fechar".
+**Mover Produtividade para bloco abaixo de Dados Principais (item 4):**
+- Remover a `TabsTrigger value="produtividade"` e o respectivo `TabsContent`.
+- Mover todos os campos da aba Produtividade (% Recebimento, % Caixa, % Imposto, Vl. Fixo, % Imposto Caixa, % Clínica, Vl. Fixo Clínica, Vl. Fixo Laudo, Terceiro Profissional, % Terceiro, Vigência Inicial, Vigência Final) para dentro do `TabsContent value="principal"`, logo abaixo do grid Convênio/Procedimento(Grupo)/Situação, dentro de um bloco visualmente separado:
+  ```tsx
+  <div className="rounded border p-4 space-y-3">
+    <h3 className="text-sm font-semibold">Produtividade</h3>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4"> ... campos ... </div>
+  </div>
+  ```
+- Ajustar a validação de vigência: se inválida, manter na aba `principal` (não mais `produtividade`).
 
-**Rotas** (`src/routes.tsx`): manter as rotas `/novo`, `/:id`, `/:id/editar` como atalhos (redirecionam para a listagem abrindo o modal correspondente via `useEffect` + search params, ex.: `/configuracoes/profissionais?modal=edit&id=123`). Alternativa mais simples: remover as rotas de novo/editar/visualizar e eliminar os arquivos `novo.tsx`, `editar.tsx`, `visualizar.tsx`. **Proposta: remover** (modal é a fonte única da verdade, menos código duplicado). Rotas de CBOs/Especialidades permanecem como rotas de página (já abrem dialog interno).
+**Aba Configurações (item 3):**
+- Remover os 3 campos read-only: "Usuário de Cadastro", "Criado em", "Alterado em".
+- Manter apenas os 4 SwitchRow + o select "Operação" (Crédito/Débito).
+- Pode-se também remover do `FormState` e do `fromEntity` os campos `created` e `modified` (limpeza opcional, sem impacto funcional).
 
-**ActionsDropdown**: sem mudança estrutural — apenas os consumidores mudam os handlers.
+**Tabs finais:** apenas `Dados Principais` e `Configurações`.
 
-## 2. Toast em campos obrigatórios no submit
+### 2. `ProdutividadeModal.tsx` — filtros na listagem (item 2)
 
-Criar helper `src/lib/forms/notifyRequired.ts`:
+Adicionar uma barra de filtros acima da tabela com 3 selects:
 
-```ts
-export function notifyRequiredErrors(
-  errors: FieldErrors,
-  labels: Record<string, string>
-) {
-  const first = Object.keys(errors)[0];
-  if (!first) return;
-  const label = labels[first] ?? first;
-  toast.error(`O campo ${label} é obrigatório`);
-}
-```
+- **Convênio** — usar `CONVENIO_OPTIONS` de `services/profissionaisProdutividade`.
+- **Procedimento** — usar lista já carregada em `procedimentos` (filtrar ativos).
+- **Grupo de Procedimentos** — carregar via `fetchGruposProcedimentos()` (já usado no FormModal). Filtrar produtividades cujo `procedimentoId` pertença a um procedimento daquele grupo (lookup via `procedimentos[i].grupoId`).
 
-Nos forms (`PacienteForm`, `ProfissionalForm`), passar segundo argumento ao `handleSubmit`:
+Comportamento:
+- Cada select com opção "Todos" (value vazio).
+- Layout: grid de 3 colunas em `md:`, com botão "Limpar filtros" ao lado.
+- Aplicar os filtros via `useMemo` sobre `list`, gerando `visibleList`. A combinação dos 3 filtros é AND.
+- Substituir `list.map` na renderização da tabela por `visibleList.map` e atualizar a checagem de "lista vazia" e os colSpans.
 
-```ts
-const FIELD_LABELS = { nome: "Nome", cpf: "CPF", dataNascimento: "Dt. Nascimento", ... };
-<form onSubmit={handleSubmit(onSubmit, (errs) => notifyRequiredErrors(errs, FIELD_LABELS))}>
-```
+### 3. Estado/efeitos auxiliares
 
-Assim, além da **borda vermelha** já existente (`errors.X && "border-destructive"`), o usuário recebe o toast no submit inválido. A limpeza do erro ao digitar já é automática (react-hook-form + `mode: "onChange"` a ser adicionado no `useForm`).
+- Em `ProdutividadeModal`, adicionar `useState` para `grupos`, `convenioFilter`, `procedimentoFilter`, `grupoFilter`. Carregar `grupos` no `load()` em paralelo com procedimentos e produtividades.
+- Em `ProdutividadeFormModal`, adicionar `useState<ProfissionalProdutividade[]>` para "produtividades existentes do profissional", populada no useEffect de abertura quando `mode === "edit"`, usada para decidir update vs create no fluxo de grupo.
 
-## 3. Reestruturação do form de Profissional em 7 abas
+### Resumo de arquivos
 
-Substituir o layout seccionado atual do `ProfissionalForm.tsx` por `<Tabs>` (shadcn). Estrutura:
+- `src/pages/Profissionais/components/ProdutividadeFormModal.tsx` (refatoração das tabs + edição por grupo + remoção dos campos de auditoria)
+- `src/pages/Profissionais/components/ProdutividadeModal.tsx` (3 filtros na listagem)
 
-```text
-[Dados Principais] [Complementares I] [Complementares II] [Documentos e Registros] [Financeiro] [Configurações] [SUS]
-```
-
-### Abas e campos
-
-| Aba | Campos |
-|---|---|
-| **Dados Principais** | Nome, Tipo de Cadastro (select), CPF, RG, Dt. Nascimento (date), Sexo (select), Email, Celular (masked), Telefone (masked), Situação |
-| **Complementares I** | CEP (masked), Endereço, Número, Complemento, Cidade, Estado (select UF) |
-| **Complementares II** | Estado civil (select), Religião, Etnia (select), Escolaridade (select), Região responsável Home Care |
-| **Documentos e Registros** | Sigla, Conselho (CRM), Status Conselho (select), RQE, Nome Laudo, Conselho Laudo, Cartão Nacional Saúde, PIS, CBO, CNES, Tipo de Pessoa |
-| **Financeiro** | Banco, Agência, Conta, Configuração Apuração, Contabilidade, Fornecedor, Planos de Conta, Tabela Repasse |
-| **Configurações** | Atende Pacientes Psiquiátricos? (Switch), Cadastrar Agenda? (Switch), Unidade (select), Solicitante (select) |
-| **SUS** | Vínculo SUS (text) + tabela de datas de exportação (placeholder por enquanto — dados mock) |
-
-Aba **"CBOs vinculados"** permanece **fora** do form (é um fluxo próprio em `/:id/cbos`), acessada via customAction no dropdown.
-
-### Schema Zod atualizado (`src/lib/schemas/profissionais/formSchema.ts`)
-
-Adicionar todos os novos campos como opcionais (exceto os já obrigatórios: `nome`, `tipoCadastroId`, `cpf`, `dataNascimento`). Exemplo de acréscimos:
-
-```ts
-email: z.string().email().optional().or(z.literal("")),
-celular: z.string().optional().or(z.literal("")),
-telefone: z.string().optional().or(z.literal("")),
-cep: z.string().optional().or(z.literal("")),
-endereco: z.string().optional().or(z.literal("")),
-// ... (numero, complemento, cidade, estado)
-estadoCivilId: z.string().optional(),
-religiao: z.string().optional(),
-etniaId: z.string().optional(),
-escolaridadeId: z.string().optional(),
-regiaoHomeCare: z.string().optional(),
-sigla: z.string().optional(),
-crm: z.string().optional(),
-statusConselhoId: z.string().optional(),
-rqe: z.string().optional(),
-// ... (nomeLaudo, conselhoLaudo, cns, pis, cbo, cnes, tipoPessoa)
-banco: z.string().optional(),
-agencia: z.string().optional(),
-conta: z.string().optional(),
-// ... (configApuracao, contabilidade, fornecedor, planosConta, tabelaRepasse)
-atendePsiquiatricos: z.boolean().default(false),
-cadastrarAgenda: z.boolean().default(false),
-unidadeId: z.string().optional(),
-solicitanteSusId: z.string().optional(),
-vinculoSus: z.string().optional(),
-```
-
-Selects com FK seguem a convenção do projeto: `{ id, value }` (id enviado, value exibido) — populados com listas mock enquanto não há backend.
-
-### Prop `readOnly` no ProfissionalForm
-
-Adicionar `readOnly?: boolean`. Quando true:
-- Todos `Input`/`InputMasked`/`Select`/`Switch` recebem `disabled`.
-- Footer mostra apenas "Fechar".
-
-## Arquivos afetados (resumo técnico)
-
-- **Editados**:
-  - `src/pages/Profissionais/index.tsx` — listagem abre modal (novo/ver/editar).
-  - `src/pages/Pacientes/index.tsx` — idem.
-  - `src/pages/ProfissionaisCbos/index.tsx`, `src/pages/ProfissionaisEspecialidades/index.tsx` — já usam dialog, apenas garantir consistência.
-  - `src/pages/Profissionais/components/ProfissionalForm.tsx` — reestruturação total em `<Tabs>`, novos campos, `readOnly`, `notifyRequiredErrors`, `mode: "onChange"`.
-  - `src/pages/Pacientes/components/PacienteForm.tsx` — adicionar `readOnly` e `notifyRequiredErrors`.
-  - `src/lib/schemas/profissionais/formSchema.ts` — ampliar schema.
-  - `src/routes.tsx` — remover rotas `/novo`, `/:id`, `/:id/editar` dos módulos Profissionais e Pacientes.
-- **Novos**:
-  - `src/lib/forms/notifyRequired.ts` — helper de toast.
-  - `src/pages/Profissionais/components/EntityModal.tsx` (wrapper de `FormModal` + `ProfissionalForm`) — opcional, pode ficar inline na listagem.
-- **Removidos**:
-  - `src/pages/Profissionais/{novo,editar,visualizar}.tsx`
-  - `src/pages/Pacientes/{novo,editar,visualizar}.tsx`
-
-## Pontos a confirmar
-
-1. **Remover páginas `/novo`, `/:id`, `/:id/editar`** ou manter como atalhos que abrem o modal da listagem? (Minha recomendação: remover — evita duplicação.)
-2. Os campos das abas novas (Complementares II, Financeiro etc.) são **todos texto livre ou selects**? Assumi selects com mock para ids conhecidos (estado civil, etnia, escolaridade, status conselho, unidade, solicitante) e texto para o resto. Pode ser ajustado quando vier o SQL das FKs.
-3. A aba **SUS** inclui uma "tabela de datas de exportação existente" — no código atual **não existe** essa tabela. Vou incluir placeholder vazio (mock) até você fornecer a estrutura.
-
-Ao aprovar, executo tudo de uma vez: helper, schema, form com abas, refatoração das listagens para modal, remoção das páginas e ajuste das rotas.
+Sem alterações em services, types, schemas ou rotas.

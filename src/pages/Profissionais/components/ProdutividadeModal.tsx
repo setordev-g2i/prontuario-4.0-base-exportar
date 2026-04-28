@@ -1,6 +1,16 @@
 import { useEffect, useState, useMemo } from "react";
 import { toast } from "sonner";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, X } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { fetchGruposProcedimentos } from "@/services/gruposProcedimentos";
+import type { GrupoProcedimento } from "@/types/entities/GrupoProcedimento";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +40,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ActionsDropdown } from "@/components/ActionsDropdown";
 import {
+  CONVENIO_OPTIONS,
   convenioLabel,
   fetchProdutividades,
   inactivateProdutividade,
@@ -52,6 +63,7 @@ interface Props {
 export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) {
   const [list, setList] = useState<ProfissionalProdutividade[]>([]);
   const [procedimentos, setProcedimentos] = useState<Procedimento[]>([]);
+  const [grupos, setGrupos] = useState<GrupoProcedimento[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [formOpen, setFormOpen] = useState(false);
@@ -63,16 +75,22 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
     string | number | null
   >(null);
 
+  const [convenioFilter, setConvenioFilter] = useState<string>("");
+  const [procedimentoFilter, setProcedimentoFilter] = useState<string>("");
+  const [grupoFilter, setGrupoFilter] = useState<string>("");
+
   async function load() {
     if (!profissional) return;
     setLoading(true);
     try {
-      const [items, procs] = await Promise.all([
+      const [items, procs, grps] = await Promise.all([
         fetchProdutividades(profissional.id),
         fetchProcedimentos(),
+        fetchGruposProcedimentos(),
       ]);
       setList(items);
       setProcedimentos(procs);
+      setGrupos(grps);
     } catch {
       toast.error("Erro ao carregar produtividade");
     } finally {
@@ -89,6 +107,30 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
     const map = new Map(procedimentos.map((p) => [p.id, p.nome]));
     return (id: number) => map.get(id) ?? String(id);
   }, [procedimentos]);
+
+  const procGrupoMap = useMemo(() => {
+    const map = new Map<number, number | undefined>();
+    procedimentos.forEach((p) => map.set(Number(p.id), p.grupoId));
+    return map;
+  }, [procedimentos]);
+
+  const visibleList = useMemo(() => {
+    return list.filter((p) => {
+      if (convenioFilter && String(p.convenioId) !== convenioFilter) return false;
+      if (procedimentoFilter && String(p.procedimentoId) !== procedimentoFilter) return false;
+      if (grupoFilter) {
+        const g = procGrupoMap.get(Number(p.procedimentoId));
+        if (String(g ?? "") !== grupoFilter) return false;
+      }
+      return true;
+    });
+  }, [list, convenioFilter, procedimentoFilter, grupoFilter, procGrupoMap]);
+
+  function clearFilters() {
+    setConvenioFilter("");
+    setProcedimentoFilter("");
+    setGrupoFilter("");
+  }
 
   function openForm(mode: ProdutividadeFormMode, item: ProfissionalProdutividade | null) {
     setFormMode(mode);
@@ -125,11 +167,57 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex justify-end">
-            <Button onClick={() => openForm("create", null)} disabled={!profissional}>
-              <Plus className="mr-1 size-4" />
-              Novo
-            </Button>
+          <div className="flex flex-wrap items-end gap-3 justify-between">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1">
+              <div>
+                <Label className="text-xs">Convênio</Label>
+                <Select value={convenioFilter || "all"} onValueChange={(v) => setConvenioFilter(v === "all" ? "" : v)}>
+                  <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    {CONVENIO_OPTIONS.map((c) => (
+                      <SelectItem key={c.id} value={String(c.id)}>{c.value}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs">Procedimento</Label>
+                <Select value={procedimentoFilter || "all"} onValueChange={(v) => setProcedimentoFilter(v === "all" ? "" : v)}>
+                  <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    {procedimentos.map((p) => (
+                      <SelectItem key={p.id} value={String(p.id)}>{p.nome}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className="text-xs">Grupo de Procedimentos</Label>
+                <Select value={grupoFilter || "all"} onValueChange={(v) => setGrupoFilter(v === "all" ? "" : v)}>
+                  <SelectTrigger><SelectValue placeholder="Todos" /></SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos</SelectItem>
+                    {grupos.map((g) => (
+                      <SelectItem key={g.id} value={String(g.id)}>{g.nome}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              {(convenioFilter || procedimentoFilter || grupoFilter) && (
+                <Button variant="outline" size="sm" onClick={clearFilters}>
+                  <X className="mr-1 size-4" />
+                  Limpar
+                </Button>
+              )}
+              <Button onClick={() => openForm("create", null)} disabled={!profissional}>
+                <Plus className="mr-1 size-4" />
+                Novo
+              </Button>
+            </div>
           </div>
 
           <div className="rounded-md border mt-2">
@@ -154,17 +242,19 @@ export function ProdutividadeModal({ open, onOpenChange, profissional }: Props) 
                       Carregando...
                     </TableCell>
                   </TableRow>
-                ) : list.length === 0 ? (
+                ) : visibleList.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={8}
                       className="text-center py-6 text-muted-foreground"
                     >
-                      Nenhuma produtividade cadastrada
+                      {list.length === 0
+                        ? "Nenhuma produtividade cadastrada"
+                        : "Nenhum registro para os filtros selecionados"}
                     </TableCell>
                   </TableRow>
                 ) : (
-                  list.map((p) => (
+                  visibleList.map((p) => (
                     <TableRow key={p.id}>
                       <TableCell>{convenioLabel(p.convenioId)}</TableCell>
                       <TableCell>{procedimentoLabel(p.procedimentoId)}</TableCell>
