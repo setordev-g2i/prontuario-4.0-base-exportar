@@ -1,37 +1,306 @@
-import { FluxodocsCrudPage, type EntityConfig } from "@/lib/fluxodocs/CrudPage";
-import { protocolosService } from "@/services/fluxodocs";
-import { useFluxodocsOptions } from "@/lib/fluxodocs/options";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { Plus, Search, Loader2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { ActionsDropdown } from "@/components/ActionsDropdown";
+import { useDebounce } from "@/hooks/useDebounce";
+import { normalize } from "@/lib/search";
+import { buildPaginationItems } from "@/lib/pagination";
+import {
+  fetchProtocolos,
+  inactivateProtocolo,
+} from "@/services/fluxodocsProtocolos";
 import type { FluxodocsProtocolo } from "@/types/entities/Fluxodocs";
+import {
+  FluxodocsProtocolosModal,
+  type FluxodocsProtocolosModalMode,
+} from "./components/FluxodocsProtocolosModal";
+
+const PAGE_SIZE = 20;
+
+const OPTS_STATUSID = [{id:1,value:"Aberto"},{id:2,value:"Enviado"},{id:3,value:"Recebido"},{id:4,value:"Devolvido"},{id:5,value:"Aceito Parcial"},{id:6,value:"Reenviado"},{id:7,value:"Cancelado"},{id:8,value:"Finalizado"}];
+const OPTS_PRIORIDADEID = [{id:1,value:"Normal"},{id:2,value:"Alta"},{id:3,value:"Urgente"}];
+const OPTS_SETORORIGEMID = [{id:1,value:"Recepção"},{id:2,value:"Faturamento"},{id:3,value:"Auditoria"},{id:4,value:"Glosas"},{id:5,value:"TISS"},{id:6,value:"Convênios"}];
+const OPTS_SETORDESTINOID = [{id:1,value:"Recepção"},{id:2,value:"Faturamento"},{id:3,value:"Auditoria"},{id:4,value:"Glosas"},{id:5,value:"TISS"},{id:6,value:"Convênios"}];
 
 export default function FluxodocsProtocolosPage() {
-  const opts = useFluxodocsOptions();
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<FluxodocsProtocolo[]>([]);
+  const [search, setSearch] = useState("");
+  const debounced = useDebounce(search, 300);
+  const [page, setPage] = useState(1);
+  const [inactivatingId, setInactivatingId] = useState<number | null>(null);
 
-  const config: EntityConfig<FluxodocsProtocolo> = {
-    singular: "Protocolo",
-    plural: "Protocolos",
-    service: protocolosService,
-    fields: [
-      { name: "numero", label: "Número", type: "text", required: true,
-        tooltip: "Número único de identificação do protocolo." },
-      { name: "tipoMovimentacaoId", label: "Tipo Movimentação", type: "select",
-        options: opts.tiposMov, required: true },
-      { name: "setorOrigemId", label: "Setor Origem", type: "select",
-        options: opts.setores, required: true },
-      { name: "setorDestinoId", label: "Setor Destino", type: "select",
-        options: opts.setores, required: true },
-      { name: "prioridadeId", label: "Prioridade", type: "select",
-        options: opts.prioridades, required: true },
-      { name: "motivoId", label: "Motivo", type: "select", options: opts.motivos },
-      { name: "statusId", label: "Status", type: "select",
-        options: opts.status, required: true,
-        tooltip: "Status atual do protocolo (gerenciado pelo workflow)." },
-      { name: "observacao", label: "Observação", type: "textarea" },
-      { name: "ordemFila", label: "Ordem na Fila", type: "number",
-        tooltip: "Calculado pela fila inteligente (IA)." },
-    ],
-    listColumns: ["numero", "tipoMovimentacaoId", "setorDestinoId", "prioridadeId", "statusId"],
-    searchableFields: ["numero", "observacao"],
-  };
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState<FluxodocsProtocolosModalMode>("create");
+  const [selected, setSelected] = useState<FluxodocsProtocolo | null>(null);
 
-  return <FluxodocsCrudPage config={config} />;
+  function openModal(mode: FluxodocsProtocolosModalMode, r: FluxodocsProtocolo | null) {
+    setModalMode(mode);
+    setSelected(r);
+    setModalOpen(true);
+  }
+
+  function handleSearchChange(value: string) {
+    setSearch(value);
+    setPage(1);
+  }
+
+  async function load() {
+    setLoading(true);
+    try {
+      const res = await fetchProtocolos();
+      setData(res.filter((r) => r.situacaoId === 1));
+    } catch {
+      toast.error("Erro ao carregar protocolos");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  async function confirmInactivate() {
+    if (inactivatingId == null) return;
+    try {
+      await inactivateProtocolo(inactivatingId);
+      toast.success("Registro inativado com sucesso");
+      setInactivatingId(null);
+      load();
+    } catch {
+      toast.error("Erro ao inativar registro");
+    }
+  }
+
+  const visible = useMemo(() => {
+    const term = normalize(debounced.trim());
+    if (!term) return data;
+    return data.filter((r) => normalize(String(r.numero ?? "")).includes(term));
+  }, [data, debounced]);
+
+  const totalPages = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = useMemo(
+    () => visible.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE),
+    [visible, currentPage],
+  );
+  const startItem = visible.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+  const endItem = Math.min(currentPage * PAGE_SIZE, visible.length);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Protocolos</h1>
+          <p className="text-sm text-muted-foreground">
+            Configurações &gt; Fluxo de Documentos &gt; Protocolos
+          </p>
+        </div>
+        <Button onClick={() => openModal("create", null)}>
+          <Plus className="mr-1 size-4" />
+          Novo
+        </Button>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Lista de protocolos</CardTitle>
+          <div className="relative mt-2 max-w-sm">
+            <Search className="absolute left-2 top-2.5 size-4 text-muted-foreground" />
+            <Input
+              className="pl-8"
+              placeholder="Buscar..."
+              value={search}
+              onChange={(ev) => handleSearchChange(ev.target.value)}
+              aria-label="Buscar"
+            />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow>
+              <TableHead>Número</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Prioridade</TableHead>
+              <TableHead>Setor de Origem</TableHead>
+              <TableHead>Setor de Destino</TableHead>
+                  <TableHead className="w-[120px]">Situação</TableHead>
+                  <TableHead className="w-[140px]">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center py-8">
+                      <Loader2 className="inline size-4 animate-spin mr-2" />
+                      Carregando...
+                    </TableCell>
+                  </TableRow>
+                ) : paginated.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={7}
+                      className="text-center py-8 text-muted-foreground"
+                    >
+                      Nenhum registro encontrado
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  paginated.map((r) => (
+                    <TableRow key={r.id}>
+              <TableCell>{r.numero != null ? String(r.numero) : "—"}</TableCell>
+              <TableCell>
+                {(OPTS_STATUSID.find((o) => String(o.id) === String(r.statusId as unknown))?.value) ?? (r.statusId != null ? String(r.statusId) : "—")}
+              </TableCell>
+              <TableCell>
+                {(OPTS_PRIORIDADEID.find((o) => String(o.id) === String(r.prioridadeId as unknown))?.value) ?? (r.prioridadeId != null ? String(r.prioridadeId) : "—")}
+              </TableCell>
+              <TableCell>
+                {(OPTS_SETORORIGEMID.find((o) => String(o.id) === String(r.setorOrigemId as unknown))?.value) ?? (r.setorOrigemId != null ? String(r.setorOrigemId) : "—")}
+              </TableCell>
+              <TableCell>
+                {(OPTS_SETORDESTINOID.find((o) => String(o.id) === String(r.setorDestinoId as unknown))?.value) ?? (r.setorDestinoId != null ? String(r.setorDestinoId) : "—")}
+              </TableCell>
+                      <TableCell>
+                        <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>
+                          {r.situacaoId === 1 ? "Ativo" : "Inativo"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <ActionsDropdown
+                          onView={() => openModal("view", r)}
+                          onEdit={() => openModal("edit", r)}
+                          onInactivate={() => setInactivatingId(r.id)}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
+
+          {visible.length > 0 && (
+            <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+              <div>
+                Exibindo {startItem}-{endItem} de {visible.length} registro
+                {visible.length === 1 ? "" : "s"}
+              </div>
+              {totalPages > 1 && (
+                <Pagination className="mx-0 w-auto justify-end">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        href="#"
+                        onClick={(ev) => {
+                          ev.preventDefault();
+                          setPage((p) => Math.max(1, p - 1));
+                        }}
+                        aria-disabled={currentPage === 1}
+                      />
+                    </PaginationItem>
+                    {buildPaginationItems(currentPage, totalPages).map((it, i) =>
+                      it === "ellipsis" ? (
+                        <PaginationItem key={`e-${i}`}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      ) : (
+                        <PaginationItem key={it}>
+                          <PaginationLink
+                            href="#"
+                            isActive={it === currentPage}
+                            onClick={(ev) => {
+                              ev.preventDefault();
+                              setPage(it);
+                            }}
+                          >
+                            {it}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ),
+                    )}
+                    <PaginationItem>
+                      <PaginationNext
+                        href="#"
+                        onClick={(ev) => {
+                          ev.preventDefault();
+                          setPage((p) => Math.min(totalPages, p + 1));
+                        }}
+                        aria-disabled={currentPage === totalPages}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <FluxodocsProtocolosModal
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        mode={modalMode}
+        registro={selected}
+        onSaved={load}
+      />
+
+      <AlertDialog
+        open={inactivatingId != null}
+        onOpenChange={(o) => !o && setInactivatingId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Inativar registro?</AlertDialogTitle>
+            <AlertDialogDescription>
+              O registro será marcado como <strong>Inativo</strong> (exclusão lógica).
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmInactivate}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Inativar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
+  );
 }
