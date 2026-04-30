@@ -1,7 +1,6 @@
 /**
- * Seeds iniciais (>= 20 itens quando aplicável) para todos os mocks
- * do módulo Fluxo de Documentos. Cada entidade gera um array com timestamps
- * e auditoria padronizados.
+ * Mocks (>= 20 itens) das entidades fluxodocs_*. Apenas dados.
+ * Substitua por chamadas reais de API quando o backend estiver disponível.
  */
 import type {
   FluxodocsTipoMovimentacao,
