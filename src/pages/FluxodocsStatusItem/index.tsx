@@ -178,9 +178,9 @@ export default function FluxodocsStatusItemPage() {
                 ) : (
                   paginated.map((r) => (
                     <TableRow key={r.id}>
-              <TableCell>{r.codigo != null && r.codigo !== "" ? String(r.codigo) : "—"}</TableCell>
-              <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
-              <TableCell>{r.ordem != null && r.ordem !== "" ? String(r.ordem) : "—"}</TableCell>
+              <TableCell>{r.codigo != null ? String(r.codigo) : "—"}</TableCell>
+              <TableCell>{r.nome != null ? String(r.nome) : "—"}</TableCell>
+              <TableCell>{r.ordem != null ? String(r.ordem) : "—"}</TableCell>
               <TableCell>
                 {r.cor ? (
                   <span className="inline-flex items-center gap-2">

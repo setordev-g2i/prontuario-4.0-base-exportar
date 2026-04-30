@@ -177,9 +177,9 @@ export default function FluxodocsParametrosIaPage() {
                 ) : (
                   paginated.map((r) => (
                     <TableRow key={r.id}>
-              <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
-              <TableCell>{r.chave != null && r.chave !== "" ? String(r.chave) : "—"}</TableCell>
-              <TableCell>{r.valor != null && r.valor !== "" ? String(r.valor) : "—"}</TableCell>
+              <TableCell>{r.nome != null ? String(r.nome) : "—"}</TableCell>
+              <TableCell>{r.chave != null ? String(r.chave) : "—"}</TableCell>
+              <TableCell>{r.valor != null ? String(r.valor) : "—"}</TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>
                           {r.situacaoId === 1 ? "Ativo" : "Inativo"}

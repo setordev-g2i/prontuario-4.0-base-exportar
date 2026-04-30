@@ -194,7 +194,7 @@ export default function FluxodocsParametrosSlaPage() {
               <TableCell>
                 {(OPTS_CONVENIOID.find((o) => String(o.id) === String(r.convenioId as unknown))?.value) ?? (r.convenioId != null ? String(r.convenioId) : "—")}
               </TableCell>
-              <TableCell>{r.prazoHoras != null && r.prazoHoras !== "" ? String(r.prazoHoras) : "—"}</TableCell>
+              <TableCell>{r.prazoHoras != null ? String(r.prazoHoras) : "—"}</TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>
                           {r.situacaoId === 1 ? "Ativo" : "Inativo"}

@@ -194,7 +194,7 @@ export default function FluxodocsWorkflowEtapasPage() {
               <TableCell>
                 {(OPTS_STATUSDESTINOID.find((o) => String(o.id) === String(r.statusDestinoId as unknown))?.value) ?? (r.statusDestinoId != null ? String(r.statusDestinoId) : "—")}
               </TableCell>
-              <TableCell>{r.ordem != null && r.ordem !== "" ? String(r.ordem) : "—"}</TableCell>
+              <TableCell>{r.ordem != null ? String(r.ordem) : "—"}</TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>
                           {r.situacaoId === 1 ? "Ativo" : "Inativo"}

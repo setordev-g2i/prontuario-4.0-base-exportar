@@ -182,7 +182,7 @@ export default function FluxodocsProtocolosPage() {
                 ) : (
                   paginated.map((r) => (
                     <TableRow key={r.id}>
-              <TableCell>{r.numero != null && r.numero !== "" ? String(r.numero) : "—"}</TableCell>
+              <TableCell>{r.numero != null ? String(r.numero) : "—"}</TableCell>
               <TableCell>
                 {(OPTS_STATUSID.find((o) => String(o.id) === String(r.statusId as unknown))?.value) ?? (r.statusId != null ? String(r.statusId) : "—")}
               </TableCell>

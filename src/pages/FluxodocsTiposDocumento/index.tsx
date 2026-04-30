@@ -177,7 +177,7 @@ export default function FluxodocsTiposDocumentoPage() {
                 ) : (
                   paginated.map((r) => (
                     <TableRow key={r.id}>
-              <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
+              <TableCell>{r.nome != null ? String(r.nome) : "—"}</TableCell>
               <TableCell>
                 {(OPTS_CATEGORIA.find((o) => String(o.id) === String(r.categoria as unknown))?.value) ?? (r.categoria != null ? String(r.categoria) : "—")}
               </TableCell>

@@ -177,8 +177,8 @@ export default function FluxodocsSetoresPage() {
                 ) : (
                   paginated.map((r) => (
                     <TableRow key={r.id}>
-              <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
-              <TableCell>{r.sigla != null && r.sigla !== "" ? String(r.sigla) : "—"}</TableCell>
+              <TableCell>{r.nome != null ? String(r.nome) : "—"}</TableCell>
+              <TableCell>{r.sigla != null ? String(r.sigla) : "—"}</TableCell>
               <TableCell>
                 {r.cor ? (
                   <span className="inline-flex items-center gap-2">

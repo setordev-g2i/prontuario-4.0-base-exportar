@@ -176,7 +176,7 @@ export default function FluxodocsMotivosPage() {
                 ) : (
                   paginated.map((r) => (
                     <TableRow key={r.id}>
-              <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
+              <TableCell>{r.nome != null ? String(r.nome) : "—"}</TableCell>
               <TableCell>
                 {(OPTS_TIPO.find((o) => String(o.id) === String(r.tipo as unknown))?.value) ?? (r.tipo != null ? String(r.tipo) : "—")}
               </TableCell>
