@@ -254,12 +254,6 @@ const menuConfig: MenuItem[] = [
           { label: "Procedimentos", icon: Stethoscope, iconName: "Stethoscope", path: "/configuracoes/procedimentos" },
         ],
       },
-      {
-        heading: "Fluxo de Documentos",
-        items: [
-          { label: "Visão geral", icon: FolderArchive, iconName: "FolderArchive", path: "/configuracoes/fluxo-documentos" },
-        ],
-      },
     ],
   },
 ];
