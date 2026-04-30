@@ -38,7 +38,7 @@ function buildInitialValues(entity: FluxodocsSetor | null | undefined): SetoreFo
     return {
     nome: "",
     sigla: "",
-    cor: #3b82f6,
+    cor: "#3b82f6",
     responsavelId: null,
     participaFluxo: true,
     };

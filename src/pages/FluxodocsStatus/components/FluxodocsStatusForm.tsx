@@ -41,7 +41,7 @@ function buildInitialValues(entity: FluxodocsStatus | null | undefined): StatuFo
     codigo: "",
     nome: "",
     tipo: null,
-    cor: #3b82f6,
+    cor: "#3b82f6",
     ordem: 1,
     permiteEdicao: true,
     finalizador: false,

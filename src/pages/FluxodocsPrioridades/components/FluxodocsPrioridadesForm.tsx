@@ -39,7 +39,7 @@ function buildInitialValues(entity: FluxodocsPrioridade | null | undefined): Pri
     codigo: "",
     nome: "",
     peso: 1,
-    cor: #3b82f6,
+    cor: "#3b82f6",
     ordem: 1,
     };
   }

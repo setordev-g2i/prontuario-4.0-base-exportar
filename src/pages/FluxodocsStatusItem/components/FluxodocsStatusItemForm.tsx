@@ -39,7 +39,7 @@ function buildInitialValues(entity: FluxodocsStatusItem | null | undefined): Sta
     codigo: "",
     nome: "",
     ordem: 1,
-    cor: #3b82f6,
+    cor: "#3b82f6",
     finalizador: false,
     };
   }

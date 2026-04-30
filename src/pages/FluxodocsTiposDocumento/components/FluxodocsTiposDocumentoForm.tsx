@@ -36,7 +36,7 @@ function buildInitialValues(entity: FluxodocsTipoDocumento | null | undefined): 
     return {
     nome: "",
     categoria: null,
-    cor: #3b82f6,
+    cor: "#3b82f6",
     };
   }
   return {
