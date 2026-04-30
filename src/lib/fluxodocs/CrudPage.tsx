@@ -404,13 +404,13 @@ export function FluxodocsCrudPage<T extends FluxodocsAudit>({ config }: CrudPage
               />
             </PaginationItem>
             {buildPaginationItems(page, totalPages).map((item, i) =>
-              item === "..." ? (
+              item === "ellipsis" ? (
                 <PaginationItem key={i}><PaginationEllipsis /></PaginationItem>
               ) : (
                 <PaginationItem key={i}>
                   <PaginationLink
                     href="#" isActive={page === item}
-                    onClick={(e) => { e.preventDefault(); setPage(item); }}
+                    onClick={(e) => { e.preventDefault(); setPage(item as number); }}
                   >
                     {item}
                   </PaginationLink>
