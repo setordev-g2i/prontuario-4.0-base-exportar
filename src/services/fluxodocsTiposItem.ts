@@ -27,7 +27,7 @@ export async function fetchTiposItem() {
   );
 }
 
-export async function fetchTiposItem(id: number) {
+export async function fetchTiposItemById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsTipoItem>>(`${ENDPOINT}/${id}`);

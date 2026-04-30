@@ -27,7 +27,7 @@ export async function fetchDocumentosObrigatoriosConvenio() {
   );
 }
 
-export async function fetchDocumentosObrigatoriosConvenio(id: number) {
+export async function fetchDocumentosObrigatoriosConvenioById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsDocumentoObrigatorioConvenio>>(`${ENDPOINT}/${id}`);

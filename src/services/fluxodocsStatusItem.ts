@@ -27,7 +27,7 @@ export async function fetchStatusItem() {
   );
 }
 
-export async function fetchStatusItem(id: number) {
+export async function fetchStatusItemById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsStatusItem>>(`${ENDPOINT}/${id}`);

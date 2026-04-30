@@ -27,7 +27,7 @@ export async function fetchRegrasFluxo() {
   );
 }
 
-export async function fetchRegrasFluxo(id: number) {
+export async function fetchRegrasFluxoById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsRegraFluxo>>(`${ENDPOINT}/${id}`);

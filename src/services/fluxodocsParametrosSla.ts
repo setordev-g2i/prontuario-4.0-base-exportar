@@ -27,7 +27,7 @@ export async function fetchParametrosSla() {
   );
 }
 
-export async function fetchParametrosSla(id: number) {
+export async function fetchParametrosSlaById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsParametroSla>>(`${ENDPOINT}/${id}`);

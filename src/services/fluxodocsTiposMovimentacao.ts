@@ -27,7 +27,7 @@ export async function fetchTiposMovimentacao() {
   );
 }
 
-export async function fetchTiposMovimentacao(id: number) {
+export async function fetchTiposMovimentacaoById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsTipoMovimentacao>>(`${ENDPOINT}/${id}`);

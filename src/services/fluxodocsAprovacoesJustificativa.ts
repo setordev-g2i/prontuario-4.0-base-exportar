@@ -27,7 +27,7 @@ export async function fetchAprovacoesJustificativa() {
   );
 }
 
-export async function fetchAprovacoesJustificativa(id: number) {
+export async function fetchAprovacoesJustificativaById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsAprovacaoJustificativa>>(`${ENDPOINT}/${id}`);

@@ -27,7 +27,7 @@ export async function fetchChecklistDocumental() {
   );
 }
 
-export async function fetchChecklistDocumental(id: number) {
+export async function fetchChecklistDocumentalById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsChecklistDocumental>>(`${ENDPOINT}/${id}`);

@@ -27,7 +27,7 @@ export async function fetchWorkflowTiposDocumento() {
   );
 }
 
-export async function fetchWorkflowTiposDocumento(id: number) {
+export async function fetchWorkflowTiposDocumentoById(id: number) {
   return tryApi(
     async () => {
       const res = await api.get<ApiSuccessResponse<FluxodocsWorkflowTipoDocumento>>(`${ENDPOINT}/${id}`);
