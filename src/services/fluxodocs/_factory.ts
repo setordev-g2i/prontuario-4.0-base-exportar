@@ -16,8 +16,8 @@ export function nowISO(): string {
 export interface MockService<T extends FluxodocsBase> {
   fetchAll: () => Promise<T[]>;
   fetchById: (id: number) => Promise<T | null>;
-  create: (data: Omit<T, keyof FluxodocsBase>) => Promise<T>;
-  update: (id: number, data: Partial<Omit<T, keyof FluxodocsBase>>) => Promise<T>;
+  create: (data: Partial<T>) => Promise<T>;
+  update: (id: number, data: Partial<T>) => Promise<T>;
   inactivate: (id: number) => Promise<void>;
   reactivate: (id: number) => Promise<void>;
   fetchOptions: (labelKey: keyof T) => Promise<{ id: number; value: string }[]>;
