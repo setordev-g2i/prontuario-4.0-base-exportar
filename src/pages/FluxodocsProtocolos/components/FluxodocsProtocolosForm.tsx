@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsProtocolo } from "@/types/entities/Fluxodocs";
 
-const OPTS_TIPOMOVIMENTACAOID = [{id:1,value:"ENVIO"},{id:2,value:"REMESSA"},{id:3,value:"DEVOLUCAO"},{id:4,value:"REENVIO"},{id:5,value:"INTERNO"},{id:6,value:"RECEBIMENTO_MANUAL"}] as const;
-const OPTS_SETORORIGEMID = [{id:1,value:"Recepção"},{id:2,value:"Faturamento"},{id:3,value:"Auditoria"},{id:4,value:"Glosas"},{id:5,value:"TISS"},{id:6,value:"Convênios"}] as const;
-const OPTS_SETORDESTINOID = [{id:1,value:"Recepção"},{id:2,value:"Faturamento"},{id:3,value:"Auditoria"},{id:4,value:"Glosas"},{id:5,value:"TISS"},{id:6,value:"Convênios"}] as const;
-const OPTS_PRIORIDADEID = [{id:1,value:"Normal"},{id:2,value:"Alta"},{id:3,value:"Urgente"}] as const;
-const OPTS_MOTIVOID = [{id:1,value:"Envio para auditoria"},{id:2,value:"Documento ilegível"},{id:3,value:"Falta de assinatura"},{id:4,value:"Falta carteirinha"},{id:5,value:"CID inconsistente"},{id:6,value:"Procedimento divergente"}] as const;
-const OPTS_STATUSID = [{id:1,value:"Aberto"},{id:2,value:"Enviado"},{id:3,value:"Recebido"},{id:4,value:"Devolvido"},{id:5,value:"Aceito Parcial"},{id:6,value:"Reenviado"},{id:7,value:"Cancelado"},{id:8,value:"Finalizado"}] as const;
-const OPTS_SLASTATUS = [{id:"NO_PRAZO",value:"No prazo"},{id:"ATRASADO",value:"Atrasado"},{id:"EM_RISCO",value:"Em risco"}] as const;
+const OPTS_TIPOMOVIMENTACAOID = [{id:1,value:"ENVIO"},{id:2,value:"REMESSA"},{id:3,value:"DEVOLUCAO"},{id:4,value:"REENVIO"},{id:5,value:"INTERNO"},{id:6,value:"RECEBIMENTO_MANUAL"}];
+const OPTS_SETORORIGEMID = [{id:1,value:"Recepção"},{id:2,value:"Faturamento"},{id:3,value:"Auditoria"},{id:4,value:"Glosas"},{id:5,value:"TISS"},{id:6,value:"Convênios"}];
+const OPTS_SETORDESTINOID = [{id:1,value:"Recepção"},{id:2,value:"Faturamento"},{id:3,value:"Auditoria"},{id:4,value:"Glosas"},{id:5,value:"TISS"},{id:6,value:"Convênios"}];
+const OPTS_PRIORIDADEID = [{id:1,value:"Normal"},{id:2,value:"Alta"},{id:3,value:"Urgente"}];
+const OPTS_MOTIVOID = [{id:1,value:"Envio para auditoria"},{id:2,value:"Documento ilegível"},{id:3,value:"Falta de assinatura"},{id:4,value:"Falta carteirinha"},{id:5,value:"CID inconsistente"},{id:6,value:"Procedimento divergente"}];
+const OPTS_STATUSID = [{id:1,value:"Aberto"},{id:2,value:"Enviado"},{id:3,value:"Recebido"},{id:4,value:"Devolvido"},{id:5,value:"Aceito Parcial"},{id:6,value:"Reenviado"},{id:7,value:"Cancelado"},{id:8,value:"Finalizado"}];
+const OPTS_SLASTATUS = [{id:"NO_PRAZO",value:"No prazo"},{id:"ATRASADO",value:"Atrasado"},{id:"EM_RISCO",value:"Em risco"}];
 
 export interface ProtocoloFormValues {
   numero: string;

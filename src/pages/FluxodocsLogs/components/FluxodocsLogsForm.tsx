@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsLog } from "@/types/entities/Fluxodocs";
 
-const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`})) as const;
-const OPTS_USUARIOID = [{id:1,value:"Dr. João Silva"},{id:2,value:"Maria Souza"},{id:3,value:"Carlos Lima"},{id:4,value:"Ana Beatriz"}] as const;
-const OPTS_SETORID = [{id:1,value:"Recepção"},{id:2,value:"Faturamento"},{id:3,value:"Auditoria"},{id:4,value:"Glosas"},{id:5,value:"TISS"},{id:6,value:"Convênios"}] as const;
-const OPTS_ACAO = [{id:"CRIADO",value:"Criado"},{id:"ENVIADO",value:"Enviado"},{id:"RECEBIDO",value:"Recebido"},{id:"DEVOLVIDO",value:"Devolvido"},{id:"REENVIADO",value:"Reenviado"},{id:"CANCELADO",value:"Cancelado"},{id:"DOCUMENTO_ANEXADO",value:"Documento anexado"}] as const;
+const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`}));
+const OPTS_USUARIOID = [{id:1,value:"Dr. João Silva"},{id:2,value:"Maria Souza"},{id:3,value:"Carlos Lima"},{id:4,value:"Ana Beatriz"}];
+const OPTS_SETORID = [{id:1,value:"Recepção"},{id:2,value:"Faturamento"},{id:3,value:"Auditoria"},{id:4,value:"Glosas"},{id:5,value:"TISS"},{id:6,value:"Convênios"}];
+const OPTS_ACAO = [{id:"CRIADO",value:"Criado"},{id:"ENVIADO",value:"Enviado"},{id:"RECEBIDO",value:"Recebido"},{id:"DEVOLVIDO",value:"Devolvido"},{id:"REENVIADO",value:"Reenviado"},{id:"CANCELADO",value:"Cancelado"},{id:"DOCUMENTO_ANEXADO",value:"Documento anexado"}];
 
 export interface LogFormValues {
   protocoloId: number | null;

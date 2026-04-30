@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsStatus } from "@/types/entities/Fluxodocs";
 
-const OPTS_TIPO = [{id:"INICIAL",value:"Inicial"},{id:"FLUXO",value:"Fluxo"},{id:"EXCECAO",value:"Exceção"},{id:"FINAL",value:"Final"}] as const;
+const OPTS_TIPO = [{id:"INICIAL",value:"Inicial"},{id:"FLUXO",value:"Fluxo"},{id:"EXCECAO",value:"Exceção"},{id:"FINAL",value:"Final"}];
 
 export interface StatuFormValues {
   codigo: string;

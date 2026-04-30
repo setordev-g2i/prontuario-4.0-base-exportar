@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsSetor } from "@/types/entities/Fluxodocs";
 
-const OPTS_RESPONSAVELID = [{id:1,value:"Dr. João Silva"},{id:2,value:"Maria Souza"},{id:3,value:"Carlos Lima"},{id:4,value:"Ana Beatriz"}] as const;
+const OPTS_RESPONSAVELID = [{id:1,value:"Dr. João Silva"},{id:2,value:"Maria Souza"},{id:3,value:"Carlos Lima"},{id:4,value:"Ana Beatriz"}];
 
 export interface SetoreFormValues {
   nome: string;

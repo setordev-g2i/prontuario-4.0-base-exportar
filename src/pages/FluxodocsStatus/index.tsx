@@ -48,7 +48,7 @@ import {
 
 const PAGE_SIZE = 20;
 
-const OPTS_TIPO = [{id:"INICIAL",value:"Inicial"},{id:"FLUXO",value:"Fluxo"},{id:"EXCECAO",value:"Exceção"},{id:"FINAL",value:"Final"}] as const;
+const OPTS_TIPO = [{id:"INICIAL",value:"Inicial"},{id:"FLUXO",value:"Fluxo"},{id:"EXCECAO",value:"Exceção"},{id:"FINAL",value:"Final"}];
 
 export default function FluxodocsStatusPage() {
   const [loading, setLoading] = useState(true);

@@ -48,7 +48,7 @@ import {
 
 const PAGE_SIZE = 20;
 
-const OPTS_CATEGORIA = [{id:"FATURAMENTO",value:"Faturamento"},{id:"CLINICO",value:"Clínico"},{id:"ADMINISTRATIVO",value:"Administrativo"}] as const;
+const OPTS_CATEGORIA = [{id:"FATURAMENTO",value:"Faturamento"},{id:"CLINICO",value:"Clínico"},{id:"ADMINISTRATIVO",value:"Administrativo"}];
 
 export default function FluxodocsTiposDocumentoPage() {
   const [loading, setLoading] = useState(true);

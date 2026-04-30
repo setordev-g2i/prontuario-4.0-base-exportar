@@ -48,9 +48,9 @@ import {
 
 const PAGE_SIZE = 20;
 
-const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`})) as const;
-const OPTS_CHECKLISTID = Array.from({length:22},(_,i)=>({id:i+1,value:`Checklist #${i+1}`})) as const;
-const OPTS_STATUSAPROVACAO = [{id:"PENDENTE",value:"Pendente"},{id:"APROVADO",value:"Aprovado"},{id:"REPROVADO",value:"Reprovado"},{id:"CANCELADO",value:"Cancelado"}] as const;
+const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`}));
+const OPTS_CHECKLISTID = Array.from({length:22},(_,i)=>({id:i+1,value:`Checklist #${i+1}`}));
+const OPTS_STATUSAPROVACAO = [{id:"PENDENTE",value:"Pendente"},{id:"APROVADO",value:"Aprovado"},{id:"REPROVADO",value:"Reprovado"},{id:"CANCELADO",value:"Cancelado"}];
 
 export default function FluxodocsAprovacoesJustificativaPage() {
   const [loading, setLoading] = useState(true);

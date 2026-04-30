@@ -14,11 +14,11 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsWorkflowEtapa } from "@/types/entities/Fluxodocs";
 
-const OPTS_WORKFLOWID = [{id:1,value:"Workflow 1"},{id:2,value:"Workflow 2"},{id:3,value:"Workflow 3"},{id:4,value:"Workflow 4"},{id:5,value:"Workflow 5"}] as const;
-const OPTS_STATUSORIGEMID = [{id:1,value:"Aberto"},{id:2,value:"Enviado"},{id:3,value:"Recebido"},{id:4,value:"Devolvido"},{id:5,value:"Aceito Parcial"},{id:6,value:"Reenviado"},{id:7,value:"Cancelado"},{id:8,value:"Finalizado"}] as const;
-const OPTS_STATUSDESTINOID = [{id:1,value:"Aberto"},{id:2,value:"Enviado"},{id:3,value:"Recebido"},{id:4,value:"Devolvido"},{id:5,value:"Aceito Parcial"},{id:6,value:"Reenviado"},{id:7,value:"Cancelado"},{id:8,value:"Finalizado"}] as const;
-const OPTS_ACAO = [{id:"ENVIAR",value:"Enviar"},{id:"RECEBER",value:"Receber"},{id:"DEVOLVER",value:"Devolver"},{id:"REENVIAR",value:"Reenviar"},{id:"ACEITAR",value:"Aceitar"},{id:"CANCELAR",value:"Cancelar"}] as const;
-const OPTS_PERFILPERMITIDO = [{id:"TODOS",value:"Todos"},{id:"AUDITOR",value:"Auditor"},{id:"FATURISTA",value:"Faturista"},{id:"GESTOR",value:"Gestor"}] as const;
+const OPTS_WORKFLOWID = [{id:1,value:"Workflow 1"},{id:2,value:"Workflow 2"},{id:3,value:"Workflow 3"},{id:4,value:"Workflow 4"},{id:5,value:"Workflow 5"}];
+const OPTS_STATUSORIGEMID = [{id:1,value:"Aberto"},{id:2,value:"Enviado"},{id:3,value:"Recebido"},{id:4,value:"Devolvido"},{id:5,value:"Aceito Parcial"},{id:6,value:"Reenviado"},{id:7,value:"Cancelado"},{id:8,value:"Finalizado"}];
+const OPTS_STATUSDESTINOID = [{id:1,value:"Aberto"},{id:2,value:"Enviado"},{id:3,value:"Recebido"},{id:4,value:"Devolvido"},{id:5,value:"Aceito Parcial"},{id:6,value:"Reenviado"},{id:7,value:"Cancelado"},{id:8,value:"Finalizado"}];
+const OPTS_ACAO = [{id:"ENVIAR",value:"Enviar"},{id:"RECEBER",value:"Receber"},{id:"DEVOLVER",value:"Devolver"},{id:"REENVIAR",value:"Reenviar"},{id:"ACEITAR",value:"Aceitar"},{id:"CANCELAR",value:"Cancelar"}];
+const OPTS_PERFILPERMITIDO = [{id:"TODOS",value:"Todos"},{id:"AUDITOR",value:"Auditor"},{id:"FATURISTA",value:"Faturista"},{id:"GESTOR",value:"Gestor"}];
 
 export interface WorkflowEtapaFormValues {
   workflowId: number | null;

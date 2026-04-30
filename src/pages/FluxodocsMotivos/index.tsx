@@ -48,7 +48,7 @@ import {
 
 const PAGE_SIZE = 20;
 
-const OPTS_TIPO = [{id:"ENVIO",value:"Envio"},{id:"DEVOLUCAO",value:"Devolução"},{id:"CANCELAMENTO",value:"Cancelamento"},{id:"REENVIO",value:"Reenvio"},{id:"JUSTIFICATIVA",value:"Justificativa"}] as const;
+const OPTS_TIPO = [{id:"ENVIO",value:"Envio"},{id:"DEVOLUCAO",value:"Devolução"},{id:"CANCELAMENTO",value:"Cancelamento"},{id:"REENVIO",value:"Reenvio"},{id:"JUSTIFICATIVA",value:"Justificativa"}];
 
 export default function FluxodocsMotivosPage() {
   const [loading, setLoading] = useState(true);

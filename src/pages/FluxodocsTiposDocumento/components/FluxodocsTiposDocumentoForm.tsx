@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsTipoDocumento } from "@/types/entities/Fluxodocs";
 
-const OPTS_CATEGORIA = [{id:"FATURAMENTO",value:"Faturamento"},{id:"CLINICO",value:"Clínico"},{id:"ADMINISTRATIVO",value:"Administrativo"}] as const;
+const OPTS_CATEGORIA = [{id:"FATURAMENTO",value:"Faturamento"},{id:"CLINICO",value:"Clínico"},{id:"ADMINISTRATIVO",value:"Administrativo"}];
 
 export interface TiposDocumentoFormValues {
   nome: string;

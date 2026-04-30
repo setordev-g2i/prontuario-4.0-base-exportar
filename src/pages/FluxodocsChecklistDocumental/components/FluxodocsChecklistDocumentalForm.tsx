@@ -14,11 +14,11 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsChecklistDocumental } from "@/types/entities/Fluxodocs";
 
-const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`})) as const;
-const OPTS_ITEMID = Array.from({length:8},(_,i)=>({id:i+1,value:`Item ${i+1}`})) as const;
-const OPTS_CONVENIOID = [{id:1,value:"Particular"},{id:2,value:"Unimed"},{id:3,value:"Bradesco Saúde"},{id:4,value:"Amil"},{id:5,value:"SUS"}] as const;
-const OPTS_TIPODOCUMENTOID = [{id:1,value:"Conta Médica"},{id:2,value:"Guia SP/SADT"},{id:3,value:"Guia Internação"},{id:4,value:"Guia Consulta"},{id:5,value:"Laudo Médico"},{id:6,value:"Receituário"},{id:7,value:"Solicitação de Exame"},{id:8,value:"Termo de Consentimento"},{id:9,value:"Relatório Cirúrgico"},{id:10,value:"Evolução Clínica"}] as const;
-const OPTS_STATUSCHECKLIST = [{id:"PENDENTE",value:"Pendente"},{id:"ANEXADO",value:"Anexado"},{id:"CONFIRMADO",value:"Confirmado"},{id:"JUSTIFICADO",value:"Justificado"},{id:"BLOQUEANTE",value:"Bloqueante"}] as const;
+const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`}));
+const OPTS_ITEMID = Array.from({length:8},(_,i)=>({id:i+1,value:`Item ${i+1}`}));
+const OPTS_CONVENIOID = [{id:1,value:"Particular"},{id:2,value:"Unimed"},{id:3,value:"Bradesco Saúde"},{id:4,value:"Amil"},{id:5,value:"SUS"}];
+const OPTS_TIPODOCUMENTOID = [{id:1,value:"Conta Médica"},{id:2,value:"Guia SP/SADT"},{id:3,value:"Guia Internação"},{id:4,value:"Guia Consulta"},{id:5,value:"Laudo Médico"},{id:6,value:"Receituário"},{id:7,value:"Solicitação de Exame"},{id:8,value:"Termo de Consentimento"},{id:9,value:"Relatório Cirúrgico"},{id:10,value:"Evolução Clínica"}];
+const OPTS_STATUSCHECKLIST = [{id:"PENDENTE",value:"Pendente"},{id:"ANEXADO",value:"Anexado"},{id:"CONFIRMADO",value:"Confirmado"},{id:"JUSTIFICADO",value:"Justificado"},{id:"BLOQUEANTE",value:"Bloqueante"}];
 
 export interface ChecklistDocumentalFormValues {
   protocoloId: number | null;

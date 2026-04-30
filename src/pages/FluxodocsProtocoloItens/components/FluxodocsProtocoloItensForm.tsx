@@ -14,15 +14,15 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsProtocoloItem } from "@/types/entities/Fluxodocs";
 
-const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`})) as const;
-const OPTS_TIPOITEMID = [{id:1,value:"CONTA"},{id:2,value:"ATENDIMENTO"},{id:3,value:"PACIENTE"},{id:4,value:"DOCUMENTO"},{id:5,value:"OFICIO"},{id:6,value:"MANUAL"}] as const;
-const OPTS_TIPODOCUMENTOID = [{id:1,value:"Conta Médica"},{id:2,value:"Guia SP/SADT"},{id:3,value:"Guia Internação"},{id:4,value:"Guia Consulta"},{id:5,value:"Laudo Médico"},{id:6,value:"Receituário"},{id:7,value:"Solicitação de Exame"},{id:8,value:"Termo de Consentimento"},{id:9,value:"Relatório Cirúrgico"},{id:10,value:"Evolução Clínica"}] as const;
-const OPTS_CONTAID = Array.from({length:10},(_,i)=>({id:i+1,value:`Conta ${20260000+i}`})) as const;
-const OPTS_ATENDIMENTOID = Array.from({length:10},(_,i)=>({id:i+1,value:`Atendimento ${10000+i}`})) as const;
-const OPTS_CLIENTEID = Array.from({length:15},(_,i)=>({id:i+1,value:`Paciente ${String(i+1).padStart(3,"0")}`})) as const;
-const OPTS_CONVENIOID = [{id:1,value:"Particular"},{id:2,value:"Unimed"},{id:3,value:"Bradesco Saúde"},{id:4,value:"Amil"},{id:5,value:"SUS"}] as const;
-const OPTS_STATUSITEMID = [{id:1,value:"Pendente"},{id:2,value:"Aceito"},{id:3,value:"Devolvido"}] as const;
-const OPTS_MOTIVODEVOLUCAOID = [{id:1,value:"Envio para auditoria"},{id:2,value:"Documento ilegível"},{id:3,value:"Falta de assinatura"},{id:4,value:"Falta carteirinha"},{id:5,value:"CID inconsistente"},{id:6,value:"Procedimento divergente"}] as const;
+const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`}));
+const OPTS_TIPOITEMID = [{id:1,value:"CONTA"},{id:2,value:"ATENDIMENTO"},{id:3,value:"PACIENTE"},{id:4,value:"DOCUMENTO"},{id:5,value:"OFICIO"},{id:6,value:"MANUAL"}];
+const OPTS_TIPODOCUMENTOID = [{id:1,value:"Conta Médica"},{id:2,value:"Guia SP/SADT"},{id:3,value:"Guia Internação"},{id:4,value:"Guia Consulta"},{id:5,value:"Laudo Médico"},{id:6,value:"Receituário"},{id:7,value:"Solicitação de Exame"},{id:8,value:"Termo de Consentimento"},{id:9,value:"Relatório Cirúrgico"},{id:10,value:"Evolução Clínica"}];
+const OPTS_CONTAID = Array.from({length:10},(_,i)=>({id:i+1,value:`Conta ${20260000+i}`}));
+const OPTS_ATENDIMENTOID = Array.from({length:10},(_,i)=>({id:i+1,value:`Atendimento ${10000+i}`}));
+const OPTS_CLIENTEID = Array.from({length:15},(_,i)=>({id:i+1,value:`Paciente ${String(i+1).padStart(3,"0")}`}));
+const OPTS_CONVENIOID = [{id:1,value:"Particular"},{id:2,value:"Unimed"},{id:3,value:"Bradesco Saúde"},{id:4,value:"Amil"},{id:5,value:"SUS"}];
+const OPTS_STATUSITEMID = [{id:1,value:"Pendente"},{id:2,value:"Aceito"},{id:3,value:"Devolvido"}];
+const OPTS_MOTIVODEVOLUCAOID = [{id:1,value:"Envio para auditoria"},{id:2,value:"Documento ilegível"},{id:3,value:"Falta de assinatura"},{id:4,value:"Falta carteirinha"},{id:5,value:"CID inconsistente"},{id:6,value:"Procedimento divergente"}];
 
 export interface ProtocoloItenFormValues {
   protocoloId: number | null;

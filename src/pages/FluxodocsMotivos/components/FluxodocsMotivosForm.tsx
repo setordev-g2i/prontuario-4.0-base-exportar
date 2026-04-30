@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsMotivo } from "@/types/entities/Fluxodocs";
 
-const OPTS_TIPO = [{id:"ENVIO",value:"Envio"},{id:"DEVOLUCAO",value:"Devolução"},{id:"CANCELAMENTO",value:"Cancelamento"},{id:"REENVIO",value:"Reenvio"},{id:"JUSTIFICATIVA",value:"Justificativa"}] as const;
+const OPTS_TIPO = [{id:"ENVIO",value:"Envio"},{id:"DEVOLUCAO",value:"Devolução"},{id:"CANCELAMENTO",value:"Cancelamento"},{id:"REENVIO",value:"Reenvio"},{id:"JUSTIFICATIVA",value:"Justificativa"}];
 
 export interface MotivoFormValues {
   nome: string;

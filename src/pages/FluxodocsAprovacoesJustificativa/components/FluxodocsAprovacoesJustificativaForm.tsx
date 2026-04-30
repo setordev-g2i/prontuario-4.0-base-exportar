@@ -14,12 +14,12 @@ import {
 } from "@/components/ui/select";
 import type { FluxodocsAprovacaoJustificativa } from "@/types/entities/Fluxodocs";
 
-const OPTS_CHECKLISTID = Array.from({length:22},(_,i)=>({id:i+1,value:`Checklist #${i+1}`})) as const;
-const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`})) as const;
-const OPTS_ITEMID = Array.from({length:8},(_,i)=>({id:i+1,value:`Item ${i+1}`})) as const;
-const OPTS_STATUSAPROVACAO = [{id:"PENDENTE",value:"Pendente"},{id:"APROVADO",value:"Aprovado"},{id:"REPROVADO",value:"Reprovado"},{id:"CANCELADO",value:"Cancelado"}] as const;
-const OPTS_SOLICITADOPORID = [{id:1,value:"Dr. João Silva"},{id:2,value:"Maria Souza"},{id:3,value:"Carlos Lima"},{id:4,value:"Ana Beatriz"}] as const;
-const OPTS_APROVADOPORID = [{id:1,value:"Dr. João Silva"},{id:2,value:"Maria Souza"},{id:3,value:"Carlos Lima"},{id:4,value:"Ana Beatriz"}] as const;
+const OPTS_CHECKLISTID = Array.from({length:22},(_,i)=>({id:i+1,value:`Checklist #${i+1}`}));
+const OPTS_PROTOCOLOID = Array.from({length:8},(_,i)=>({id:i+1,value:`Protocolo ${i+1}`}));
+const OPTS_ITEMID = Array.from({length:8},(_,i)=>({id:i+1,value:`Item ${i+1}`}));
+const OPTS_STATUSAPROVACAO = [{id:"PENDENTE",value:"Pendente"},{id:"APROVADO",value:"Aprovado"},{id:"REPROVADO",value:"Reprovado"},{id:"CANCELADO",value:"Cancelado"}];
+const OPTS_SOLICITADOPORID = [{id:1,value:"Dr. João Silva"},{id:2,value:"Maria Souza"},{id:3,value:"Carlos Lima"},{id:4,value:"Ana Beatriz"}];
+const OPTS_APROVADOPORID = [{id:1,value:"Dr. João Silva"},{id:2,value:"Maria Souza"},{id:3,value:"Carlos Lima"},{id:4,value:"Ana Beatriz"}];
 
 export interface AprovacoesJustificativaFormValues {
   checklistId: number | null;
