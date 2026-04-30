@@ -183,16 +183,16 @@ export default function FluxodocsParametrosSlaPage() {
                   paginated.map((r) => (
                     <TableRow key={r.id}>
               <TableCell>
-                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
+                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId as unknown))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_SETORDESTINOID.find((o) => String(o.id) === String(r.setorDestinoId))?.value) ?? (r.setorDestinoId != null ? String(r.setorDestinoId) : "—")}
+                {(OPTS_SETORDESTINOID.find((o) => String(o.id) === String(r.setorDestinoId as unknown))?.value) ?? (r.setorDestinoId != null ? String(r.setorDestinoId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_PRIORIDADEID.find((o) => String(o.id) === String(r.prioridadeId))?.value) ?? (r.prioridadeId != null ? String(r.prioridadeId) : "—")}
+                {(OPTS_PRIORIDADEID.find((o) => String(o.id) === String(r.prioridadeId as unknown))?.value) ?? (r.prioridadeId != null ? String(r.prioridadeId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_CONVENIOID.find((o) => String(o.id) === String(r.convenioId))?.value) ?? (r.convenioId != null ? String(r.convenioId) : "—")}
+                {(OPTS_CONVENIOID.find((o) => String(o.id) === String(r.convenioId as unknown))?.value) ?? (r.convenioId != null ? String(r.convenioId) : "—")}
               </TableCell>
               <TableCell>{r.prazoHoras != null && r.prazoHoras !== "" ? String(r.prazoHoras) : "—"}</TableCell>
                       <TableCell>

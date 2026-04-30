@@ -182,16 +182,16 @@ export default function FluxodocsProtocoloItensPage() {
                   paginated.map((r) => (
                     <TableRow key={r.id}>
               <TableCell>
-                {(OPTS_PROTOCOLOID.find((o) => String(o.id) === String(r.protocoloId))?.value) ?? (r.protocoloId != null ? String(r.protocoloId) : "—")}
+                {(OPTS_PROTOCOLOID.find((o) => String(o.id) === String(r.protocoloId as unknown))?.value) ?? (r.protocoloId != null ? String(r.protocoloId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_TIPOITEMID.find((o) => String(o.id) === String(r.tipoItemId))?.value) ?? (r.tipoItemId != null ? String(r.tipoItemId) : "—")}
+                {(OPTS_TIPOITEMID.find((o) => String(o.id) === String(r.tipoItemId as unknown))?.value) ?? (r.tipoItemId != null ? String(r.tipoItemId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
+                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId as unknown))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_STATUSITEMID.find((o) => String(o.id) === String(r.statusItemId))?.value) ?? (r.statusItemId != null ? String(r.statusItemId) : "—")}
+                {(OPTS_STATUSITEMID.find((o) => String(o.id) === String(r.statusItemId as unknown))?.value) ?? (r.statusItemId != null ? String(r.statusItemId) : "—")}
               </TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>

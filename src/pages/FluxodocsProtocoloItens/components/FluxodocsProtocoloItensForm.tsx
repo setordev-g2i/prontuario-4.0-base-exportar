@@ -109,15 +109,15 @@ export function ProtocoloItenForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.protocoloId && values.protocoloId !== 0) {
+    if (!values.protocoloId) {
       newErrors.protocoloId = true;
       firstError ??= "Protocolo";
     }
-    if (!values.tipoItemId && values.tipoItemId !== 0) {
+    if (!values.tipoItemId) {
       newErrors.tipoItemId = true;
       firstError ??= "Tipo de Item";
     }
-    if (!values.statusItemId && values.statusItemId !== 0) {
+    if (!values.statusItemId) {
       newErrors.statusItemId = true;
       firstError ??= "Status do Item";
     }

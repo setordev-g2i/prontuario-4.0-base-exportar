@@ -184,16 +184,16 @@ export default function FluxodocsProtocolosPage() {
                     <TableRow key={r.id}>
               <TableCell>{r.numero != null && r.numero !== "" ? String(r.numero) : "—"}</TableCell>
               <TableCell>
-                {(OPTS_STATUSID.find((o) => String(o.id) === String(r.statusId))?.value) ?? (r.statusId != null ? String(r.statusId) : "—")}
+                {(OPTS_STATUSID.find((o) => String(o.id) === String(r.statusId as unknown))?.value) ?? (r.statusId != null ? String(r.statusId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_PRIORIDADEID.find((o) => String(o.id) === String(r.prioridadeId))?.value) ?? (r.prioridadeId != null ? String(r.prioridadeId) : "—")}
+                {(OPTS_PRIORIDADEID.find((o) => String(o.id) === String(r.prioridadeId as unknown))?.value) ?? (r.prioridadeId != null ? String(r.prioridadeId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_SETORORIGEMID.find((o) => String(o.id) === String(r.setorOrigemId))?.value) ?? (r.setorOrigemId != null ? String(r.setorOrigemId) : "—")}
+                {(OPTS_SETORORIGEMID.find((o) => String(o.id) === String(r.setorOrigemId as unknown))?.value) ?? (r.setorOrigemId != null ? String(r.setorOrigemId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_SETORDESTINOID.find((o) => String(o.id) === String(r.setorDestinoId))?.value) ?? (r.setorDestinoId != null ? String(r.setorDestinoId) : "—")}
+                {(OPTS_SETORDESTINOID.find((o) => String(o.id) === String(r.setorDestinoId as unknown))?.value) ?? (r.setorDestinoId != null ? String(r.setorDestinoId) : "—")}
               </TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>

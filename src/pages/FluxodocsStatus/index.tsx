@@ -182,7 +182,7 @@ export default function FluxodocsStatusPage() {
               <TableCell>{r.codigo != null && r.codigo !== "" ? String(r.codigo) : "—"}</TableCell>
               <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
               <TableCell>
-                {(OPTS_TIPO.find((o) => String(o.id) === String(r.tipo))?.value) ?? (r.tipo != null ? String(r.tipo) : "—")}
+                {(OPTS_TIPO.find((o) => String(o.id) === String(r.tipo as unknown))?.value) ?? (r.tipo != null ? String(r.tipo) : "—")}
               </TableCell>
               <TableCell>
                 {r.cor ? (

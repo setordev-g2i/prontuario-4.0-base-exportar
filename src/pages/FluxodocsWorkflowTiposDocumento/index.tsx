@@ -178,7 +178,7 @@ export default function FluxodocsWorkflowTiposDocumentoPage() {
                     <TableRow key={r.id}>
               <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
               <TableCell>
-                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
+                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId as unknown))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
               </TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>

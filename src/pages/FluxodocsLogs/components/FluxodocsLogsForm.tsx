@@ -80,7 +80,7 @@ export function LogForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.acao && values.acao !== 0) {
+    if (!values.acao) {
       newErrors.acao = true;
       firstError ??= "Ação";
     }

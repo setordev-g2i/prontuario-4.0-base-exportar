@@ -179,7 +179,7 @@ export default function FluxodocsTiposDocumentoPage() {
                     <TableRow key={r.id}>
               <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
               <TableCell>
-                {(OPTS_CATEGORIA.find((o) => String(o.id) === String(r.categoria))?.value) ?? (r.categoria != null ? String(r.categoria) : "—")}
+                {(OPTS_CATEGORIA.find((o) => String(o.id) === String(r.categoria as unknown))?.value) ?? (r.categoria != null ? String(r.categoria) : "—")}
               </TableCell>
               <TableCell>
                 {r.cor ? (

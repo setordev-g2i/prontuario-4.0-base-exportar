@@ -71,11 +71,11 @@ export function TiposDocumentoForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.nome && values.nome !== 0) {
+    if (!values.nome) {
       newErrors.nome = true;
       firstError ??= "Nome";
     }
-    if (!values.categoria && values.categoria !== 0) {
+    if (!values.categoria) {
       newErrors.categoria = true;
       firstError ??= "Categoria";
     }

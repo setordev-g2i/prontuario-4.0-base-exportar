@@ -182,16 +182,16 @@ export default function FluxodocsRegrasFluxoPage() {
                   paginated.map((r) => (
                     <TableRow key={r.id}>
               <TableCell>
-                {(OPTS_SETORORIGEMID.find((o) => String(o.id) === String(r.setorOrigemId))?.value) ?? (r.setorOrigemId != null ? String(r.setorOrigemId) : "—")}
+                {(OPTS_SETORORIGEMID.find((o) => String(o.id) === String(r.setorOrigemId as unknown))?.value) ?? (r.setorOrigemId != null ? String(r.setorOrigemId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_SETORDESTINOID.find((o) => String(o.id) === String(r.setorDestinoId))?.value) ?? (r.setorDestinoId != null ? String(r.setorDestinoId) : "—")}
+                {(OPTS_SETORDESTINOID.find((o) => String(o.id) === String(r.setorDestinoId as unknown))?.value) ?? (r.setorDestinoId != null ? String(r.setorDestinoId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
+                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId as unknown))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_TIPOMOVIMENTACAOID.find((o) => String(o.id) === String(r.tipoMovimentacaoId))?.value) ?? (r.tipoMovimentacaoId != null ? String(r.tipoMovimentacaoId) : "—")}
+                {(OPTS_TIPOMOVIMENTACAOID.find((o) => String(o.id) === String(r.tipoMovimentacaoId as unknown))?.value) ?? (r.tipoMovimentacaoId != null ? String(r.tipoMovimentacaoId) : "—")}
               </TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>

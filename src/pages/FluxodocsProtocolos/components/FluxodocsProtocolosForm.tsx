@@ -119,27 +119,27 @@ export function ProtocoloForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.numero && values.numero !== 0) {
+    if (!values.numero) {
       newErrors.numero = true;
       firstError ??= "Número";
     }
-    if (!values.tipoMovimentacaoId && values.tipoMovimentacaoId !== 0) {
+    if (!values.tipoMovimentacaoId) {
       newErrors.tipoMovimentacaoId = true;
       firstError ??= "Tipo de Movimentação";
     }
-    if (!values.setorOrigemId && values.setorOrigemId !== 0) {
+    if (!values.setorOrigemId) {
       newErrors.setorOrigemId = true;
       firstError ??= "Setor de Origem";
     }
-    if (!values.setorDestinoId && values.setorDestinoId !== 0) {
+    if (!values.setorDestinoId) {
       newErrors.setorDestinoId = true;
       firstError ??= "Setor de Destino";
     }
-    if (!values.prioridadeId && values.prioridadeId !== 0) {
+    if (!values.prioridadeId) {
       newErrors.prioridadeId = true;
       firstError ??= "Prioridade";
     }
-    if (!values.statusId && values.statusId !== 0) {
+    if (!values.statusId) {
       newErrors.statusId = true;
       firstError ??= "Status";
     }

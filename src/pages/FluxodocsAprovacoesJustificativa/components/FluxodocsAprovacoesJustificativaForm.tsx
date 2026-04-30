@@ -97,27 +97,27 @@ export function AprovacoesJustificativaForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.checklistId && values.checklistId !== 0) {
+    if (!values.checklistId) {
       newErrors.checklistId = true;
       firstError ??= "Checklist";
     }
-    if (!values.protocoloId && values.protocoloId !== 0) {
+    if (!values.protocoloId) {
       newErrors.protocoloId = true;
       firstError ??= "Protocolo";
     }
-    if (!values.justificativa && values.justificativa !== 0) {
+    if (!values.justificativa) {
       newErrors.justificativa = true;
       firstError ??= "Justificativa";
     }
-    if (!values.statusAprovacao && values.statusAprovacao !== 0) {
+    if (!values.statusAprovacao) {
       newErrors.statusAprovacao = true;
       firstError ??= "Status da Aprovação";
     }
-    if (!values.solicitadoPorId && values.solicitadoPorId !== 0) {
+    if (!values.solicitadoPorId) {
       newErrors.solicitadoPorId = true;
       firstError ??= "Solicitado por";
     }
-    if (!values.solicitadoEm && values.solicitadoEm !== 0) {
+    if (!values.solicitadoEm) {
       newErrors.solicitadoEm = true;
       firstError ??= "Solicitado em";
     }

@@ -96,15 +96,15 @@ export function ChecklistDocumentalForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.protocoloId && values.protocoloId !== 0) {
+    if (!values.protocoloId) {
       newErrors.protocoloId = true;
       firstError ??= "Protocolo";
     }
-    if (!values.tipoDocumentoId && values.tipoDocumentoId !== 0) {
+    if (!values.tipoDocumentoId) {
       newErrors.tipoDocumentoId = true;
       firstError ??= "Tipo de Documento";
     }
-    if (!values.statusChecklist && values.statusChecklist !== 0) {
+    if (!values.statusChecklist) {
       newErrors.statusChecklist = true;
       firstError ??= "Status do Checklist";
     }

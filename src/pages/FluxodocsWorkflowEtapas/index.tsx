@@ -183,16 +183,16 @@ export default function FluxodocsWorkflowEtapasPage() {
                   paginated.map((r) => (
                     <TableRow key={r.id}>
               <TableCell>
-                {(OPTS_WORKFLOWID.find((o) => String(o.id) === String(r.workflowId))?.value) ?? (r.workflowId != null ? String(r.workflowId) : "—")}
+                {(OPTS_WORKFLOWID.find((o) => String(o.id) === String(r.workflowId as unknown))?.value) ?? (r.workflowId != null ? String(r.workflowId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_ACAO.find((o) => String(o.id) === String(r.acao))?.value) ?? (r.acao != null ? String(r.acao) : "—")}
+                {(OPTS_ACAO.find((o) => String(o.id) === String(r.acao as unknown))?.value) ?? (r.acao != null ? String(r.acao) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_STATUSORIGEMID.find((o) => String(o.id) === String(r.statusOrigemId))?.value) ?? (r.statusOrigemId != null ? String(r.statusOrigemId) : "—")}
+                {(OPTS_STATUSORIGEMID.find((o) => String(o.id) === String(r.statusOrigemId as unknown))?.value) ?? (r.statusOrigemId != null ? String(r.statusOrigemId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_STATUSDESTINOID.find((o) => String(o.id) === String(r.statusDestinoId))?.value) ?? (r.statusDestinoId != null ? String(r.statusDestinoId) : "—")}
+                {(OPTS_STATUSDESTINOID.find((o) => String(o.id) === String(r.statusDestinoId as unknown))?.value) ?? (r.statusDestinoId != null ? String(r.statusDestinoId) : "—")}
               </TableCell>
               <TableCell>{r.ordem != null && r.ordem !== "" ? String(r.ordem) : "—"}</TableCell>
                       <TableCell>

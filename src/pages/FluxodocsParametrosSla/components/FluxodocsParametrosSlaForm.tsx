@@ -80,11 +80,11 @@ export function ParametrosSlaForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.tipoDocumentoId && values.tipoDocumentoId !== 0) {
+    if (!values.tipoDocumentoId) {
       newErrors.tipoDocumentoId = true;
       firstError ??= "Tipo de Documento";
     }
-    if (!values.prioridadeId && values.prioridadeId !== 0) {
+    if (!values.prioridadeId) {
       newErrors.prioridadeId = true;
       firstError ??= "Prioridade";
     }

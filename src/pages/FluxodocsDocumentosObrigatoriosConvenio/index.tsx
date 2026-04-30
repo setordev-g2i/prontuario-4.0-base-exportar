@@ -180,10 +180,10 @@ export default function FluxodocsDocumentosObrigatoriosConvenioPage() {
                   paginated.map((r) => (
                     <TableRow key={r.id}>
               <TableCell>
-                {(OPTS_CONVENIOID.find((o) => String(o.id) === String(r.convenioId))?.value) ?? (r.convenioId != null ? String(r.convenioId) : "—")}
+                {(OPTS_CONVENIOID.find((o) => String(o.id) === String(r.convenioId as unknown))?.value) ?? (r.convenioId != null ? String(r.convenioId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
+                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId as unknown))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
               </TableCell>
               <TableCell>{r.obrigatorio ? "Sim" : "Não"}</TableCell>
               <TableCell>{r.bloqueiaEnvio ? "Sim" : "Não"}</TableCell>

@@ -178,7 +178,7 @@ export default function FluxodocsMotivosPage() {
                     <TableRow key={r.id}>
               <TableCell>{r.nome != null && r.nome !== "" ? String(r.nome) : "—"}</TableCell>
               <TableCell>
-                {(OPTS_TIPO.find((o) => String(o.id) === String(r.tipo))?.value) ?? (r.tipo != null ? String(r.tipo) : "—")}
+                {(OPTS_TIPO.find((o) => String(o.id) === String(r.tipo as unknown))?.value) ?? (r.tipo != null ? String(r.tipo) : "—")}
               </TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>

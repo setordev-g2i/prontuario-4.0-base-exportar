@@ -83,15 +83,15 @@ export function StatuForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.codigo && values.codigo !== 0) {
+    if (!values.codigo) {
       newErrors.codigo = true;
       firstError ??= "Código";
     }
-    if (!values.nome && values.nome !== 0) {
+    if (!values.nome) {
       newErrors.nome = true;
       firstError ??= "Nome";
     }
-    if (!values.tipo && values.tipo !== 0) {
+    if (!values.tipo) {
       newErrors.tipo = true;
       firstError ??= "Tipo";
     }

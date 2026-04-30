@@ -182,16 +182,16 @@ export default function FluxodocsLogsPage() {
                   paginated.map((r) => (
                     <TableRow key={r.id}>
               <TableCell>
-                {(OPTS_PROTOCOLOID.find((o) => String(o.id) === String(r.protocoloId))?.value) ?? (r.protocoloId != null ? String(r.protocoloId) : "—")}
+                {(OPTS_PROTOCOLOID.find((o) => String(o.id) === String(r.protocoloId as unknown))?.value) ?? (r.protocoloId != null ? String(r.protocoloId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_ACAO.find((o) => String(o.id) === String(r.acao))?.value) ?? (r.acao != null ? String(r.acao) : "—")}
+                {(OPTS_ACAO.find((o) => String(o.id) === String(r.acao as unknown))?.value) ?? (r.acao != null ? String(r.acao) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_USUARIOID.find((o) => String(o.id) === String(r.usuarioId))?.value) ?? (r.usuarioId != null ? String(r.usuarioId) : "—")}
+                {(OPTS_USUARIOID.find((o) => String(o.id) === String(r.usuarioId as unknown))?.value) ?? (r.usuarioId != null ? String(r.usuarioId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_SETORID.find((o) => String(o.id) === String(r.setorId))?.value) ?? (r.setorId != null ? String(r.setorId) : "—")}
+                {(OPTS_SETORID.find((o) => String(o.id) === String(r.setorId as unknown))?.value) ?? (r.setorId != null ? String(r.setorId) : "—")}
               </TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>

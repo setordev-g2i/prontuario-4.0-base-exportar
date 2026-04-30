@@ -93,19 +93,19 @@ export function WorkflowEtapaForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.workflowId && values.workflowId !== 0) {
+    if (!values.workflowId) {
       newErrors.workflowId = true;
       firstError ??= "Workflow";
     }
-    if (!values.statusOrigemId && values.statusOrigemId !== 0) {
+    if (!values.statusOrigemId) {
       newErrors.statusOrigemId = true;
       firstError ??= "Status de Origem";
     }
-    if (!values.statusDestinoId && values.statusDestinoId !== 0) {
+    if (!values.statusDestinoId) {
       newErrors.statusDestinoId = true;
       firstError ??= "Status de Destino";
     }
-    if (!values.acao && values.acao !== 0) {
+    if (!values.acao) {
       newErrors.acao = true;
       firstError ??= "Ação";
     }
@@ -113,7 +113,7 @@ export function WorkflowEtapaForm({
       newErrors.ordem = true;
       firstError ??= "Ordem";
     }
-    if (!values.perfilPermitido && values.perfilPermitido !== 0) {
+    if (!values.perfilPermitido) {
       newErrors.perfilPermitido = true;
       firstError ??= "Perfil permitido";
     }

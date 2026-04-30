@@ -92,11 +92,11 @@ export function DocumentosObrigatoriosConvenioForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.convenioId && values.convenioId !== 0) {
+    if (!values.convenioId) {
       newErrors.convenioId = true;
       firstError ??= "Convênio";
     }
-    if (!values.tipoDocumentoId && values.tipoDocumentoId !== 0) {
+    if (!values.tipoDocumentoId) {
       newErrors.tipoDocumentoId = true;
       firstError ??= "Tipo de Documento";
     }

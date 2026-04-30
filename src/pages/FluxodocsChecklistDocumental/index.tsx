@@ -182,16 +182,16 @@ export default function FluxodocsChecklistDocumentalPage() {
                   paginated.map((r) => (
                     <TableRow key={r.id}>
               <TableCell>
-                {(OPTS_PROTOCOLOID.find((o) => String(o.id) === String(r.protocoloId))?.value) ?? (r.protocoloId != null ? String(r.protocoloId) : "—")}
+                {(OPTS_PROTOCOLOID.find((o) => String(o.id) === String(r.protocoloId as unknown))?.value) ?? (r.protocoloId != null ? String(r.protocoloId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
+                {(OPTS_TIPODOCUMENTOID.find((o) => String(o.id) === String(r.tipoDocumentoId as unknown))?.value) ?? (r.tipoDocumentoId != null ? String(r.tipoDocumentoId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_CONVENIOID.find((o) => String(o.id) === String(r.convenioId))?.value) ?? (r.convenioId != null ? String(r.convenioId) : "—")}
+                {(OPTS_CONVENIOID.find((o) => String(o.id) === String(r.convenioId as unknown))?.value) ?? (r.convenioId != null ? String(r.convenioId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_STATUSCHECKLIST.find((o) => String(o.id) === String(r.statusChecklist))?.value) ?? (r.statusChecklist != null ? String(r.statusChecklist) : "—")}
+                {(OPTS_STATUSCHECKLIST.find((o) => String(o.id) === String(r.statusChecklist as unknown))?.value) ?? (r.statusChecklist != null ? String(r.statusChecklist) : "—")}
               </TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>

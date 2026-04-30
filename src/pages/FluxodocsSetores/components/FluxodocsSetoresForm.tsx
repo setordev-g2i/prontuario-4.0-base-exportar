@@ -77,11 +77,11 @@ export function SetoreForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.nome && values.nome !== 0) {
+    if (!values.nome) {
       newErrors.nome = true;
       firstError ??= "Nome";
     }
-    if (!values.sigla && values.sigla !== 0) {
+    if (!values.sigla) {
       newErrors.sigla = true;
       firstError ??= "Sigla";
     }

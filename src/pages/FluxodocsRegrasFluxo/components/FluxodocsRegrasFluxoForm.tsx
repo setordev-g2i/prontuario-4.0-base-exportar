@@ -77,19 +77,19 @@ export function RegrasFluxoForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.setorOrigemId && values.setorOrigemId !== 0) {
+    if (!values.setorOrigemId) {
       newErrors.setorOrigemId = true;
       firstError ??= "Setor de Origem";
     }
-    if (!values.setorDestinoId && values.setorDestinoId !== 0) {
+    if (!values.setorDestinoId) {
       newErrors.setorDestinoId = true;
       firstError ??= "Setor de Destino";
     }
-    if (!values.tipoDocumentoId && values.tipoDocumentoId !== 0) {
+    if (!values.tipoDocumentoId) {
       newErrors.tipoDocumentoId = true;
       firstError ??= "Tipo de Documento";
     }
-    if (!values.tipoMovimentacaoId && values.tipoMovimentacaoId !== 0) {
+    if (!values.tipoMovimentacaoId) {
       newErrors.tipoMovimentacaoId = true;
       firstError ??= "Tipo de Movimentação";
     }

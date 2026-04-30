@@ -180,13 +180,13 @@ export default function FluxodocsAprovacoesJustificativaPage() {
                   paginated.map((r) => (
                     <TableRow key={r.id}>
               <TableCell>
-                {(OPTS_PROTOCOLOID.find((o) => String(o.id) === String(r.protocoloId))?.value) ?? (r.protocoloId != null ? String(r.protocoloId) : "—")}
+                {(OPTS_PROTOCOLOID.find((o) => String(o.id) === String(r.protocoloId as unknown))?.value) ?? (r.protocoloId != null ? String(r.protocoloId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_CHECKLISTID.find((o) => String(o.id) === String(r.checklistId))?.value) ?? (r.checklistId != null ? String(r.checklistId) : "—")}
+                {(OPTS_CHECKLISTID.find((o) => String(o.id) === String(r.checklistId as unknown))?.value) ?? (r.checklistId != null ? String(r.checklistId) : "—")}
               </TableCell>
               <TableCell>
-                {(OPTS_STATUSAPROVACAO.find((o) => String(o.id) === String(r.statusAprovacao))?.value) ?? (r.statusAprovacao != null ? String(r.statusAprovacao) : "—")}
+                {(OPTS_STATUSAPROVACAO.find((o) => String(o.id) === String(r.statusAprovacao as unknown))?.value) ?? (r.statusAprovacao != null ? String(r.statusAprovacao) : "—")}
               </TableCell>
                       <TableCell>
                         <Badge variant={r.situacaoId === 1 ? "default" : "secondary"}>

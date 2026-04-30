@@ -71,15 +71,15 @@ export function ParametrosIaForm({
     e.preventDefault();
     const newErrors: Record<string, boolean> = {};
     let firstError: string | undefined;
-    if (!values.nome && values.nome !== 0) {
+    if (!values.nome) {
       newErrors.nome = true;
       firstError ??= "Nome";
     }
-    if (!values.chave && values.chave !== 0) {
+    if (!values.chave) {
       newErrors.chave = true;
       firstError ??= "Chave";
     }
-    if (!values.valor && values.valor !== 0) {
+    if (!values.valor) {
       newErrors.valor = true;
       firstError ??= "Valor";
     }
