@@ -1,4 +1,4 @@
-import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate, Sequence } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, spring, interpolate } from "remotion";
 
 const TABS = [
   { n: "01", t: "Dashboard", d: "Visão em tempo real" },
@@ -92,19 +92,17 @@ export const Scene3Tabs: React.FC = () => {
       >
         Tudo num só lugar
       </div>
-      <Sequence from={20}>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: 28,
-          }}
-        >
-          {TABS.map((tab, i) => (
-            <Card key={tab.n} n={tab.n} t={tab.t} d={tab.d} delay={i * 8} />
-          ))}
-        </div>
-      </Sequence>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(4, 1fr)",
+          gap: 28,
+        }}
+      >
+        {TABS.map((tab, i) => (
+          <Card key={tab.n} n={tab.n} t={tab.t} d={tab.d} delay={20 + i * 8} />
+        ))}
+      </div>
     </AbsoluteFill>
   );
 };
