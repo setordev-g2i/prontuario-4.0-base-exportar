@@ -230,7 +230,7 @@ export function createFluxo(args: CreateFluxoArgs): FluxoCompleto {
   if (draft.checklist.length) {
     gravarLog({ protocoloId, acao: "CHECKLIST_GERADO", payload: { itens: draft.checklist.length } });
   }
-  gravarLog({ protocoloId, acao: "IA_SLA_CALCULADA", payload: sla });
+  gravarLog({ protocoloId, acao: "IA_SLA_CALCULADA", payload: { ...sla } });
 
   return enriquecerProtocolo(protocolo);
 }
