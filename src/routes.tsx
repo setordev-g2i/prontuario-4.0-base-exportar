@@ -37,6 +37,7 @@ import FluxodocsAprovacoesJustificativaPage from "@/pages/FluxodocsAprovacoesJus
 import FluxodocsProtocolosPage from "@/pages/FluxodocsProtocolos";
 import FluxodocsProtocoloItensPage from "@/pages/FluxodocsProtocoloItens";
 import FluxodocsLogsPage from "@/pages/FluxodocsLogs";
+import FluxodocsOperacionalPage from "@/pages/FluxoDocumentosOperacional";
 
 export function AppRoutes() {
   return (
@@ -77,6 +78,9 @@ export function AppRoutes() {
         <Route path="/configuracoes/fluxo-documentos/protocolos" element={<FluxodocsProtocolosPage />} />
         <Route path="/configuracoes/fluxo-documentos/protocolo-itens" element={<FluxodocsProtocoloItensPage />} />
         <Route path="/configuracoes/fluxo-documentos/logs" element={<FluxodocsLogsPage />} />
+
+        {/* Gerenciamento → Fluxo de Documentos (operacional) */}
+        <Route path="/gerenciamento/fluxo-documentos" element={<FluxodocsOperacionalPage />} />
 
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
