@@ -171,6 +171,12 @@ const menuConfig: MenuItem[] = [
         ],
       },
       {
+        heading: "Documentos",
+        items: [
+          { label: "Fluxo de Documentos", icon: FileText, iconName: "FileText", path: "/gerenciamento/fluxo-documentos" },
+        ],
+      },
+      {
         heading: "Estoque",
         items: [
           { label: "Farmácia", icon: Pill, iconName: "Pill", path: "/gerenciamento/estoque/farmacia" },
